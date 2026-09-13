@@ -1,9 +1,8 @@
-import { NextRequest } from "next/server";
 import { AuthError, requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { jsonError, jsonOk } from "@/lib/http";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const session = await requireUser();
     await prisma.notification.updateMany({

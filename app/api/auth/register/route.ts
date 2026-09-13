@@ -1,12 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import {
-  createSessionToken,
-  hashPassword,
-  SESSION_COOKIE,
-  sessionCookieOptions,
-  verifyPassword,
-} from "@/lib/auth";
+import { createSessionToken, hashPassword, SESSION_COOKIE, sessionCookieOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { assertSameOrigin, jsonError, jsonOk, requestIp } from "@/lib/http";
 import { clientKey, rateLimit } from "@/lib/rate-limit";

@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 import { AuthError, requireUser } from "@/lib/auth";
 import { placeBet } from "@/lib/betting";
-import { assertSameOrigin, jsonError, jsonOk, requestIp } from "@/lib/http";
+import { assertSameOrigin, jsonError, jsonOk } from "@/lib/http";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
 import { parseGhsToPesewas } from "@/lib/money";
 
