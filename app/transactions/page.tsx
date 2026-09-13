@@ -32,7 +32,19 @@ export default async function TransactionsPage() {
                 </span>
               </div>
               <p className="text-xs text-muted">
-                {tx.status} · {tx.publicId} · {tx.createdAt.toLocaleString()}
+                <span
+                  className={
+                    tx.status === "PENDING"
+                      ? "font-bold uppercase text-[#b45309]"
+                      : tx.status === "SUCCESSFUL"
+                        ? "font-bold text-odds"
+                        : ""
+                  }
+                >
+                  {tx.status}
+                </span>
+                {" · "}
+                {tx.publicId} · {tx.createdAt.toLocaleString()}
               </p>
               {tx.note ? <p className="mt-1 text-xs text-[#4b5563]">{tx.note}</p> : null}
             </article>
