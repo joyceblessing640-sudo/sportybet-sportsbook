@@ -8,9 +8,9 @@ import { useBetSlip } from "@/store/bet-slip";
 
 const ITEMS = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/sports", label: "Menu", icon: List },
+  { href: "/sports", label: "AZ Menu", icon: List },
   { href: "/games", label: "Games", icon: Gamepad2 },
-  { href: "/bets", label: "Open Bet", icon: Ticket },
+  { href: "/bets", label: "Open Bets", icon: Ticket },
   { href: "/me", label: "Me", icon: UserRound },
 ];
 

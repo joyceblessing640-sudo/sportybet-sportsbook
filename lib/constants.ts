@@ -28,5 +28,27 @@ export const MARKET_TABS = [
   { id: "BTTS", label: "BTTS" },
   { id: "AH", label: "Handicap" },
   { id: "FH", label: "First Half" },
+  { id: "FHOU", label: "1st Half O/U" },
   { id: "CS", label: "Correct Score" },
 ] as const;
+
+export const LIST_MARKET_TABS = [
+  { id: "1X2", label: "1X2" },
+  { id: "OU", label: "O/U" },
+  { id: "DC", label: "DC" },
+  { id: "FHOU", label: "1st Half O/U" },
+  { id: "AH", label: "Handicap" },
+  { id: "FH", label: "Hc" },
+  { id: "BTTS", label: "1up 2up" },
+] as const;
+
+export const LIVE_SPORT_TABS = [
+  { id: "live", label: "Live", href: "/live" },
+  { id: "football", label: "Football", href: "/sports/football" },
+  { id: "vfootball", label: "vFootball", href: "/virtuals" },
+  { id: "basketball", label: "Basketball", href: "/sports/basketball" },
+  { id: "tennis", label: "Tennis", href: "/sports/tennis" },
+  { id: "efootball", label: "eFootball", href: "/sports/esports" },
+] as const;
+
+export const PAYMENT_METHODS = ["AT", "MTN", "Telecel", "VISA", "Mastercard", "Bank"] as const;

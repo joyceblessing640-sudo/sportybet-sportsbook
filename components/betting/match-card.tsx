@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { format } from "date-fns";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Flame } from "lucide-react";
 import type { ClientMatch } from "@/lib/serialize";
 import { OddsButton } from "./odds-button";
 import { TeamBadge } from "./team-badge";
@@ -10,6 +10,57 @@ import { cn } from "@/lib/utils";
 
 function marketByType(match: ClientMatch, type: string) {
   return match.markets.find((m) => m.type === type) ?? match.markets[0];
+}
+
+function columnHeaders(marketType: string, outcomes: { label: string }[]) {
+  if (marketType === "1X2" || marketType === "DC" || marketType === "FH") {
+    return outcomes.slice(0, 3).map((o) => o.label);
+  }
+  return outcomes.slice(0, 3).map((o) => o.label);
+}
+
+export function DateOddsHeader({
+  label,
+  headers,
+  dark,
+}: {
+  label: string;
+  headers: string[];
+  dark?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2 px-3 py-2 text-[11px] font-semibold",
+        dark ? "text-white/55" : "text-[#8b93a3]",
+      )}
+    >
+      <span className="min-w-0 flex-1 truncate uppercase tracking-wide">{label}</span>
+      <div className="grid w-[46%] grid-cols-3 text-center">
+        {headers.slice(0, 3).map((h) => (
+          <span key={h}>{h}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Badges({ match }: { match: ClientMatch }) {
+  return (
+    <span className="flex shrink-0 items-center gap-1">
+      {match.isHot ? (
+        <span className="inline-flex items-center gap-0.5 rounded bg-[#ed1c24] px-1 py-0.5 text-[9px] font-black uppercase tracking-wide text-white">
+          <Flame className="h-2.5 w-2.5 fill-white" />
+          Hot
+        </span>
+      ) : null}
+      {match.isBestOdds ? (
+        <span className="inline-flex items-center rounded bg-[#12a150] px-1 py-0.5 text-[9px] font-black uppercase tracking-wide text-white">
+          Best Odds
+        </span>
+      ) : null}
+    </span>
+  );
 }
 
 export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
@@ -20,8 +71,8 @@ export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
     <article className="min-w-[300px] snap-start rounded-xl bg-white p-3 shadow-[0_1px_4px_rgba(16,24,40,0.06)]">
       <div className="mb-2 flex items-center gap-2 text-[11px] text-[#6b7280]">
         <span className="rounded bg-[#f3f4f6] px-1.5 py-0.5 font-semibold text-[#374151]">{match.league.name}</span>
+        <Badges match={match} />
         {match.isDemo ? <span className="rounded bg-[#fff4cc] px-1.5 py-0.5 font-semibold text-[#8a6d00]">DEMO</span> : null}
-        {live ? <span className="rounded bg-brand px-1.5 py-0.5 font-bold uppercase text-white">Hot</span> : null}
         <span className="ml-auto">{live ? match.clock : format(new Date(match.startTime), "dd MMM HH:mm")}</span>
       </div>
       <Link href={`/match/${match.id}`} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-2">
@@ -54,59 +105,90 @@ export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
           ))}
         </div>
       ) : null}
-      <Link
-        href={`/match/${match.id}`}
-        className="mt-2 flex items-center justify-center gap-1 text-xs font-semibold text-brand"
-      >
+      <Link href={`/match/${match.id}`} className="mt-2 flex items-center justify-center gap-1 text-xs font-semibold text-brand">
         More markets <ChevronRight className="h-3.5 w-3.5" />
       </Link>
     </article>
   );
 }
 
-export function MatchRow({ match, marketType = "1X2" }: { match: ClientMatch; marketType?: string }) {
+export function MatchRow({
+  match,
+  marketType = "1X2",
+  compactOdds = false,
+}: {
+  match: ClientMatch;
+  marketType?: string;
+  compactOdds?: boolean;
+}) {
   const market = marketByType(match, marketType) ?? match.markets[0];
   const live = match.status === "LIVE" || match.status === "HT";
+  const kick = live ? match.clock : format(new Date(match.startTime), "HH:mm");
+  const leagueLine = `${match.league.country} - ${match.league.name}`;
 
   return (
-    <div className={cn("border-b border-[#eef0f4] px-3 py-2.5", live ? "bg-transparent" : "bg-white")}>
-      <div className="mb-1.5 flex items-center gap-2 text-[11px]">
-        <span className={cn("font-medium", live ? "text-white/55" : "text-[#8b93a3]")}>
-          {live ? match.clock : format(new Date(match.startTime), "HH:mm")}
-        </span>
-        <span className={cn("truncate", live ? "text-white/70" : "text-[#8b93a3]")}>{match.league.name}</span>
-        {match.isDemo ? <span className="rounded bg-[#fff4cc] px-1 text-[10px] font-bold text-[#8a6d00]">DEMO</span> : null}
-        <Link href={`/match/${match.id}`} className={cn("ml-auto", live ? "text-white/50" : "text-[#c0c5d0]")}>
-          <ChevronRight className="h-4 w-4" />
-        </Link>
+    <div className={cn("border-b px-3 py-2.5", live ? "border-white/10 bg-transparent" : "border-[#eef0f4] bg-white")}>
+      <div className="mb-1 flex items-center gap-1.5 text-[11px]">
+        <Badges match={match} />
+        <span className={cn("font-medium", live ? "text-white/70" : "text-[#6b7280]")}>{kick}</span>
+        <span className={cn("tabular-nums", live ? "text-white/45" : "text-[#9aa3b2]")}>ID {match.displayId}</span>
+        <span className={cn("min-w-0 flex-1 truncate", live ? "text-white/55" : "text-[#8b93a3]")}>{leagueLine}</span>
       </div>
-      <div className="grid grid-cols-[minmax(0,1fr)_minmax(140px,1.1fr)] items-center gap-3">
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(132px,0.95fr)] items-center gap-2">
         <Link href={`/match/${match.id}`} className="min-w-0">
-          <p className={cn("truncate text-sm font-medium", live ? "text-white" : "text-ink")}>{match.home.shortName}</p>
-          <p className={cn("truncate text-sm font-medium", live ? "text-white" : "text-ink")}>{match.away.shortName}</p>
+          <p className={cn("flex items-center justify-between gap-2 truncate text-sm font-medium", live ? "text-white" : "text-ink")}>
+            <span className="truncate">{match.home.shortName}</span>
+            {live ? <span className="tabular-nums text-white">{match.homeScore}</span> : null}
+          </p>
+          <p className={cn("flex items-center justify-between gap-2 truncate text-sm font-medium", live ? "text-white" : "text-ink")}>
+            <span className="truncate">{match.away.shortName}</span>
+            {live ? <span className="tabular-nums text-white">{match.awayScore}</span> : null}
+          </p>
+          <p className={cn("mt-0.5 text-[11px] font-semibold", live ? "text-white/50" : "text-[#8b93a3]")}>
+            +{match.extraMarkets}
+          </p>
         </Link>
-        {live ? (
-          <div className="flex items-center gap-2">
-            <div className="w-6 text-right text-sm font-bold text-white">
-              <div>{match.homeScore}</div>
-              <div>{match.awayScore}</div>
-            </div>
-            {market ? (
-              <div className="flex min-w-0 flex-1 gap-1">
-                {market.outcomes.slice(0, 3).map((outcome) => (
-                  <OddsButton key={outcome.id} match={match} marketName={market.name} outcome={outcome} compact />
-                ))}
-              </div>
-            ) : null}
-          </div>
-        ) : market ? (
+        {market ? (
           <div className="flex gap-1">
             {market.outcomes.slice(0, 3).map((outcome) => (
-              <OddsButton key={outcome.id} match={match} marketName={market.name} outcome={outcome} compact />
+              <OddsButton
+                key={outcome.id}
+                match={match}
+                marketName={market.name}
+                outcome={outcome}
+                compact
+                hideLabel={compactOdds}
+              />
             ))}
           </div>
-        ) : null}
+        ) : (
+          <div className="text-right text-xs text-[#9aa3b2]">Locked</div>
+        )}
       </div>
+    </div>
+  );
+}
+
+export function MatchList({
+  matches,
+  marketType,
+  dark,
+  dateLabel,
+}: {
+  matches: ClientMatch[];
+  marketType: string;
+  dark?: boolean;
+  dateLabel?: string;
+}) {
+  const sample = matches[0];
+  const market = sample ? marketByType(sample, marketType) ?? sample.markets[0] : null;
+  const headers = market ? columnHeaders(marketType, market.outcomes) : ["1", "X", "2"];
+  return (
+    <div className={dark ? "bg-live text-white" : "overflow-hidden bg-white"}>
+      {dateLabel ? <DateOddsHeader label={dateLabel} headers={headers} dark={dark} /> : null}
+      {matches.map((match) => (
+        <MatchRow key={match.id} match={match} marketType={marketType} compactOdds />
+      ))}
     </div>
   );
 }
@@ -118,11 +200,5 @@ export function LeagueMatchTable({
   matches: ClientMatch[];
   marketType: string;
 }) {
-  return (
-    <div className="overflow-hidden rounded-xl bg-white shadow-[0_1px_4px_rgba(16,24,40,0.06)]">
-      {matches.map((match) => (
-        <MatchRow key={match.id} match={match} marketType={marketType} />
-      ))}
-    </div>
-  );
+  return <MatchList matches={matches} marketType={marketType} dateLabel="Fixtures" />;
 }

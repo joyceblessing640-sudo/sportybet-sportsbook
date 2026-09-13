@@ -1,3 +1,5 @@
+import { extraMarketsCount, isBestOddsMatch, isHotMatch, matchDisplayId } from "./match-meta";
+
 export type ClientTeam = {
   id: string;
   name: string;
@@ -36,6 +38,10 @@ export type ClientMatch = {
   home: ClientTeam;
   away: ClientTeam;
   markets: ClientMarket[];
+  displayId: string;
+  extraMarkets: number;
+  isHot: boolean;
+  isBestOdds: boolean;
 };
 
 export function serializeMatch(match: {
@@ -74,6 +80,13 @@ export function serializeMatch(match: {
     sport: match.sport,
     home: match.homeTeam,
     away: match.awayTeam,
+    displayId: matchDisplayId(match.id),
+    extraMarkets: extraMarketsCount(
+      match.id,
+      match.markets.reduce((sum, market) => sum + market.outcomes.length, 0),
+    ),
+    isHot: isHotMatch(match.status, match.isFeatured),
+    isBestOdds: isBestOddsMatch(match.sport.id, match.status),
     markets: match.markets.map((market) => ({
       id: market.id,
       type: market.type,

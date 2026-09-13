@@ -10,7 +10,7 @@ import { useBetSlip } from "@/store/bet-slip";
 import type { SlipItem } from "@/lib/slip";
 import { cn } from "@/lib/utils";
 
-const BARE = ["/login", "/register", "/forgot-password", "/reset-password", "/admin"];
+const BARE = ["/login", "/register", "/forgot-password", "/reset-password", "/account", "/admin"];
 
 export function AppShell({ children, slipItems }: { children: ReactNode; slipItems: SlipItem[] }) {
   const pathname = usePathname();

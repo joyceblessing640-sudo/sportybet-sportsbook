@@ -29,12 +29,15 @@ export async function POST(request: NextRequest) {
   if (!body.success) return jsonError("Enter your email/username and password.");
 
   const identifier = body.data.identifier.trim();
+  const { resolveGhanaPhone } = await import("@/lib/phone");
+  const phone = resolveGhanaPhone(identifier);
   const user = await prisma.user.findFirst({
     where: {
       OR: [
         { email: identifier.toLowerCase() },
         { username: identifier },
         { phone: identifier },
+        ...(phone ? [{ phone }] : []),
       ],
     },
   });

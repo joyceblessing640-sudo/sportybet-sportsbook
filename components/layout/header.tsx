@@ -76,13 +76,13 @@ export function Header({ onMenu }: { onMenu: () => void }) {
             </>
           ) : (
             <>
-              <Link
-                href="/register"
-                className="hidden h-8 items-center rounded-md border border-white px-3 text-xs font-bold sm:inline-flex"
-              >
+              <Link href="/register" className="px-1 text-xs font-semibold text-white">
                 Join Now
               </Link>
-              <Link href="/login" className="inline-flex h-8 items-center rounded-md bg-white px-3 text-xs font-bold text-brand">
+              <Link
+                href="/login"
+                className="inline-flex h-8 items-center rounded-md border border-white px-3 text-xs font-bold text-white"
+              >
                 Login
               </Link>
             </>

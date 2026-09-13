@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { readSlipItems, writeSlipItems } from "@/lib/slip";
 
@@ -83,4 +84,32 @@ export async function loadCodeAction(formData: FormData) {
   }
   await writeSlipItems(next);
   revalidatePath("/", "layout");
+}
+
+export async function loadBookingCodeAction(_prev: { error?: string } | null, formData: FormData) {
+  const code = String(formData.get("code") ?? "").trim().toUpperCase();
+  if (!code) return { error: "Enter a booking code." };
+  if (code !== "SB7K2Q" && code !== "D5P6AF") {
+    return { error: "Unknown booking code. Demo codes: SB7K2Q and D5P6AF." };
+  }
+  const featured = await prisma.match.findMany({
+    where: { isFeatured: true, status: { in: ["SCHEDULED", "LIVE", "HT"] } },
+    include: {
+      homeTeam: true,
+      awayTeam: true,
+      league: true,
+      markets: { include: { outcomes: { where: { active: true } } } },
+    },
+    orderBy: { startTime: "asc" },
+    take: 8,
+  });
+  const picks = code === "D5P6AF" ? featured.slice(3, 6) : featured.slice(0, 3);
+  const ids = picks
+    .map((match) => (match.markets.find((m) => m.type === "1X2") ?? match.markets[0])?.outcomes[0]?.id)
+    .filter(Boolean)
+    .join(",");
+  const fd = new FormData();
+  fd.set("outcomeIds", ids);
+  await loadCodeAction(fd);
+  redirect("/slip");
 }

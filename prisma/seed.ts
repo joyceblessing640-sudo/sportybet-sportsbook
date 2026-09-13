@@ -174,6 +174,14 @@ async function main() {
     ["Poland VNL", "Poland", "POL", "#DC143C", "volleyball"],
     ["Natus Vincere", "NAVI", "NAV", "#FFDD00", "esports"],
     ["FaZe Clan", "FaZe", "FAZ", "#E10600", "esports"],
+    ["Coventry City", "Coventry City", "COV", "#71B2E3", "football"],
+    ["Brighton", "Brighton", "BHA", "#005DAA", "football"],
+    ["Lecce", "Lecce", "LEC", "#FFED00", "football"],
+    ["Monza", "Monza", "MON", "#C8102E", "football"],
+    ["Lille", "Lille", "LIL", "#E01A22", "football"],
+    ["Troyes", "Troyes", "TRO", "#0055A4", "football"],
+    ["RB Leipzig", "RB Leipzig", "RBL", "#DD0741", "football"],
+    ["Wolfsburg", "Wolfsburg", "WOB", "#65B32E", "football"],
   ].map(([name, short, abbr, color, sportId]) => ({ name, short, abbr, color, sportId }));
 
   const teams = [];
@@ -251,6 +259,15 @@ async function main() {
           { code: "1", label: "1", odds: odds(homeOdds + 0.4) },
           { code: "X", label: "X", odds: odds(2.2) },
           { code: "2", label: "2", odds: odds(awayOdds + 0.5) },
+        ],
+      },
+      {
+        type: "FHOU",
+        name: "1st Half Over/Under 1.5",
+        line: "1.5",
+        outcomes: [
+          { code: "OVER", label: "Over 1.5", odds: odds(1.9) },
+          { code: "UNDER", label: "Under 1.5", odds: odds(1.85) },
         ],
       },
       {
@@ -417,6 +434,41 @@ async function main() {
       start: daysFromNow(5, 20),
       status: "SCHEDULED",
       prices: [1.7, 3.9, 4.8],
+    },
+    {
+      league: "premier-league",
+      home: "Coventry City",
+      away: "Brighton",
+      start: hoursFromNow(3.2),
+      status: "SCHEDULED",
+      featured: true,
+      prices: [3.93, 3.9, 1.96],
+    },
+    {
+      league: "serie-a",
+      home: "Lecce",
+      away: "Monza",
+      start: hoursFromNow(3.2),
+      status: "SCHEDULED",
+      prices: [2.89, 3.14, 2.82],
+    },
+    {
+      league: "ligue-1",
+      home: "Lille",
+      away: "Troyes",
+      start: hoursFromNow(3.2),
+      status: "SCHEDULED",
+      featured: true,
+      prices: [1.49, 5.03, 6.76],
+    },
+    {
+      league: "bundesliga",
+      home: "RB Leipzig",
+      away: "Wolfsburg",
+      start: hoursFromNow(3.7),
+      status: "SCHEDULED",
+      featured: true,
+      prices: [1.38, 5.1, 7.4],
     },
   ];
 

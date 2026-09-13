@@ -7,6 +7,7 @@ import {
   systemPotentialWin,
 } from "../lib/money";
 import { detectProvider, normalizeGhanaPhone } from "../lib/validation";
+import { resolveGhanaPhone } from "../lib/phone";
 
 describe("money", () => {
   it("parses GHS amounts to pesewas", () => {
@@ -34,6 +35,11 @@ describe("ghana phone", () => {
     expect(normalizeGhanaPhone("0241234567")).toBe("0241234567");
     expect(normalizeGhanaPhone("+233241234567")).toBe("0241234567");
     expect(normalizeGhanaPhone("123")).toBeNull();
+  });
+
+  it("resolves the 9-digit local form used after +233", () => {
+    expect(resolveGhanaPhone("240000001")).toBe("0240000001");
+    expect(resolveGhanaPhone("+233240000001")).toBe("0240000001");
   });
 
   it("detects mobile money networks", () => {

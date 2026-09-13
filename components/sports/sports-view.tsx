@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
-import { MatchRow } from "@/components/betting/match-card";
+import { MatchList } from "@/components/betting/match-card";
 import { Input } from "@/components/ui/input";
 import type { ClientMatch } from "@/lib/serialize";
-import { MARKET_TABS } from "@/lib/constants";
+import { LIST_MARKET_TABS, LIVE_SPORT_TABS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 type League = { id: string; name: string; slug: string; sportId: string; country: string };
 type Sport = { id: string; name: string; slug: string };
@@ -27,30 +28,38 @@ export function SportsView({
   const [sportId, setSportId] = useState(initialSport ?? "football");
   const [leagueSlug, setLeagueSlug] = useState<string | "all">("all");
   const [market, setMarket] = useState("1X2");
-  const [tab, setTab] = useState<"sports" | "live" | "promos">("sports");
+  const [topTab, setTopTab] = useState<"highlights" | "today" | "countries">("today");
+  const [sportTab, setSportTab] = useState(initialSport ?? "football");
 
   const filteredLeagues = leagues.filter((l) => l.sportId === sportId);
   const visible = useMemo(() => {
     return matches.filter((m) => {
-      if (tab === "live" && m.status !== "LIVE" && m.status !== "HT") return false;
-      if (m.sport.id !== sportId && sportId) return false;
+      if (topTab === "highlights" && !m.isFeatured && m.status !== "LIVE" && m.status !== "HT") return false;
+      const sportFilter = sportTab === "live" ? true : sportTab === "vfootball" ? false : m.sport.id === sportTab;
+      if (sportTab === "live") {
+        if (m.status !== "LIVE" && m.status !== "HT") return false;
+      } else if (!sportFilter && sportTab !== "vfootball") {
+        return false;
+      }
       if (leagueSlug !== "all" && m.league.slug !== leagueSlug) return false;
       if (query) {
-        const hay = `${m.home.name} ${m.away.name} ${m.league.name}`.toLowerCase();
+        const hay = `${m.home.name} ${m.away.name} ${m.league.name} ${m.displayId}`.toLowerCase();
         if (!hay.includes(query.toLowerCase())) return false;
       }
       return true;
     });
-  }, [matches, sportId, leagueSlug, query, tab]);
+  }, [matches, sportTab, leagueSlug, query, topTab]);
 
   const grouped = useMemo(() => {
     const map = new Map<string, ClientMatch[]>();
     for (const match of visible) {
-      const day = new Date(match.startTime).toDateString();
+      const day = format(new Date(match.startTime), "dd/MM eeee");
       map.set(day, [...(map.get(day) ?? []), match]);
     }
     return [...map.entries()];
   }, [visible]);
+
+  const liveCount = matches.filter((m) => m.status === "LIVE" || m.status === "HT").length;
 
   return (
     <div>
@@ -65,38 +74,55 @@ export function SportsView({
           />
         </div>
         <div className="mt-3 grid grid-cols-5 text-center text-[11px] font-medium text-white/90">
-          <Link href="/bets">Load Code</Link>
+          <Link href="/load-code">Load Code</Link>
           <Link href="/virtuals">Virtuals</Link>
           <Link href="/games">Jackpot</Link>
           <Link href="/live">Livescore</Link>
           <Link href="/sports">Results</Link>
         </div>
       </div>
-      <div className="flex gap-4 border-b border-[#eceff3] bg-white px-4 text-sm font-semibold">
-        {[
-          { id: "sports", label: "Sports" },
-          { id: "live", label: `Live (${matches.filter((m) => m.status === "LIVE" || m.status === "HT").length})` },
-          { id: "promos", label: "Promotions" },
-        ].map((item) => (
+
+      <div className="flex gap-4 overflow-x-auto bg-white px-4 pt-3 text-sm font-semibold">
+        {LIVE_SPORT_TABS.map((tab) => (
           <button
-            key={item.id}
+            key={tab.id}
             type="button"
-            onClick={() => setTab(item.id as typeof tab)}
+            onClick={() => {
+              setSportTab(tab.id === "efootball" ? "esports" : tab.id);
+              setLeagueSlug("all");
+            }}
             className={cn(
-              "py-3",
-              tab === item.id ? "border-b-2 border-odds text-odds" : "text-[#6b7280]",
+              "shrink-0",
+              (sportTab === tab.id || (tab.id === "efootball" && sportTab === "esports"))
+                ? "text-odds"
+                : tab.id === "live"
+                  ? "text-ink"
+                  : "text-[#6b7280]",
             )}
           >
-            {item.label}
+            {tab.label}
           </button>
         ))}
       </div>
-      {tab === "promos" ? (
-        <div className="p-4 text-sm text-muted">
-          Open the <Link href="/promotions" className="font-semibold text-brand">promotions</Link> page for current demo offers.
-        </div>
-      ) : (
-        <div className="grid min-h-[70dvh] grid-cols-[38%_1fr] bg-white md:grid-cols-[200px_1fr]">
+
+      <div className="mt-2 grid grid-cols-3 border-b border-[#eceff3] bg-white text-center text-sm font-semibold">
+        {(["highlights", "today", "countries"] as const).map((id) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setTopTab(id)}
+            className={cn(
+              "py-2.5 capitalize",
+              topTab === id ? "border-b-2 border-odds text-odds" : "text-[#6b7280]",
+            )}
+          >
+            {id}
+          </button>
+        ))}
+      </div>
+
+      {topTab === "countries" ? (
+        <div className="grid min-h-[50dvh] grid-cols-[38%_1fr] bg-white md:grid-cols-[200px_1fr]">
           <div className="border-r border-[#eceff3]">
             {sports.map((sport) => (
               <button
@@ -104,6 +130,7 @@ export function SportsView({
                 type="button"
                 onClick={() => {
                   setSportId(sport.id);
+                  setSportTab(sport.id);
                   setLeagueSlug("all");
                 }}
                 className={cn(
@@ -134,49 +161,43 @@ export function SportsView({
               >
                 {league.country === "England" && league.slug === "premier-league"
                   ? "England Premier League"
-                  : league.name}
+                  : `${league.country} - ${league.name}`}
               </Link>
             ))}
           </div>
         </div>
-      )}
-      {tab !== "promos" ? (
-        <div className="mt-3">
-          <div className="no-scrollbar flex gap-3 overflow-x-auto px-3">
-            {MARKET_TABS.map((item) => (
+      ) : (
+        <>
+          <div className="no-scrollbar flex gap-3 overflow-x-auto bg-white px-3 py-2">
+            {LIST_MARKET_TABS.map((item) => (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => setMarket(item.id)}
                 className={cn(
-                  "shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold",
-                  market === item.id ? "bg-brand text-white" : "bg-white text-[#4b5563]",
+                  "shrink-0 pb-1 text-xs font-semibold",
+                  market === item.id ? "border-b-2 border-odds text-odds" : "text-[#6b7280]",
                 )}
               >
                 {item.label}
               </button>
             ))}
           </div>
-          <div className="mt-3 space-y-3 px-3 pb-4">
-            {grouped.length === 0 ? (
-              <div className="rounded-xl bg-white p-8 text-center text-sm text-muted">
-                No demo matches match this filter.
-              </div>
-            ) : (
-              grouped.map(([day, list]) => (
-                <section key={day}>
-                  <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#6b7280]">{day}</h2>
-                  <div className="overflow-hidden rounded-xl bg-white">
-                    {list.map((match) => (
-                      <MatchRow key={match.id} match={match} marketType={market} />
-                    ))}
-                  </div>
-                </section>
-              ))
-            )}
-          </div>
-        </div>
-      ) : null}
+          {sportTab === "vfootball" ? (
+            <p className="m-3 rounded-xl bg-white p-6 text-sm text-muted">
+              Virtual football is a placeholder. Open <Link href="/virtuals" className="font-semibold text-brand">Virtuals</Link>{" "}
+              when a licensed feed is connected.
+            </p>
+          ) : grouped.length === 0 ? (
+            <div className="m-3 rounded-xl bg-white p-8 text-center text-sm text-muted">No demo matches match this filter.</div>
+          ) : (
+            grouped.map(([day, list]) => (
+              <MatchList key={day} matches={list} marketType={market} dateLabel={day} />
+            ))
+          )}
+        </>
+      )}
+      <p className="px-4 py-3 text-xs text-muted">Live events in this demo: {liveCount}. Search also accepts Game ID.</p>
     </div>
   );
 }

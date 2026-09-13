@@ -32,7 +32,9 @@ The app listens on [http://127.0.0.1:43141](http://127.0.0.1:43141).
 | Admin | admin@sportbet.test | AdminPass123! |
 | Sub-admin | subadmin@sportbet.test | SubAdmin123! |
 
-The demo player wallet is pre-funded so you can place tickets. Deposits and withdrawals stay **Pending** until an admin confirms them. The UI never marks a payment successful on its own.
+The demo player wallet is pre-funded so you can place tickets. Log in with **+233 240000001** / `DemoPass123!` (email `demo@sportbet.test` also works). Deposits and withdrawals stay **Pending** until an admin confirms them. The UI never marks a payment successful on its own.
+
+Registration is a three-step Ghana mobile flow (number → demo OTP `123456` → username/password). This UI is original SPORTBET software inspired by common sportsbook layouts. It does not copy another operator's source code, trademarks, or licences.
 
 ## Scripts
 
