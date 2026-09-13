@@ -1,0 +1,334 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  phone        String?    @unique
+  username     String     @unique
+  passwordHash String
+  role         String     @default("USER")
+  status       String     @default("ACTIVE")
+  loyaltyTier  String     @default("Bronze")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  wallet          Wallet?
+  bets            Bet[]
+  transactions    Transaction[]
+  deposits        Deposit[]
+  withdrawals     Withdrawal[]
+  notifications   Notification[]
+  passwordResets  PasswordReset[]
+  supportTickets  SupportTicket[]
+  auditLogs       AuditLog[]      @relation("AuditActor")
+  favorites       Favorite[]
+
+  @@index([role, status])
+  @@index([createdAt])
+}
+
+model Wallet {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balancePesewas     Int      @default(0)
+  withdrawablePesewas Int     @default(0)
+  bonusPesewas       Int      @default(0)
+  version            Int      @default(0)
+  updatedAt          DateTime @updatedAt
+}
+
+model PasswordReset {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Sport {
+  id        String   @id
+  name      String
+  slug      String   @unique
+  icon      String
+  sortOrder Int      @default(0)
+  leagues   League[]
+  matches   Match[]
+}
+
+model League {
+  id        String  @id @default(cuid())
+  sportId   String
+  sport     Sport   @relation(fields: [sportId], references: [id])
+  name      String
+  country   String
+  slug      String  @unique
+  sortOrder Int     @default(0)
+  matches   Match[]
+
+  @@index([sportId])
+}
+
+model Team {
+  id           String  @id @default(cuid())
+  name         String
+  shortName    String
+  abbreviation String
+  color        String
+  sportId      String
+  homeMatches  Match[] @relation("HomeTeam")
+  awayMatches  Match[] @relation("AwayTeam")
+
+  @@index([sportId])
+}
+
+model Match {
+  id          String    @id @default(cuid())
+  sportId     String
+  sport       Sport     @relation(fields: [sportId], references: [id])
+  leagueId    String
+  league      League    @relation(fields: [leagueId], references: [id])
+  homeTeamId  String
+  homeTeam    Team      @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeamId  String
+  awayTeam    Team      @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  startTime   DateTime
+  status      String    @default("SCHEDULED")
+  homeScore   Int       @default(0)
+  awayScore   Int       @default(0)
+  periodLabel String?
+  isFeatured  Boolean   @default(false)
+  isDemo      Boolean   @default(true)
+  markets     Market[]
+  selections  BetSelection[]
+  favorites   Favorite[]
+
+  @@index([leagueId, startTime])
+  @@index([sportId, status, startTime])
+  @@index([status, startTime])
+  @@index([isFeatured, startTime])
+}
+
+model Market {
+  id       String    @id @default(cuid())
+  matchId  String
+  match    Match     @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  type     String
+  name     String
+  line     String?
+  status   String    @default("OPEN")
+  outcomes Outcome[]
+
+  @@index([matchId, type])
+}
+
+model Outcome {
+  id         String         @id @default(cuid())
+  marketId   String
+  market     Market         @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  code       String
+  label      String
+  odds       Int
+  active     Boolean        @default(true)
+  selections BetSelection[]
+
+  @@index([marketId, active])
+}
+
+model Bet {
+  id                 String         @id @default(cuid())
+  publicId           String         @unique
+  userId             String
+  user               User           @relation(fields: [userId], references: [id])
+  type               String
+  status             String         @default("PENDING")
+  stakePesewas       Int
+  totalOdds          Int
+  potentialWinPesewas Int
+  settledWinPesewas  Int            @default(0)
+  createdAt          DateTime       @default(now())
+  settledAt          DateTime?
+  selections         BetSelection[]
+  transactions       Transaction[]
+
+  @@index([userId, status, createdAt])
+  @@index([createdAt])
+}
+
+model BetSelection {
+  id           String  @id @default(cuid())
+  betId        String
+  bet          Bet     @relation(fields: [betId], references: [id], onDelete: Cascade)
+  matchId      String
+  match        Match   @relation(fields: [matchId], references: [id])
+  outcomeId    String
+  outcome      Outcome @relation(fields: [outcomeId], references: [id])
+  marketType   String
+  marketName   String
+  outcomeLabel String
+  odds         Int
+  status       String  @default("PENDING")
+
+  @@index([betId])
+  @@index([matchId])
+}
+
+model Transaction {
+  id             String    @id @default(cuid())
+  publicId       String    @unique
+  userId         String
+  user           User      @relation(fields: [userId], references: [id])
+  type           String
+  status         String
+  amountPesewas  Int
+  balanceAfter   Int?
+  reference      String?
+  note           String?
+  depositId      String?
+  deposit        Deposit?  @relation(fields: [depositId], references: [id])
+  withdrawalId   String?
+  withdrawal     Withdrawal? @relation(fields: [withdrawalId], references: [id])
+  betId          String?
+  bet            Bet?      @relation(fields: [betId], references: [id])
+  createdAt      DateTime  @default(now())
+
+  @@index([userId, createdAt])
+  @@index([type, status])
+}
+
+model Deposit {
+  id            String        @id @default(cuid())
+  publicId      String        @unique
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  method        String
+  provider      String?
+  amountPesewas Int
+  phone         String?
+  reference     String?
+  status        String        @default("PENDING")
+  adminNote     String?
+  reviewedBy    String?
+  reviewedAt    DateTime?
+  createdAt     DateTime      @default(now())
+  transactions  Transaction[]
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+model Withdrawal {
+  id                    String        @id @default(cuid())
+  publicId              String        @unique
+  userId                String
+  user                  User          @relation(fields: [userId], references: [id])
+  method                String
+  provider              String?
+  amountPesewas         Int
+  phone                 String?
+  accountName           String?
+  accountNumber         String?
+  bankName              String?
+  status                String        @default("PENDING")
+  adminNote             String?
+  reviewedBy            String?
+  reviewedAt            DateTime?
+  createdAt             DateTime      @default(now())
+  transactions          Transaction[]
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+model Promotion {
+  id          String      @id @default(cuid())
+  title       String
+  subtitle    String
+  body        String
+  ctaLabel    String
+  href        String
+  theme       String
+  active      Boolean     @default(true)
+  sortOrder   Int         @default(0)
+  promoCodes  PromoCode[]
+}
+
+model PromoCode {
+  id        String     @id @default(cuid())
+  code      String     @unique
+  promotionId String?
+  promotion Promotion? @relation(fields: [promotionId], references: [id])
+  percentOff Int       @default(0)
+  maxUses   Int        @default(100)
+  usedCount Int        @default(0)
+  active    Boolean    @default(true)
+  expiresAt DateTime?
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  href      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read, createdAt])
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  email     String
+  subject   String
+  message   String
+  status    String   @default("OPEN")
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  matchId   String
+  match     Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, matchId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation("AuditActor", fields: [actorId], references: [id])
+  action     String
+  entityType String
+  entityId   String?
+  metadata   String   @default("{}")
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([entityType, entityId])
+}
+
+model Setting {
+  key   String @id
+  value String
+}

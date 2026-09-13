@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f5f7;
+  --foreground: #191c24;
+  --brand: #ed1c24;
+  --brand-dark: #c4161c;
+  --odds: #12a150;
+  --odds-bg: #e7f7ee;
+  --odds-border: #bfe8cf;
+  --ink: #191c24;
+  --live: #16181f;
+  --muted: #6b7280;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: #ed1c24;
+  --color-brand-dark: #c4161c;
+  --color-odds: #12a150;
+  --color-odds-bg: #e7f7ee;
+  --color-ink: #191c24;
+  --color-live: #16181f;
+  --color-muted: #6b7280;
+  --font-sans: var(--font-sans);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), "Segoe UI", sans-serif;
+  min-height: 100dvh;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.odds-btn {
+  background: #e7f7ee;
+  color: #0f8a44;
+  border: 1px solid #c9ebd6;
+  font-weight: 700;
+  border-radius: 4px;
+  transition: 0.15s ease;
+}
+.odds-btn:hover {
+  background: #d5f1e0;
+}
+.odds-btn[data-active="true"] {
+  background: #12a150;
+  color: white;
+  border-color: #12a150;
+}
+
+.bottom-pad {
+  padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 1024px) {
+  .bottom-pad {
+    padding-bottom: 1.5rem;
+  }
+}
