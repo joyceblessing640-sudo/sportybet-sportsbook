@@ -163,6 +163,7 @@ export function BetSlipPanel({ onClose, embedded = false }: { onClose?: () => vo
 }
 
 export function BetSlipFab() {
+  const count = useBetSlip((s) => s.items.length);
   const items = useBetSlip((s) => s.items);
   const setOpen = useBetSlip((s) => s.setOpen);
   const total = items.reduce((acc, item) => acc * (item.odds / 100), 1);
@@ -170,14 +171,14 @@ export function BetSlipFab() {
     <button
       type="button"
       onClick={() => setOpen(true)}
-      className="fixed right-3 z-30 grid h-14 w-14 place-items-center rounded-full bg-[#12a150] text-white shadow-lg xl:hidden"
+      className="fixed right-3 z-40 grid h-14 w-14 place-items-center rounded-full bg-[#12a150] text-white shadow-lg xl:hidden"
       style={{ bottom: "calc(4.75rem + env(safe-area-inset-bottom))" }}
       aria-label="Open bet slip"
     >
       <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-white px-1 text-[11px] font-bold text-brand">
-        {items.length}
+        {count}
       </span>
-      <span className="text-sm font-black">{items.length ? total.toFixed(2) : "0.00"}</span>
+      <span className="text-sm font-black">{count ? total.toFixed(2) : "0.00"}</span>
     </button>
   );
 }

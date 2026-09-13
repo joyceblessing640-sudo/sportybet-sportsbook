@@ -24,7 +24,7 @@ export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
         {live ? <span className="rounded bg-brand px-1.5 py-0.5 font-bold uppercase text-white">Hot</span> : null}
         <span className="ml-auto">{live ? match.clock : format(new Date(match.startTime), "dd MMM HH:mm")}</span>
       </div>
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-2">
+      <Link href={`/match/${match.id}`} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-2">
         <div className="flex flex-col items-center gap-1 text-center">
           <TeamBadge team={match.home} />
           <p className="line-clamp-2 text-xs font-medium text-ink">{match.home.shortName}</p>
@@ -46,7 +46,7 @@ export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
           <TeamBadge team={match.away} />
           <p className="line-clamp-2 text-xs font-medium text-ink">{match.away.shortName}</p>
         </div>
-      </div>
+      </Link>
       {market ? (
         <div className="mt-1 flex gap-1.5">
           {market.outcomes.map((outcome) => (
@@ -81,10 +81,10 @@ export function MatchRow({ match, marketType = "1X2" }: { match: ClientMatch; ma
         </Link>
       </div>
       <div className="grid grid-cols-[minmax(0,1fr)_minmax(140px,1.1fr)] items-center gap-3">
-        <div className="min-w-0">
+        <Link href={`/match/${match.id}`} className="min-w-0">
           <p className={cn("truncate text-sm font-medium", live ? "text-white" : "text-ink")}>{match.home.shortName}</p>
           <p className={cn("truncate text-sm font-medium", live ? "text-white" : "text-ink")}>{match.away.shortName}</p>
-        </div>
+        </Link>
         {live ? (
           <div className="flex items-center gap-2">
             <div className="w-6 text-right text-sm font-bold text-white">

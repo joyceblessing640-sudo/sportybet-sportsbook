@@ -17,13 +17,16 @@ export function OddsButton({
   compact?: boolean;
 }) {
   const selected = useBetSlip((s) => s.items.some((i) => i.outcomeId === outcome.id));
-  const add = useBetSlip((s) => s.addFromMatch);
 
   return (
     <button
       type="button"
       data-active={selected}
-      onClick={() => add(match, marketName, outcome)}
+      onClick={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        useBetSlip.getState().addFromMatch(match, marketName, outcome);
+      }}
       className={cn(
         "odds-btn flex min-w-0 flex-1 flex-col items-center justify-center px-1",
         compact ? "h-9 text-[11px]" : "h-11 text-xs",

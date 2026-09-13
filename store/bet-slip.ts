@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 import type { ClientMatch, ClientOutcome } from "@/lib/serialize";
 import { combineOddsHundredths, potentialWinPesewas, systemPotentialWin } from "@/lib/money";
 
@@ -28,6 +29,8 @@ type SlipState = {
   setOpen: (open: boolean) => void;
 };
 
+type PersistedSlip = Pick<SlipState, "items" | "tab" | "stake">;
+
 export const useBetSlip = create<SlipState>()(
   persist(
     (set, get) => ({
@@ -38,19 +41,21 @@ export const useBetSlip = create<SlipState>()(
       addFromMatch: (match, marketName, outcome) => {
         const items = get().items;
         if (items.some((i) => i.outcomeId === outcome.id)) {
-          set({ items: items.filter((i) => i.outcomeId !== outcome.id) });
+          set({ items: items.filter((i) => i.outcomeId !== outcome.id), open: true });
           return;
         }
-        const next = items.filter((i) => i.matchId !== match.id);
-        next.push({
-          outcomeId: outcome.id,
-          matchId: match.id,
-          matchLabel: `${match.home.shortName} vs ${match.away.shortName}`,
-          league: match.league.name,
-          marketName,
-          outcomeLabel: outcome.label,
-          odds: outcome.odds,
-        });
+        const next = [
+          ...items.filter((i) => i.matchId !== match.id),
+          {
+            outcomeId: outcome.id,
+            matchId: match.id,
+            matchLabel: `${match.home.shortName} vs ${match.away.shortName}`,
+            league: match.league.name,
+            marketName,
+            outcomeLabel: outcome.label,
+            odds: outcome.odds,
+          },
+        ];
         set({
           items: next,
           tab: next.length > 1 ? (get().tab === "SINGLE" ? "MULTI" : get().tab) : "SINGLE",
@@ -69,9 +74,36 @@ export const useBetSlip = create<SlipState>()(
       setStake: (stake) => set({ stake }),
       setOpen: (open) => set({ open }),
     }),
-    { name: "sportbet-slip" },
+    {
+      name: "sportbet-slip",
+      storage: createJSONStorage(() => localStorage),
+      skipHydration: true,
+      partialize: (state): PersistedSlip => ({
+        items: state.items,
+        tab: state.tab,
+        stake: state.stake,
+      }),
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as PersistedSlip | undefined;
+        if (!persisted) return currentState;
+        if (currentState.items.length > 0) return currentState;
+        return {
+          ...currentState,
+          items: persisted.items ?? currentState.items,
+          tab: persisted.tab ?? currentState.tab,
+          stake: persisted.stake ?? currentState.stake,
+        };
+      },
+    },
   ),
 );
+
+export function BetSlipHydrator() {
+  useEffect(() => {
+    void useBetSlip.persist.rehydrate();
+  }, []);
+  return null;
+}
 
 export function slipSummary(items: SlipItem[], tab: SlipState["tab"], stakePesewas: number) {
   const odds = items.map((i) => i.odds);

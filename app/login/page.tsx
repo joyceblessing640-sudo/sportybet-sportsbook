@@ -9,22 +9,29 @@ import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 import { useAuth } from "@/components/providers";
 
+const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+
 function LoginForm() {
   const router = useRouter();
   const next = useSearchParams().get("next") || "/";
   const { refresh } = useAuth();
   const [pending, setPending] = useState(false);
+  const [identifier, setIdentifier] = useState(DEMO ? "demo@sportbet.test" : "");
+  const [password, setPassword] = useState(DEMO ? "DemoPass123!" : "");
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
+    if (!identifier.trim() || !password) {
+      toast.error("Enter your email/username and password.");
+      return;
+    }
     setPending(true);
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        identifier: String(form.get("identifier") ?? ""),
-        password: String(form.get("password") ?? ""),
+        identifier: identifier.trim(),
+        password,
       }),
     });
     const data = await res.json();
@@ -46,21 +53,35 @@ function LoginForm() {
           Home
         </Link>
       </div>
-      <form onSubmit={onSubmit} className="mt-auto rounded-t-3xl bg-white px-5 py-8">
+      <form onSubmit={onSubmit} className="mt-auto rounded-t-3xl bg-white px-5 py-8" noValidate>
         <h1 className="text-2xl font-black">Login</h1>
         <p className="mt-1 text-sm text-muted">Use your SPORTBET email, username or phone.</p>
         <div className="mt-5">
           <Label htmlFor="identifier">Email / Username</Label>
-          <Input id="identifier" name="identifier" required placeholder="demo@sportbet.test" />
+          <Input
+            id="identifier"
+            name="identifier"
+            autoComplete="username"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+            placeholder="you@email.com"
+          />
         </div>
         <div className="mt-3">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" name="password" type="password" required />
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
         <Link href="/forgot-password" className="mt-2 inline-block text-sm font-semibold text-brand">
           Forgot password?
         </Link>
-        <Button className="mt-5 w-full" disabled={pending}>
+        <Button type="submit" className="mt-5 w-full" disabled={pending}>
           {pending ? "Signing in…" : "Login"}
         </Button>
         <p className="mt-4 text-center text-sm text-muted">
