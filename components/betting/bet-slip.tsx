@@ -1,22 +1,30 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useActionState, useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/providers";
 import { formatGhs, formatOdds, parseGhsToPesewas } from "@/lib/money";
+import type { SlipItem } from "@/lib/slip";
 import { cn } from "@/lib/utils";
 import { slipSummary, useBetSlip } from "@/store/bet-slip";
+import { clearSlipAction, removeSlipSelection } from "@/app/actions/slip";
+import { placeBetAction } from "@/app/actions/bet";
 
-export function BetSlipPanel({ onClose, embedded = false }: { onClose?: () => void; embedded?: boolean }) {
-  const { items, tab, stake, setTab, setStake, remove, clear } = useBetSlip();
-  const { user, refresh } = useAuth();
-  const router = useRouter();
-  const [pending, setPending] = useState(false);
+export function BetSlipPanel({
+  items,
+  onClose,
+  embedded = false,
+}: {
+  items: SlipItem[];
+  onClose?: () => void;
+  embedded?: boolean;
+}) {
+  const { tab, stake, setTab, setStake } = useBetSlip();
+  const { user } = useAuth();
+  const [state, action, pending] = useActionState(placeBetAction, null);
 
   const stakePesewas = parseGhsToPesewas(stake) ?? 0;
   const summary = useMemo(() => slipSummary(items, tab, stakePesewas), [items, tab, stakePesewas]);
@@ -25,49 +33,22 @@ export function BetSlipPanel({ onClose, embedded = false }: { onClose?: () => vo
     (tab === "MULTI" && items.length < 2) ||
     (tab === "SYSTEM" && items.length < 3);
 
-  async function place() {
-    if (!user) {
-      router.push("/login?next=/");
-      return;
-    }
-    setPending(true);
-    try {
-      const res = await fetch("/api/bets", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: tab,
-          stake,
-          outcomeIds: items.map((i) => i.outcomeId),
-          systemK: summary.systemK ?? undefined,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        toast.error(data.error ?? "Could not place bet.");
-        return;
-      }
-      toast.success(`Bet ${data.bet.publicId} placed.`);
-      clear();
-      await refresh();
-      router.push("/bets");
-    } finally {
-      setPending(false);
-    }
-  }
-
   return (
     <section className={cn("flex h-full flex-col bg-white", embedded && "border-l border-[#eceff3]")}>
       <header className="flex items-center justify-between border-b border-[#eceff3] px-3 py-2">
         <div>
           <p className="text-sm font-bold text-ink">Bet Slip</p>
-          <p className="text-[11px] text-muted">{items.length} selection{items.length === 1 ? "" : "s"}</p>
+          <p className="text-[11px] text-muted">
+            {items.length} selection{items.length === 1 ? "" : "s"}
+          </p>
         </div>
         <div className="flex items-center gap-1">
           {items.length > 0 ? (
-            <button type="button" onClick={clear} className="p-2 text-[#8b93a3]" aria-label="Clear slip">
-              <Trash2 className="h-4 w-4" />
-            </button>
+            <form action={clearSlipAction}>
+              <button type="submit" className="p-2 text-[#8b93a3]" aria-label="Clear slip">
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </form>
           ) : null}
           {onClose ? (
             <button type="button" onClick={onClose} className="p-2 text-[#8b93a3]" aria-label="Close bet slip">
@@ -110,16 +91,20 @@ export function BetSlipPanel({ onClose, embedded = false }: { onClose?: () => vo
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-odds">{formatOdds(item.odds)}</span>
-                  <button type="button" onClick={() => remove(item.outcomeId)} aria-label="Remove selection">
-                    <X className="h-4 w-4 text-[#b0b6c2]" />
-                  </button>
+                  <form action={removeSlipSelection}>
+                    <input type="hidden" name="outcomeId" value={item.outcomeId} />
+                    <button type="submit" aria-label="Remove selection">
+                      <X className="h-4 w-4 text-[#b0b6c2]" />
+                    </button>
+                  </form>
                 </div>
               </div>
             </article>
           ))
         )}
       </div>
-      <div className="border-t border-[#eceff3] p-3">
+      <form action={action} className="border-t border-[#eceff3] p-3">
+        <input type="hidden" name="type" value={tab} />
         <div className="mb-2 flex items-center justify-between text-sm">
           <span className="text-muted">Total odds</span>
           <span className="font-bold">{items.length ? formatOdds(summary.totalOdds) : "0.00"}</span>
@@ -130,7 +115,7 @@ export function BetSlipPanel({ onClose, embedded = false }: { onClose?: () => vo
           </p>
         ) : null}
         <label className="mb-2 block text-xs font-medium text-muted">Stake (GHS)</label>
-        <Input value={stake} onChange={(e) => setStake(e.target.value)} inputMode="decimal" placeholder="10.00" />
+        <Input name="stake" value={stake} onChange={(e) => setStake(e.target.value)} inputMode="decimal" placeholder="10.00" />
         <div className="mt-2 flex items-center justify-between text-sm">
           <span className="text-muted">Potential win</span>
           <span className="font-bold text-brand">{formatGhs(summary.potentialWin)}</span>
@@ -142,43 +127,42 @@ export function BetSlipPanel({ onClose, embedded = false }: { onClose?: () => vo
             {tab === "SYSTEM" ? "System bets need at least three selections." : null}
           </p>
         ) : null}
+        {state?.error ? <p className="mt-2 text-xs text-brand">{state.error}</p> : null}
         {user ? (
-          <Button className="mt-3 w-full" disabled={pending || items.length === 0 || invalidCombo} onClick={place}>
+          <Button type="submit" className="mt-3 w-full" disabled={pending || items.length === 0 || invalidCombo}>
             {pending ? "Placing…" : "Place Bet"}
           </Button>
         ) : (
           <div className="mt-3 grid grid-cols-2 gap-2">
             <Button variant="outline" className="border-brand text-brand hover:bg-red-50" asChild>
-              <Link href="/login">Login</Link>
+              <Link href="/login?next=/slip">Login</Link>
             </Button>
             <Button asChild>
               <Link href="/register">Register</Link>
             </Button>
           </div>
         )}
-        <p className="mt-2 text-center text-[10px] text-muted">18+ Play responsibly. Odds are calculated on the server from stored prices.</p>
-      </div>
+        <p className="mt-2 text-center text-[10px] text-muted">
+          18+ Play responsibly. Odds are calculated on the server from stored prices.
+        </p>
+      </form>
     </section>
   );
 }
 
-export function BetSlipFab() {
-  const count = useBetSlip((s) => s.items.length);
-  const items = useBetSlip((s) => s.items);
-  const setOpen = useBetSlip((s) => s.setOpen);
+export function BetSlipFab({ items }: { items: SlipItem[] }) {
   const total = items.reduce((acc, item) => acc * (item.odds / 100), 1);
   return (
-    <button
-      type="button"
-      onClick={() => setOpen(true)}
+    <Link
+      href="/slip"
       className="fixed right-3 z-40 grid h-14 w-14 place-items-center rounded-full bg-[#12a150] text-white shadow-lg xl:hidden"
       style={{ bottom: "calc(4.75rem + env(safe-area-inset-bottom))" }}
       aria-label="Open bet slip"
     >
       <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-white px-1 text-[11px] font-bold text-brand">
-        {count}
+        {items.length}
       </span>
-      <span className="text-sm font-black">{count ? total.toFixed(2) : "0.00"}</span>
-    </button>
+      <span className="text-sm font-black">{items.length ? total.toFixed(2) : "0.00"}</span>
+    </Link>
   );
 }

@@ -1,49 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, Suspense, useState } from "react";
-import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useActionState } from "react";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
-import { useAuth } from "@/components/providers";
+import { loginAction } from "@/app/actions/auth";
 
 const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 function LoginForm() {
-  const router = useRouter();
   const next = useSearchParams().get("next") || "/";
-  const { refresh } = useAuth();
-  const [pending, setPending] = useState(false);
-  const [identifier, setIdentifier] = useState(DEMO ? "demo@sportbet.test" : "");
-  const [password, setPassword] = useState(DEMO ? "DemoPass123!" : "");
-
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!identifier.trim() || !password) {
-      toast.error("Enter your email/username and password.");
-      return;
-    }
-    setPending(true);
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        identifier: identifier.trim(),
-        password,
-      }),
-    });
-    const data = await res.json();
-    setPending(false);
-    if (!res.ok || !data.ok) {
-      toast.error(data.error ?? "Login failed.");
-      return;
-    }
-    await refresh();
-    router.push(next);
-    router.refresh();
-  }
+  const [state, action, pending] = useActionState(loginAction, null);
 
   return (
     <div className="flex min-h-dvh flex-col bg-brand">
@@ -53,7 +22,8 @@ function LoginForm() {
           Home
         </Link>
       </div>
-      <form onSubmit={onSubmit} className="mt-auto rounded-t-3xl bg-white px-5 py-8" noValidate>
+      <form action={action} method="post" className="mt-auto rounded-t-3xl bg-white px-5 py-8">
+        <input type="hidden" name="next" value={next} />
         <h1 className="text-2xl font-black">Login</h1>
         <p className="mt-1 text-sm text-muted">Use your SPORTBET email, username or phone.</p>
         <div className="mt-5">
@@ -62,9 +32,9 @@ function LoginForm() {
             id="identifier"
             name="identifier"
             autoComplete="username"
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
+            defaultValue={DEMO ? "demo@sportbet.test" : ""}
             placeholder="you@email.com"
+            required
           />
         </div>
         <div className="mt-3">
@@ -74,13 +44,14 @@ function LoginForm() {
             name="password"
             type="password"
             autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            defaultValue={DEMO ? "DemoPass123!" : ""}
+            required
           />
         </div>
         <Link href="/forgot-password" className="mt-2 inline-block text-sm font-semibold text-brand">
           Forgot password?
         </Link>
+        {state?.error ? <p className="mt-3 text-sm text-brand">{state.error}</p> : null}
         <Button type="submit" className="mt-5 w-full" disabled={pending}>
           {pending ? "Signing in…" : "Login"}
         </Button>

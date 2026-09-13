@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   Bell,
   ChevronRight,
@@ -16,6 +15,7 @@ import {
   Ticket,
   UserRound,
 } from "lucide-react";
+import { logoutAction } from "@/app/actions/auth";
 import { useAuth } from "@/components/providers";
 import { Button } from "@/components/ui/button";
 import { formatGhs } from "@/lib/money";
@@ -31,15 +31,7 @@ const MENU = [
 ];
 
 export default function MePage() {
-  const { user, setUser } = useAuth();
-  const router = useRouter();
-
-  async function logout() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    setUser(null);
-    router.push("/");
-    router.refresh();
-  }
+  const { user } = useAuth();
 
   return (
     <div className="pb-8">
@@ -118,9 +110,11 @@ export default function MePage() {
           <Link href="/how-to-play">Terms & How to Play</Link>
         </div>
         {user ? (
-          <button type="button" onClick={logout} className="mt-6 text-sm font-semibold text-white/80">
-            Logout
-          </button>
+          <form action={logoutAction}>
+            <button type="submit" className="mt-6 text-sm font-semibold text-white/80">
+              Logout
+            </button>
+          </form>
         ) : null}
         {user?.role === "ADMIN" || user?.role === "SUB_ADMIN" ? (
           <Link href="/admin" className="mt-3 block text-sm font-semibold text-[#86efac]">
