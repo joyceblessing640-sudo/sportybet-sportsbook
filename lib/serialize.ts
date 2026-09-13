@@ -1,5 +1,12 @@
 import { extraMarketsCount, isBestOddsMatch, isHotMatch, matchDisplayId } from "./match-meta";
 
+const ONE_X_TWO: Record<string, number> = { "1": 0, X: 1, "2": 2, "1X": 0, "12": 1, X2: 2 };
+
+function sortOutcomes<T extends { code: string }>(type: string, outcomes: T[]) {
+  if (type !== "1X2" && type !== "FH" && type !== "DC") return outcomes;
+  return [...outcomes].sort((a, b) => (ONE_X_TWO[a.code] ?? 9) - (ONE_X_TWO[b.code] ?? 9));
+}
+
 export type ClientTeam = {
   id: string;
   name: string;
@@ -92,7 +99,7 @@ export function serializeMatch(match: {
       type: market.type,
       name: market.name,
       line: market.line,
-      outcomes: market.outcomes.map((o) => ({
+      outcomes: sortOutcomes(market.type, market.outcomes).map((o) => ({
         id: o.id,
         code: o.code,
         label: o.label,

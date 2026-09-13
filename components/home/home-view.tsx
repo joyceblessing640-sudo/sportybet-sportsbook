@@ -242,7 +242,9 @@ export function HomeView({
         {liveFiltered.length === 0 ? (
           <p className="px-4 py-8 text-sm text-white/60">No live demo matches in this sport.</p>
         ) : (
-          liveFiltered.map((match) => <MatchRow key={match.id} match={match} marketType={liveMarket} compactOdds />)
+          liveFiltered.map((match) => (
+            <MatchRow key={match.id} match={match} marketType={liveMarket} compactOdds onDark />
+          ))
         )}
       </section>
     </div>

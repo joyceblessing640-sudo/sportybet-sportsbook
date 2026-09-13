@@ -116,35 +116,38 @@ export function MatchRow({
   match,
   marketType = "1X2",
   compactOdds = false,
+  onDark = false,
 }: {
   match: ClientMatch;
   marketType?: string;
   compactOdds?: boolean;
+  onDark?: boolean;
 }) {
   const market = marketByType(match, marketType) ?? match.markets[0];
   const live = match.status === "LIVE" || match.status === "HT";
   const kick = live ? match.clock : format(new Date(match.startTime), "HH:mm");
   const leagueLine = `${match.league.country} - ${match.league.name}`;
+  const light = !onDark;
 
   return (
-    <div className={cn("border-b px-3 py-2.5", live ? "border-white/10 bg-transparent" : "border-[#eef0f4] bg-white")}>
+    <div className={cn("border-b px-3 py-2.5", onDark ? "border-white/10 bg-transparent" : "border-[#eef0f4] bg-white")}>
       <div className="mb-1 flex items-center gap-1.5 text-[11px]">
         <Badges match={match} />
-        <span className={cn("font-medium", live ? "text-white/70" : "text-[#6b7280]")}>{kick}</span>
-        <span className={cn("tabular-nums", live ? "text-white/45" : "text-[#9aa3b2]")}>ID {match.displayId}</span>
-        <span className={cn("min-w-0 flex-1 truncate", live ? "text-white/55" : "text-[#8b93a3]")}>{leagueLine}</span>
+        <span className={cn("font-medium", light ? "text-[#6b7280]" : "text-white/70")}>{kick}</span>
+        <span className={cn("tabular-nums", light ? "text-[#9aa3b2]" : "text-white/45")}>ID {match.displayId}</span>
+        <span className={cn("min-w-0 flex-1 truncate", light ? "text-[#8b93a3]" : "text-white/55")}>{leagueLine}</span>
       </div>
       <div className="grid grid-cols-[minmax(0,1fr)_minmax(132px,0.95fr)] items-center gap-2">
         <Link href={`/match/${match.id}`} className="min-w-0">
-          <p className={cn("flex items-center justify-between gap-2 truncate text-sm font-medium", live ? "text-white" : "text-ink")}>
+          <p className={cn("flex items-center justify-between gap-2 truncate text-sm font-medium", light ? "text-ink" : "text-white")}>
             <span className="truncate">{match.home.shortName}</span>
-            {live ? <span className="tabular-nums text-white">{match.homeScore}</span> : null}
+            {live ? <span className={cn("tabular-nums", light ? "text-ink" : "text-white")}>{match.homeScore}</span> : null}
           </p>
-          <p className={cn("flex items-center justify-between gap-2 truncate text-sm font-medium", live ? "text-white" : "text-ink")}>
+          <p className={cn("flex items-center justify-between gap-2 truncate text-sm font-medium", light ? "text-ink" : "text-white")}>
             <span className="truncate">{match.away.shortName}</span>
-            {live ? <span className="tabular-nums text-white">{match.awayScore}</span> : null}
+            {live ? <span className={cn("tabular-nums", light ? "text-ink" : "text-white")}>{match.awayScore}</span> : null}
           </p>
-          <p className={cn("mt-0.5 text-[11px] font-semibold", live ? "text-white/50" : "text-[#8b93a3]")}>
+          <p className={cn("mt-0.5 text-[11px] font-semibold", light ? "text-[#8b93a3]" : "text-white/50")}>
             +{match.extraMarkets}
           </p>
         </Link>
@@ -187,7 +190,7 @@ export function MatchList({
     <div className={dark ? "bg-live text-white" : "overflow-hidden bg-white"}>
       {dateLabel ? <DateOddsHeader label={dateLabel} headers={headers} dark={dark} /> : null}
       {matches.map((match) => (
-        <MatchRow key={match.id} match={match} marketType={marketType} compactOdds />
+        <MatchRow key={match.id} match={match} marketType={marketType} compactOdds onDark={dark} />
       ))}
     </div>
   );

@@ -47,7 +47,7 @@ export default async function LivePage() {
         {matches.length === 0 ? (
           <p className="px-4 py-10 text-sm text-white/60">No live demo events right now.</p>
         ) : (
-          matches.map((match) => <MatchRow key={match.id} match={match} compactOdds />)
+          matches.map((match) => <MatchRow key={match.id} match={match} compactOdds onDark />)
         )}
       </section>
     </div>
