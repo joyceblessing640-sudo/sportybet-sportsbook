@@ -29,6 +29,7 @@ export function AppShell({ children, slipItems }: { children: ReactNode; slipIte
   const [menuOpen, setMenuOpen] = useState(false);
   const bare = BARE.some((path) => pathname === path || pathname.startsWith(`${path}/`));
   const hideTop = HIDE_TOP.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  const hideFooter = pathname.startsWith("/virtuals/instant-football");
 
   useEffect(() => {
     if (prevPath.current !== pathname) {
@@ -53,11 +54,13 @@ export function AppShell({ children, slipItems }: { children: ReactNode; slipIte
       <div className="mx-auto flex max-w-[1440px]">
         <main className="min-w-0 flex-1 bottom-pad">
           {children}
-          <SiteFooter />
+          {hideFooter ? null : <SiteFooter />}
         </main>
-        <div className="sticky top-[5.25rem] hidden h-[calc(100dvh-5.25rem)] w-[300px] shrink-0 self-start lg:block">
-          <BetSlipPanel embedded items={slipItems} />
-        </div>
+        {hideTop ? null : (
+          <div className="sticky top-[5.25rem] hidden h-[calc(100dvh-5.25rem)] w-[300px] shrink-0 self-start lg:block">
+            <BetSlipPanel embedded items={slipItems} />
+          </div>
+        )}
       </div>
       <BottomNav onOpenMenu={() => setMenuOpen(true)} />
       {hideTop ? null : <BetSlipFab key={slipItems.length} items={slipItems} onOpen={openMobileSlip} />}

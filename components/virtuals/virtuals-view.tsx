@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 const BANNERS = [
   { id: "sim", src: "/virtuals/banner.jpg", href: "/games", alt: "Lead by 2? You win. Half-time up now in SIM." },
   { id: "vfl", src: "/virtuals/vfootball.png", href: "/sports/football", alt: "vFootball scheduled cycles" },
-  { id: "ifc", src: "/virtuals/instant-football.png", href: "/sports/football", alt: "Instant Football" },
+  { id: "ifc", src: "/virtuals/instant-football.png", href: "/virtuals/instant-football", alt: "Instant Football" },
   { id: "wcup", src: "/virtuals/world-cup.png", href: "/sports/football", alt: "Instant World Cup" },
   { id: "gold", src: "/virtuals/golden-virtuals.png", href: "/virtuals", alt: "Golden Virtuals" },
   { id: "leg", src: "/virtuals/legends.png", href: "/sports/football", alt: "Sporty Legends" },
@@ -19,7 +19,7 @@ const BANNERS = [
 const GAMES = [
   { id: "world-cup", tag: "NEW", title: "Instant World Cup", href: "/sports/football", art: "/virtuals/world-cup.png" },
   { id: "scheduled-football", tag: "NEW", title: "Scheduled Football", href: "/sports/football", art: "/virtuals/scheduled-football.png" },
-  { id: "instant-football", tag: "POPULAR", title: "Instant Football", href: "/sports/football", art: "/virtuals/instant-football.png" },
+  { id: "instant-football", tag: "POPULAR", title: "Instant Football", href: "/virtuals/instant-football", art: "/virtuals/instant-football.png" },
   { id: "vfootball", tag: "SCHEDULED", title: "vFootball", href: "/sports/football", art: "/virtuals/vfootball.png" },
   { id: "legends", tag: "NEW", title: "Sporty Legends", href: "/sports/football", art: "/virtuals/legends.png" },
   { id: "penalty", tag: "NEW", title: "Sporty Penalty", href: "/sports/football", art: "/virtuals/penalty.png" },
