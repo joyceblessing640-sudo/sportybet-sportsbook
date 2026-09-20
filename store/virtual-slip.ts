@@ -21,6 +21,7 @@ type VirtualSlipState = {
   tab: "SINGLE" | "MULTI";
   stake: string;
   toggle: (match: VirtualMatch, marketId: VirtualMarketId, outcome: VirtualOutcome) => void;
+  togglePick: (item: VirtualSlipItem) => void;
   remove: (outcomeId: string) => void;
   clear: () => void;
   setTab: (tab: "SINGLE" | "MULTI") => void;
@@ -51,6 +52,17 @@ export const useVirtualSlip = create<VirtualSlipState>()((set, get) => ({
       odds: outcome.odds,
     };
     const next = [...current.filter((item) => item.matchId !== match.id), nextItem];
+    set({ items: next, tab: next.length > 1 ? "MULTI" : "SINGLE" });
+  },
+  togglePick: (item) => {
+    const current = get().items;
+    const existing = current.find((row) => row.outcomeId === item.outcomeId);
+    if (existing) {
+      const next = current.filter((row) => row.outcomeId !== item.outcomeId);
+      set({ items: next, tab: next.length > 1 ? "MULTI" : "SINGLE" });
+      return;
+    }
+    const next = [...current.filter((row) => row.matchId !== item.matchId), item];
     set({ items: next, tab: next.length > 1 ? "MULTI" : "SINGLE" });
   },
   remove: (outcomeId) => {

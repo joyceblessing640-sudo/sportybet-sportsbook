@@ -322,12 +322,19 @@ export function getVirtualMatch(id: string, now = new Date()) {
   return generateVirtualFixtures(now).find((match) => match.id === id) ?? null;
 }
 
-export function simulateMatch(matchId: string, now = new Date()): Simulation {
+export function simulateMatch(
+  matchId: string,
+  now = new Date(),
+  extra?: { home?: string; away?: string; round?: number },
+): Simulation {
   const match = getVirtualMatch(matchId, now);
-  const rng = mulberry32(hashSeed(`sim:${matchId}:${fixtureDay(now)}`));
+  const seedKey = `sim:${matchId}:${fixtureDay(now)}${extra?.round && extra.round !== 1 ? `:r${extra.round}` : ""}`;
+  const rng = mulberry32(hashSeed(seedKey));
   const events: SimEvent[] = [];
   let homeScore = 0;
   let awayScore = 0;
+  const homeName = extra?.home ?? match?.home.shortName ?? "Home";
+  const awayName = extra?.away ?? match?.away.shortName ?? "Away";
   const push = (minute: number, type: SimEventType, label: string, team?: "home" | "away") => {
     events.push({ minute, type, team, label, homeScore, awayScore });
   };
@@ -338,7 +345,7 @@ export function simulateMatch(matchId: string, now = new Date()): Simulation {
   for (let i = 0; i < firstHalfChances; i += 1) {
     minute = Math.min(44, minute + 4 + Math.floor(rng() * 6));
     const team = rng() > 0.48 ? "home" : "away";
-    const teamName = team === "home" ? match?.home.shortName ?? "Home" : match?.away.shortName ?? "Away";
+    const teamName = team === "home" ? homeName : awayName;
     push(minute, "CHANCE", `Chance — ${teamName}`, team);
     if (rng() > 0.35) {
       push(minute, "SHOT", `Shot — ${teamName}`, team);
@@ -358,7 +365,7 @@ export function simulateMatch(matchId: string, now = new Date()): Simulation {
   for (let i = 0; i < secondHalfChances; i += 1) {
     minute = Math.min(90, minute + 4 + Math.floor(rng() * 7));
     const team = rng() > 0.5 ? "home" : "away";
-    const teamName = team === "home" ? match?.home.shortName ?? "Home" : match?.away.shortName ?? "Away";
+    const teamName = team === "home" ? homeName : awayName;
     push(minute, "CHANCE", `Chance — ${teamName}`, team);
     if (rng() > 0.32) {
       push(minute, "SHOT", `Shot — ${teamName}`, team);

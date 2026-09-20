@@ -1,14 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/components/providers";
 import { formatGhs, formatOdds, parseGhsToPesewas } from "@/lib/money";
+import { placeDemoBet } from "@/lib/virtuals/demo-tickets";
 import { cn } from "@/lib/utils";
 import { useVirtualSlip, virtualSlipSummary } from "@/store/virtual-slip";
 
@@ -24,7 +23,6 @@ export function closeInstantSlip() {
 
 export function InstantSlipPanel() {
   const router = useRouter();
-  const { user, setUser } = useAuth();
   const { items, tab, stake, setTab, setStake, remove, clear } = useVirtualSlip();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,52 +31,24 @@ export function InstantSlipPanel() {
   const summary = virtualSlipSummary(items, stakePesewas);
   const invalid = (tab === "SINGLE" && items.length !== 1) || (tab === "MULTI" && items.length < 2);
 
-  async function place(kind: "bet" | "watch") {
+  function placeDemo() {
     if (items.length === 0) return;
     setError(null);
-    if (kind === "watch") {
-      closeInstantSlip();
-      const ids = items.map((item) => item.matchId).join(",");
-      router.push(`/virtuals/instant-football/sim?matches=${encodeURIComponent(ids)}`);
-      return;
-    }
-    if (!user) {
-      router.push("/login?next=/virtuals/instant-football");
-      return;
-    }
     if (invalid) return;
+    if (!stakePesewas) {
+      setError("Enter a demo stake.");
+      return;
+    }
     setPending(true);
     try {
-      const res = await fetch("/api/virtuals/place", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          type: tab,
-          stake,
-          picks: items.map((item) => ({
-            matchId: item.matchId,
-            marketId: item.marketId,
-            selection: item.selection,
-          })),
-        }),
-      });
-      const data = await res.json().catch(() => null);
-      if (!res.ok || !data?.ok) {
-        setError(data?.error ?? "Could not place this virtual bet.");
-        return;
-      }
-      if (user.wallet && typeof data.balancePesewas === "number") {
-        setUser({ ...user, wallet: { ...user.wallet, balancePesewas: data.balancePesewas } });
-      }
-      const ids = (data.matchIds as string[]).join(",");
+      const ticket = placeDemoBet({ type: tab, stakePesewas, items });
       clear();
       closeInstantSlip();
-      toast.success("Virtual bet placed");
-      router.push(
-        `/virtuals/instant-football/sim?matches=${encodeURIComponent(ids)}&ticket=${encodeURIComponent(data.ticketId)}`,
-      );
-    } catch {
-      setError("Could not place this virtual bet.");
+      toast.success("Demo bet placed — no real money");
+      router.push("/bets");
+      return ticket;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not place this demo bet.");
     } finally {
       setPending(false);
     }
@@ -89,9 +59,7 @@ export function InstantSlipPanel() {
       <header className="flex items-center justify-between border-b border-line px-2.5 py-1.5">
         <div>
           <p className="text-[12px] font-bold text-ink">Betslip</p>
-          <p className="text-[10px] text-muted">
-            {items.length} virtual selection{items.length === 1 ? "" : "s"}
-          </p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-[#12a150]">Demo · simulated</p>
         </div>
         <div className="flex items-center gap-1">
           {items.length > 0 ? (
@@ -110,10 +78,7 @@ export function InstantSlipPanel() {
             key={item}
             type="button"
             onClick={() => setTab(item)}
-            className={cn(
-              "py-1.5 capitalize",
-              tab === item ? "border-b-2 border-brand text-brand" : "text-muted",
-            )}
+            className={cn("py-1.5 capitalize", tab === item ? "border-b-2 border-brand text-brand" : "text-muted")}
           >
             {item.toLowerCase()}
           </button>
@@ -123,7 +88,7 @@ export function InstantSlipPanel() {
         {items.length === 0 ? (
           <div className="px-5 py-10 text-center">
             <p className="text-[13px] font-semibold text-ink">Your slip is empty</p>
-            <p className="mt-1 text-[12px] text-muted">Tap a virtual odd to add a selection.</p>
+            <p className="mt-1 text-[12px] text-muted">Tap a 1, X or 2 odd to add a demo selection.</p>
           </div>
         ) : (
           items.map((item) => (
@@ -152,10 +117,16 @@ export function InstantSlipPanel() {
           <span className="text-muted">Total odds</span>
           <span className="font-bold">{items.length ? formatOdds(summary.totalOdds) : "0.00"}</span>
         </div>
-        <label className="mb-1.5 block text-[11px] font-medium text-muted">Stake (GHS)</label>
-        <Input value={stake} onChange={(e) => setStake(e.target.value)} inputMode="decimal" placeholder="10.00" className="h-8" />
+        <label className="mb-1.5 block text-[11px] font-medium text-muted">Stake (GHS) · demo</label>
+        <Input
+          value={stake}
+          onChange={(e) => setStake(e.target.value)}
+          inputMode="decimal"
+          placeholder="10.00"
+          className="h-8"
+        />
         <div className="mt-1.5 flex items-center justify-between text-[12px]">
-          <span className="text-muted">Potential win</span>
+          <span className="text-muted">Potential return</span>
           <span className="font-bold text-brand">{formatGhs(summary.potentialWin)}</span>
         </div>
         {invalid && items.length > 0 ? (
@@ -164,26 +135,18 @@ export function InstantSlipPanel() {
           </p>
         ) : null}
         {error ? <p className="mt-2 text-xs text-danger">{error}</p> : null}
-        {user ? (
-          <Button
-            type="button"
-            variant="green"
-            className="mt-2.5 h-9 w-full"
-            disabled={pending || items.length === 0 || invalid}
-            onClick={() => void place("bet")}
-          >
-            {pending ? "Placing…" : "Place Bet"}
-          </Button>
-        ) : (
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <Button variant="outline" className="border-brand text-brand hover:bg-brand-soft" asChild>
-              <Link href="/login?next=/virtuals/instant-football">Login</Link>
-            </Button>
-            <Button type="button" variant="green" disabled={items.length === 0} onClick={() => void place("watch")}>
-              Simulate
-            </Button>
-          </div>
-        )}
+        <Button
+          type="button"
+          variant="green"
+          className="mt-2.5 h-9 w-full"
+          disabled={pending || items.length === 0 || invalid}
+          onClick={placeDemo}
+        >
+          {pending ? "Placing…" : "Place Bet"}
+        </Button>
+        <p className="mt-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-muted">
+          Demo ticket only · no real-money transaction
+        </p>
       </div>
     </section>
   );

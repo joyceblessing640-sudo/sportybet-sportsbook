@@ -3,30 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { toast } from "sonner";
-import { useAuth } from "@/components/providers";
-import { formatGhs } from "@/lib/money";
+import { getDemoMatch } from "@/lib/virtuals/demo-board";
+import { simulateMatch, type SimEvent } from "@/lib/virtuals/engine";
 import { cn } from "@/lib/utils";
-import {
-  getVirtualMatch,
-  simulateMatch,
-  teamMarkSvg,
-  type SimEvent,
-  type VirtualMatch,
-} from "@/lib/virtuals/engine";
+import { DemoCrest } from "@/components/virtuals/demo-crest";
 
-function TeamMark({ match, side }: { match: VirtualMatch; side: "home" | "away" }) {
-  const team = match[side];
-  return (
-    <div className="flex min-w-0 flex-col items-center gap-1">
-      {/* Generated crest, not a live-API logo. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={teamMarkSvg(team)} alt="" width={56} height={56} className="h-14 w-14 rounded-full" />
-      <p className="truncate text-[13px] font-bold text-white">{team.shortName}</p>
-      <p className="text-[11px] font-semibold text-white/55">{team.abbreviation}</p>
-    </div>
-  );
-}
+const SPEED_MS = { "1x": 700, "2x": 320 } as const;
 
 export function InstantFootballSim({
   matchIds,
@@ -35,56 +17,42 @@ export function InstantFootballSim({
   matchIds: string[];
   ticketId: string | null;
 }) {
-  const { user, setUser } = useAuth();
   const ids = matchIds.filter(Boolean);
   const [index, setIndex] = useState(0);
+  const [started, setStarted] = useState(false);
+  const [speed, setSpeed] = useState<"1x" | "2x">("1x");
   const [cursor, setCursor] = useState(0);
-  const [settled, setSettled] = useState(false);
-  const [payout, setPayout] = useState<number | null>(null);
 
-  const match = useMemo(() => (ids[index] ? getVirtualMatch(ids[index]) : null), [ids, index]);
-  const sim = useMemo(() => (ids[index] ? simulateMatch(ids[index]) : null), [ids, index]);
+  const match = useMemo(() => (ids[index] ? getDemoMatch(ids[index]) : null), [ids, index]);
+  const sim = useMemo(() => {
+    if (!ids[index] || !match) return null;
+    return simulateMatch(ids[index], new Date(), { home: match.home.name, away: match.away.name });
+  }, [ids, index, match]);
   const events = sim?.events ?? [];
-  const shown = events.slice(0, Math.max(1, cursor));
+  const shown = events.slice(0, Math.max(started ? 1 : 0, cursor));
   const latest = shown.at(-1);
-  const finished = Boolean(sim && cursor >= events.length);
+  const finished = Boolean(sim && started && cursor >= events.length);
 
   useEffect(() => {
-    setCursor(1);
-  }, [index]);
-
-  useEffect(() => {
-    if (!sim || cursor >= events.length) return;
-    const timer = window.setTimeout(() => setCursor((value) => value + 1), latest?.type === "GOAL" ? 1100 : 650);
+    if (!started || !sim || cursor >= events.length) return;
+    const latestEvent = events[Math.max(0, cursor - 1)];
+    const timer = window.setTimeout(
+      () => setCursor((value) => value + 1),
+      latestEvent?.type === "GOAL" ? SPEED_MS[speed] + 280 : SPEED_MS[speed],
+    );
     return () => window.clearTimeout(timer);
-  }, [sim, cursor, events.length, latest?.type]);
+  }, [started, sim, cursor, events, speed]);
 
-  useEffect(() => {
-    if (!finished || !ticketId || settled || !user) return;
-    const last = index >= ids.length - 1;
-    if (!last) return;
-    let cancelled = false;
-    void (async () => {
-      const res = await fetch("/api/virtuals/settle", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ticketId }),
-      });
-      const data = await res.json().catch(() => null);
-      if (cancelled) return;
-      if (res.ok && data?.ok) {
-        setSettled(true);
-        setPayout(data.payoutPesewas ?? 0);
-        if (user.wallet && typeof data.balancePesewas === "number") {
-          setUser({ ...user, wallet: { ...user.wallet, balancePesewas: data.balancePesewas } });
-        }
-        toast.success(data.won ? "Virtual bet won" : "Virtual bet settled");
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [finished, ticketId, settled, user, index, ids.length, setUser]);
+  if (ticketId) {
+    return (
+      <div className="min-h-dvh bg-[#14161a] px-4 py-10 text-center text-white">
+        <p className="text-[14px] font-semibold">Open the demo ticket to Kick Off</p>
+        <Link href={`/virtuals/instant-football/ticket/${ticketId}`} className="mt-3 inline-block text-[13px] text-[#7dffb1]">
+          View demo ticket
+        </Link>
+      </div>
+    );
+  }
 
   if (!match || !sim) {
     return (
@@ -99,41 +67,56 @@ export function InstantFootballSim({
 
   return (
     <div className="min-h-dvh bg-[#14161a] text-white">
-      <header className="sticky top-0 z-20 flex h-11 items-center bg-[#1b1d22] px-1">
+      <header className="sticky top-0 z-20 flex h-11 items-center bg-[#e31837] px-1">
         <Link href="/virtuals/instant-football" aria-label="Back to matches" className="grid h-9 w-9 place-items-center">
           <ChevronLeft className="h-6 w-6" />
         </Link>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-[15px] font-semibold">Instant Football</h1>
-          <p className="text-[10px] text-white/50">Virtual simulation</p>
+          <p className="text-[10px] text-white/80">DEMO / simulated</p>
         </div>
-        {ids.length > 1 ? (
-          <p className="pr-3 text-[11px] text-white/55">
-            {index + 1}/{ids.length}
-          </p>
-        ) : null}
       </header>
-
-      <div className="px-3 pb-6 pt-5">
-        <div className="rounded-2xl bg-[#1f232b] px-3 py-5">
+      <div className="px-3 pb-6 pt-4">
+        {!started ? (
+          <button type="button" className="h-12 w-full rounded-md bg-[#12a150] text-[16px] font-bold" onClick={() => { setStarted(true); setCursor(1); }}>
+            Kick Off
+          </button>
+        ) : (
+          <div className="flex gap-2">
+            {(["1x", "2x"] as const).map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setSpeed(item)}
+                className={cn("h-9 flex-1 rounded-md text-[13px] font-bold", speed === item ? "bg-[#12a150]" : "bg-[#2a2d36]")}
+              >
+                {item}
+              </button>
+            ))}
+            <button type="button" className="h-9 flex-1 rounded-md bg-white text-[13px] font-bold text-ink" onClick={() => setCursor(events.length)}>
+              Skip to Result
+            </button>
+          </div>
+        )}
+        <div className="mt-4 rounded-2xl bg-[#1f232b] px-3 py-5">
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-            <TeamMark match={match} side="home" />
+            <div className="flex min-w-0 flex-col items-center gap-1">
+              <DemoCrest team={match.home} size={48} />
+              <p className="truncate text-[13px] font-bold">{match.home.name}</p>
+            </div>
             <div className="text-center">
               <p className="text-[11px] font-semibold text-white/45">VS</p>
-              <p
-                className={cn(
-                  "mt-1 text-[32px] font-black tabular-nums leading-none",
-                  latest?.type === "GOAL" ? "text-[#7dffb1]" : "text-white",
-                )}
-              >
+              <p className={cn("mt-1 text-[32px] font-black tabular-nums leading-none", latest?.type === "GOAL" ? "text-[#7dffb1]" : "text-white")}>
                 {latest?.homeScore ?? 0} - {latest?.awayScore ?? 0}
               </p>
               <p className="mt-1 text-[11px] font-semibold text-white/50">{latest ? `${latest.minute}'` : "0'"}</p>
             </div>
-            <TeamMark match={match} side="away" />
+            <div className="flex min-w-0 flex-col items-center gap-1">
+              <DemoCrest team={match.away} size={48} />
+              <p className="truncate text-[13px] font-bold">{match.away.name}</p>
+            </div>
           </div>
         </div>
-
         <ol className="mt-4 space-y-1.5">
           {shown.map((event: SimEvent, i) => (
             <li
@@ -152,22 +135,19 @@ export function InstantFootballSim({
             </li>
           ))}
         </ol>
-
         {finished ? (
           <div className="mt-4 rounded-xl bg-[#1f232b] px-3 py-3 text-center">
-            <p className="text-[14px] font-bold">Full Time {sim.homeScore} - {sim.awayScore}</p>
-            {payout != null ? (
-              <p className="mt-1 text-[12px] text-[#7dffb1]">{payout > 0 ? `Won ${formatGhs(payout)}` : "Ticket lost"}</p>
-            ) : ticketId && user ? (
-              <p className="mt-1 text-[12px] text-white/50">Settling virtual ticket…</p>
-            ) : (
-              <p className="mt-1 text-[12px] text-white/50">Virtual result from the Instant Football engine</p>
-            )}
+            <p className="text-[14px] font-bold">
+              Full Time {sim.homeScore} - {sim.awayScore}
+            </p>
             {index < ids.length - 1 ? (
               <button
                 type="button"
                 className="mt-3 h-9 w-full rounded-md bg-accent text-[13px] font-bold"
-                onClick={() => setIndex((value) => value + 1)}
+                onClick={() => {
+                  setIndex((value) => value + 1);
+                  setCursor(1);
+                }}
               >
                 Simulate next match
               </button>

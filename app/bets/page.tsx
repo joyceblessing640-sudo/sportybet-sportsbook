@@ -9,6 +9,7 @@ import { serializeMatch } from "@/lib/serialize";
 import { withClocks } from "@/lib/data";
 import { ensureFootballSynced } from "@/lib/football/sync";
 import { RecommendedCodes } from "@/components/bets/recommended-codes";
+import { DemoOpenBets } from "@/components/virtuals/demo-open-bets";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -67,6 +68,7 @@ export default async function BetsPage({
           Bet History
         </Link>
       </div>
+      <DemoOpenBets tab={current} />
       {!session ? (
         <div className="bg-white px-5 py-8 text-center">
           <p className="text-[13px] leading-relaxed text-muted">
