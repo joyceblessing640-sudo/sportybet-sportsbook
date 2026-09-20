@@ -51,7 +51,14 @@ export function BetSlipPanel({
             </form>
           ) : null}
           {onClose ? (
-            <button type="button" onClick={onClose} className="p-2 text-muted" aria-label="Close bet slip">
+            <button
+              type="button"
+              popoverTarget="mobile-betslip"
+              popoverTargetAction="hide"
+              onClick={onClose}
+              className="p-2 text-muted"
+              aria-label="Close bet slip"
+            >
               <X className="h-4 w-4" />
             </button>
           ) : null}
@@ -186,8 +193,11 @@ export function BetSlipBar({ items, onOpen }: { items: SlipItem[]; onOpen: () =>
   return (
     <button
       type="button"
-      onClick={onOpen}
-      className="fixed inset-x-3 z-40 flex items-center justify-between rounded-md bg-brand px-3 py-2 text-white shadow-lg lg:hidden"
+      data-testid="betslip-bar"
+      popoverTarget="mobile-betslip"
+      popoverTargetAction="show"
+      onClick={() => onOpen()}
+      className="fixed inset-x-3 z-[45] flex items-center justify-between rounded-md bg-brand px-3 py-2 text-white shadow-lg lg:hidden"
       style={{ bottom: "calc(3.4rem + env(safe-area-inset-bottom))" }}
     >
       <span className="text-[12px] font-semibold">

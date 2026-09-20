@@ -1,23 +1,38 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { SportsNav } from "@/components/layout/sports-nav";
 import { Sidebar } from "@/components/layout/sidebar";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { BetSlipBar, BetSlipPanel } from "@/components/betting/bet-slip";
-import { useBetSlip } from "@/store/bet-slip";
 import type { SlipItem } from "@/lib/slip";
 
 const BARE = ["/login", "/register", "/forgot-password", "/reset-password", "/account", "/admin"];
+export const MOBILE_SLIP_ID = "mobile-betslip";
+
+export function openMobileSlip() {
+  document.getElementById(MOBILE_SLIP_ID)?.showPopover();
+}
+
+export function closeMobileSlip() {
+  document.getElementById(MOBILE_SLIP_ID)?.hidePopover();
+}
 
 export function AppShell({ children, slipItems }: { children: ReactNode; slipItems: SlipItem[] }) {
   const pathname = usePathname();
+  const prevPath = useRef(pathname);
   const [menuOpen, setMenuOpen] = useState(false);
-  const open = useBetSlip((s) => s.open);
-  const setOpen = useBetSlip((s) => s.setOpen);
   const bare = BARE.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+
+  useEffect(() => {
+    if (prevPath.current !== pathname) {
+      prevPath.current = pathname;
+      closeMobileSlip();
+      setMenuOpen(false);
+    }
+  }, [pathname]);
 
   if (bare) return <>{children}</>;
 
@@ -33,18 +48,13 @@ export function AppShell({ children, slipItems }: { children: ReactNode; slipIte
           <BetSlipPanel embedded items={slipItems} />
         </div>
       </div>
-      <BottomNav />
-      <BetSlipBar items={slipItems} onOpen={() => setOpen(true)} />
-      {open ? (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <button className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} aria-label="Close bet slip" />
-          <div className="sheet-up absolute inset-x-0 bottom-0 flex h-[min(82dvh,640px)] flex-col rounded-t-2xl bg-white shadow-2xl">
-            <BetSlipPanel items={slipItems} onClose={() => setOpen(false)} />
-          </div>
-        </div>
-      ) : null}
+      <BottomNav onOpenSlip={openMobileSlip} />
+      <BetSlipBar items={slipItems} onOpen={openMobileSlip} />
+      <div id={MOBILE_SLIP_ID} popover="auto" data-testid="betslip-sheet" className="betslip-popover lg:hidden">
+        <BetSlipPanel items={slipItems} onClose={closeMobileSlip} />
+      </div>
       {menuOpen ? (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-[60] lg:hidden">
           <button className="absolute inset-0 bg-black/40" onClick={() => setMenuOpen(false)} aria-label="Close menu" />
           <div className="drawer-in relative h-full w-[80%] max-w-xs bg-white shadow-xl">
             <Sidebar onNavigate={() => setMenuOpen(false)} />

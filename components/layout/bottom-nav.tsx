@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, List, Radio, Ticket, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useBetSlip } from "@/store/bet-slip";
 import { useSlipItems } from "@/components/slip-context";
 
 const ITEMS = [
@@ -15,9 +14,8 @@ const ITEMS = [
   { href: "/me", label: "Account", icon: UserRound },
 ] as const;
 
-export function BottomNav() {
+export function BottomNav({ onOpenSlip }: { onOpenSlip: () => void }) {
   const pathname = usePathname();
-  const setOpen = useBetSlip((s) => s.setOpen);
   const count = useSlipItems().length;
 
   return (
@@ -36,7 +34,9 @@ export function BottomNav() {
               <button
                 key={item.label}
                 type="button"
-                onClick={() => setOpen(true)}
+                popoverTarget="mobile-betslip"
+                popoverTargetAction="show"
+                onClick={() => onOpenSlip()}
                 className="relative flex flex-col items-center gap-0.5 py-1.5 text-[10px] font-medium text-[#8b93a3]"
               >
                 <Icon className={cn("h-[18px] w-[18px]", active && "text-brand")} />

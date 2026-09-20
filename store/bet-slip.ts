@@ -10,22 +10,18 @@ type SlipState = {
   items: SlipItem[];
   tab: "SINGLE" | "MULTI" | "SYSTEM";
   stake: string;
-  open: boolean;
   setItems: (items: SlipItem[]) => void;
   setTab: (tab: SlipState["tab"]) => void;
   setStake: (stake: string) => void;
-  setOpen: (open: boolean) => void;
 };
 
 export const useBetSlip = create<SlipState>()((set) => ({
   items: [],
   tab: "SINGLE",
   stake: "10",
-  open: false,
   setItems: (items) => set({ items, tab: items.length > 1 ? "MULTI" : "SINGLE" }),
   setTab: (tab) => set({ tab }),
   setStake: (stake) => set({ stake }),
-  setOpen: (open) => set({ open }),
 }));
 
 export function slipSummary(items: SlipItem[], tab: SlipState["tab"], stakePesewas: number) {
