@@ -97,7 +97,7 @@ export function HomeView({
     <div className="bg-[#f4f5f7]">
       <PromoCarousel />
 
-      <div className="grid grid-cols-6 bg-white px-0.5 pb-1.5 pt-0.5 min-[412px]:pb-2">
+      <div className="grid grid-cols-6 bg-white px-0.5 pb-1.5 pt-0 min-[412px]:pb-2">
         {SHORTCUTS.map((item) => {
           const Icon = item.Icon;
           return (

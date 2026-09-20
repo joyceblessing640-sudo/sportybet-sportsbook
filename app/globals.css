@@ -91,6 +91,14 @@ label {
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
+  line-height: 0;
+}
+
+.promo-carousel-track {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  will-change: transform;
 }
 
 .promo-carousel,
@@ -101,10 +109,6 @@ label {
 .promo-carousel a,
 .promo-carousel button {
   -webkit-touch-callout: none;
-}
-
-.promo-carousel-track {
-  will-change: transform;
 }
 
 .no-scrollbar::-webkit-scrollbar {

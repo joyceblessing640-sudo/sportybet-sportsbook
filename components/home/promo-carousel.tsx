@@ -26,7 +26,7 @@ const AXIS = 8;
 const SNAP = 0.18;
 
 const CARD_CLASS =
-  "relative h-[48px] w-[48px] shrink-0 overflow-hidden rounded-[6px] min-[375px]:h-[50px] min-[375px]:w-[50px] min-[412px]:h-[54px] min-[412px]:w-[54px] min-[430px]:h-[56px] min-[430px]:w-[56px]";
+  "relative block h-[48px] w-[48px] shrink-0 overflow-hidden rounded-[6px] min-[375px]:h-[50px] min-[375px]:w-[50px] min-[412px]:h-[54px] min-[412px]:w-[54px] min-[430px]:h-[56px] min-[430px]:w-[56px]";
 
 function PromoPage({
   cards,
@@ -37,7 +37,7 @@ function PromoPage({
 }) {
   return (
     <div
-      className="flex w-1/2 shrink-0 gap-1.5 px-2.5 py-1.5 min-[412px]:gap-2 min-[412px]:px-3 min-[412px]:py-2"
+      className="flex w-1/2 shrink-0 gap-1.5 px-2.5 pb-0 pt-1.5 min-[412px]:gap-2 min-[412px]:px-3 min-[412px]:pt-2"
       data-promo-page={page}
     >
       {cards.map((promo) => (
