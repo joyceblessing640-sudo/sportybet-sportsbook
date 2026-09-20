@@ -22,12 +22,32 @@ export function Header({ onMenu }: { onMenu?: () => void }) {
 
   return (
     <header className="sb-top">
-      <div className="sb-top-inner">
+      {user ? null : (
+        <div className="sb-top-inner sb-top-inner-photo">
+          <img
+            src="/header/header-provided.png"
+            alt=""
+            width={1080}
+            height={122}
+            className="sb-top-photo"
+            draggable={false}
+          />
+          <Link href="/" className="sb-photo-hit sb-photo-home" aria-label="SportyBet home" />
+          <Link href="/sports" className="sb-photo-hit sb-photo-search" aria-label="Search" />
+          <Link href="/register" className="sb-photo-hit sb-photo-join" aria-label="Join Now" />
+          <Link href="/login" className="sb-photo-hit sb-photo-login" aria-label="Log in" />
+        </div>
+      )}
+      <div className={user ? "sb-top-inner" : "sb-top-inner sb-top-inner-standard"}>
         <Link href="/" className="sb-wordmark" aria-label="SportyBet home">
-          <span className="sb-s">
-            S<i />
-          </span>
-          portyBet
+          <img
+            src="/header/wordmark-provided.png"
+            alt=""
+            width={232}
+            height={68}
+            className="sb-wordmark-img"
+            draggable={false}
+          />
         </Link>
         <div className="sb-top-actions">
           <button type="button" className="sb-search" aria-label="Search" onClick={() => router.push("/sports")}>
