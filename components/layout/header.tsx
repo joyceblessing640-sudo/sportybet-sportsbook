@@ -14,11 +14,6 @@ export function Header({ onMenu }: { onMenu?: () => void }) {
 
   return (
     <header className="bg-header text-white">
-      {process.env.NEXT_PUBLIC_DEMO_MODE === "true" ? (
-        <p className="bg-header-deep px-3 py-0.5 text-center text-[10px] font-medium text-white/80">
-          DEMO — Sample matches and odds. Not a licensed operator. No real-money payments.
-        </p>
-      ) : null}
       <div className="mx-auto flex h-12 max-w-[1440px] items-center gap-2 px-3">
         <Logo />
         <div className="ml-auto flex items-center gap-2">
