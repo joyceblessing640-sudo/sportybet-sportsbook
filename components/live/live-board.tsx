@@ -116,7 +116,7 @@ export function LiveBoard({
       </div>
       <div className="flex items-center px-3 py-1 text-[11px] text-white/45">
         <span className="min-w-0 flex-1" />
-        <div className={cn("grid text-center", headers.length === 2 ? "w-[6.5rem] grid-cols-2" : "w-[9.75rem] grid-cols-3")}>
+        <div className={cn("grid shrink-0 text-center", headers.length === 2 ? "w-[6.25rem] grid-cols-2" : "w-[9.5rem] grid-cols-3")}>
           {headers.map((h) => (
             <span key={h}>{h}</span>
           ))}

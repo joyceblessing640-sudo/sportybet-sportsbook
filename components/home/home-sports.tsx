@@ -115,7 +115,7 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
             <p className="px-3 py-6 text-sm text-muted">No matches available</p>
           ) : (
             <div className="[&>div]:rounded-none [&>div]:border-x-0 [&>div]:border-t-0">
-              <MatchList matches={visible.slice(0, 12)} marketType={market} showBadges />
+              <MatchList matches={visible.slice(0, 12)} marketType={market} showBadges groupDates />
             </div>
           )}
         </>

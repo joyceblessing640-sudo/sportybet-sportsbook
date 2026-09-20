@@ -34,7 +34,7 @@ export function OddsButton({
           spread
             ? "h-[38px] flex-row justify-between px-3 text-[15px]"
             : compact
-              ? "h-8 flex-col text-[13px]"
+              ? "h-[26px] text-[13px]"
               : "h-10 flex-col text-xs",
         )}
       >

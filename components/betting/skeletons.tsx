@@ -12,22 +12,17 @@ export function MatchCardSkeleton({ count = 4 }: { count?: number }) {
         </div>
       </div>
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="grid grid-cols-[1fr_140px] gap-3 border-t border-line px-3 py-2.5">
+        <div key={i} className="grid grid-cols-[minmax(0,1fr)_9.5rem] gap-2 border-t border-line px-3 py-1.5">
           <div>
-            <Skeleton className="mb-2 h-3 w-24" />
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-6 rounded-full" />
-              <Skeleton className="h-3 w-28" />
-            </div>
-            <div className="mt-1.5 flex items-center gap-2">
-              <Skeleton className="h-6 w-6 rounded-full" />
-              <Skeleton className="h-3 w-24" />
-            </div>
+            <Skeleton className="mb-1 h-2.5 w-40" />
+            <Skeleton className="mb-1 h-3.5 w-28" />
+            <Skeleton className="h-3.5 w-24" />
+            <Skeleton className="mt-1 h-2.5 w-10" />
           </div>
           <div className="flex items-center gap-1">
-            <Skeleton className="h-8 flex-1" />
-            <Skeleton className="h-8 flex-1" />
-            <Skeleton className="h-8 flex-1" />
+            <Skeleton className="h-7 flex-1" />
+            <Skeleton className="h-7 flex-1" />
+            <Skeleton className="h-7 flex-1" />
           </div>
         </div>
       ))}

@@ -57,6 +57,19 @@ export function formatKickoff(iso: string | Date) {
   });
 }
 
+/** Compact 12-hour kickoff for match-list rows, e.g. 1:00PM. */
+export function formatKickoff12(iso: string | Date) {
+  return formatInTimeZone(iso, FOOTBALL_TZ, {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  })
+    .replace(/\./g, "")
+    .replace(/\s/g, "")
+    .replace(/am/i, "AM")
+    .replace(/pm/i, "PM");
+}
+
 export function formatKickoffDay(iso: string | Date) {
   return formatInTimeZone(iso, FOOTBALL_TZ, {
     weekday: "short",
@@ -76,9 +89,10 @@ export function startOfGhanaDay(offsetDays = 0) {
 }
 
 export function formatFixtureDay(iso: string | Date) {
-  const day = formatInTimeZone(iso, FOOTBALL_TZ, { day: "2-digit", month: "2-digit" });
   const weekday = formatInTimeZone(iso, FOOTBALL_TZ, { weekday: "long" });
-  return `${day} ${weekday}`;
+  const month = formatInTimeZone(iso, FOOTBALL_TZ, { month: "2-digit" });
+  const day = formatInTimeZone(iso, FOOTBALL_TZ, { day: "2-digit" });
+  return `${weekday}, ${month}/${day}`;
 }
 
 export function formatKickoffStamp(iso: string | Date) {

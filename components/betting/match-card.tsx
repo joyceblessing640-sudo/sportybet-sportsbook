@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { formatKickoff } from "@/lib/football/time";
+import { formatFixtureDay, formatKickoff, formatKickoff12 } from "@/lib/football/time";
 import { BarChart2 } from "lucide-react";
 import { CountryMark } from "@/components/brand/country-mark";
 import type { ClientMatch } from "@/lib/serialize";
@@ -11,6 +11,10 @@ import { cn } from "@/lib/utils";
 
 function marketByType(match: ClientMatch, type: string) {
   return match.markets.find((m) => m.type === type);
+}
+
+function oddsColClass(count: number) {
+  return count <= 2 ? "w-[6.25rem]" : "w-[9.5rem]";
 }
 
 export function groupByLeague(matches: ClientMatch[]) {
@@ -25,6 +29,15 @@ export function groupByLeague(matches: ClientMatch[]) {
   });
 }
 
+function groupByDate(matches: ClientMatch[]) {
+  const map = new Map<string, ClientMatch[]>();
+  for (const match of matches) {
+    const key = formatFixtureDay(match.startTime);
+    map.set(key, [...(map.get(key) ?? []), match]);
+  }
+  return [...map.entries()];
+}
+
 export function DateOddsHeader({
   label,
   headers,
@@ -36,16 +49,17 @@ export function DateOddsHeader({
   dark?: boolean;
   country?: string;
 }) {
+  const cols = Math.min(headers.length, 3);
   return (
     <div
       className={cn(
-        "flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold",
-        dark ? "text-white/55" : "bg-[#f7f9f8] text-muted",
+        "flex items-center gap-1.5 px-3 py-1.5 text-[12px]",
+        dark ? "text-white/55" : "bg-white text-[#6b7280]",
       )}
     >
       {country ? <CountryMark country={country} /> : null}
-      <span className="min-w-0 flex-1 truncate uppercase tracking-wide">{label}</span>
-      <div className={cn("grid text-center", headers.length === 2 ? "w-[6.5rem] grid-cols-2" : "w-[9.75rem] grid-cols-3 sm:w-[11rem]")}>
+      <span className="min-w-0 flex-1 truncate font-medium">{label}</span>
+      <div className={cn("grid shrink-0 text-center text-[11px] font-medium", cols <= 2 ? "w-[6.25rem] grid-cols-2" : "w-[9.5rem] grid-cols-3")}>
         {headers.slice(0, 3).map((h) => (
           <span key={h}>{h}</span>
         ))}
@@ -113,22 +127,20 @@ export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
 export function MatchCard({
   match,
   marketType = "1X2",
-  showOu = false,
   onDark = false,
   hideLeague = false,
   showBadges = false,
 }: {
   match: ClientMatch;
   marketType?: string;
-  showOu?: boolean;
   onDark?: boolean;
   hideLeague?: boolean;
   showBadges?: boolean;
 }) {
   const market = marketByType(match, marketType);
-  const ou = match.markets.find((m) => m.type === "OU");
+  const oneXTwo = marketByType(match, "1X2");
   const live = match.status === "LIVE" || match.status === "HT";
-  const clock = live ? match.clock : formatKickoff(match.startTime);
+  const clock = live ? match.clock : formatKickoff12(match.startTime);
   const period =
     live && match.periodLabel && match.periodLabel !== clock && !String(clock ?? "").includes(match.periodLabel)
       ? match.periodLabel
@@ -136,64 +148,55 @@ export function MatchCard({
   const kick = period ? `${clock} ${period}` : clock;
   const light = !onDark;
   const cols = Math.min(market?.outcomes.length ?? 3, 3);
-  const oddsWidth = cols === 2 ? "w-[6.5rem]" : "w-[9.75rem] sm:w-[11rem]";
+  const oddsWidth = oddsColClass(cols);
+  const showBestOdds = showBadges && (match.isBestOdds || Boolean(oneXTwo));
 
   return (
     <article
       className={cn(
-        "border-b px-3 py-2",
-        onDark ? "on-dark border-white/10 bg-transparent" : "border-line bg-white",
+        "overflow-hidden border-b px-3 py-1.5",
+        onDark ? "on-dark border-white/10 bg-transparent" : "border-[#eef0f3] bg-white",
       )}
     >
-      {showBadges && (match.isHot || match.isBestOdds) ? (
-        <div className="mb-1 flex items-center gap-0">
-          {match.isHot ? (
-            <span className="inline-flex items-center gap-0.5 bg-[#e31c23] px-1.5 py-[1px] text-[9px] font-black tracking-wide text-white">
-              HOT
-              <span aria-hidden>🔥</span>
-            </span>
-          ) : null}
-          {match.isBestOdds ? (
-            <span className="inline-flex items-center gap-0.5 bg-[#12a150] px-1.5 py-[1px] text-[9px] font-black tracking-wide text-white">
-              BEST ODDS
-              <span aria-hidden>🟡</span>
-            </span>
-          ) : null}
-        </div>
-      ) : null}
-      <div className="mb-1 flex items-center gap-1.5 text-[11px]">
-        <span className={cn("tabular-nums font-semibold", live ? "text-accent" : light ? "text-muted" : "text-white/70")}>
+      <div className="mb-1 flex min-w-0 items-center gap-1 text-[10px] leading-none">
+        {showBadges && match.isHot ? (
+          <span className="inline-flex shrink-0 items-center gap-px bg-[#e31c23] px-1 py-px text-[8px] font-black tracking-wide text-white">
+            HOT
+            <span aria-hidden>🔥</span>
+          </span>
+        ) : null}
+        {showBestOdds ? (
+          <span className="inline-flex shrink-0 items-center gap-px bg-[#12a150] px-1 py-px text-[8px] font-black tracking-wide text-white">
+            BEST ODDS
+            <span aria-hidden>🔥</span>
+          </span>
+        ) : null}
+        <span className={cn("shrink-0 tabular-nums", live ? "font-semibold text-accent" : light ? "text-[#8b919a]" : "text-white/70")}>
           {kick}
         </span>
+        <span className={cn("shrink-0", light ? "text-[#8b919a]" : "text-white/55")}>ID {match.displayId}</span>
         {hideLeague ? null : (
-          <span className={cn("min-w-0 truncate", light ? "text-muted" : "text-white/55")}>
+          <span className={cn("min-w-0 truncate", light ? "text-[#8b919a]" : "text-white/55")}>
             {match.league.country} - {match.league.name}
           </span>
         )}
-        <BarChart2 className={cn("ml-auto h-3.5 w-3.5 shrink-0", light ? "text-[#c5cad3]" : "text-white/35")} />
+        <Link href={`/match/${match.id}`} aria-label="Match statistics" className="ml-auto shrink-0">
+          <BarChart2 className={cn("h-3.5 w-3.5", light ? "text-[#c5cad3]" : "text-white/35")} />
+        </Link>
       </div>
-      <div
-        className={cn(
-          "grid items-center gap-2",
-          cols === 2
-            ? "grid-cols-[minmax(0,1fr)_auto_6.5rem]"
-            : "grid-cols-[minmax(0,1fr)_auto_9.75rem] sm:grid-cols-[minmax(0,1fr)_auto_11rem]",
-        )}
-      >
-        <Link href={`/match/${match.id}`} className="min-w-0">
-          <p className={cn("truncate text-[13px] font-medium", light ? "text-ink" : "text-white")}>{match.home.shortName}</p>
-          <p className={cn("mt-0.5 truncate text-[13px] font-medium", light ? "text-ink" : "text-white")}>{match.away.shortName}</p>
+      <div className="flex min-w-0 items-center gap-2">
+        <Link href={`/match/${match.id}`} className="min-w-0 flex-1">
+          <p className={cn("truncate text-[13px] leading-[17px]", light ? "text-ink" : "text-white")}>{match.home.name}</p>
+          <p className={cn("truncate text-[13px] leading-[17px]", light ? "text-ink" : "text-white")}>{match.away.name}</p>
         </Link>
         {live ? (
-          <div className={cn("w-4 text-right text-[13px] font-bold tabular-nums", light ? "text-ink" : "text-white")}>
+          <div className={cn("w-4 shrink-0 text-right text-[13px] font-bold leading-[17px] tabular-nums", light ? "text-ink" : "text-white")}>
             <p>{match.homeScore}</p>
-            <p className="mt-0.5">{match.awayScore}</p>
+            <p>{match.awayScore}</p>
           </div>
-        ) : (
-          <span className="w-0" />
-        )}
+        ) : null}
         {market ? (
-          <div className={cn("flex gap-1", oddsWidth)}>
+          <div className={cn("flex shrink-0 gap-[3px]", oddsWidth)}>
             {market.outcomes.slice(0, 3).map((outcome) => (
               <OddsButton
                 key={outcome.id}
@@ -201,33 +204,17 @@ export function MatchCard({
                 marketName={market.name}
                 outcome={outcome}
                 compact
-                hideLabel={market.outcomes.length > 2}
+                hideLabel
               />
             ))}
           </div>
         ) : (
-          <span className="w-0" />
+          <span className={cn("shrink-0", oddsWidth)} />
         )}
       </div>
-      {showOu && ou ? (
-        <div className="mt-1.5 grid grid-cols-[minmax(0,1fr)_auto_9.75rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_auto_11rem]">
-          {match.extraMarkets > 0 ? (
-            <Link href={`/match/${match.id}`} className={cn("text-[11px] font-semibold", light ? "text-accent" : "text-accent")}>
-              +{match.extraMarkets}
-            </Link>
-          ) : (
-            <span />
-          )}
-          <span className={cn("text-[10px] font-semibold", light ? "text-muted" : "text-white/50")}>{ou.line ?? "O/U"}</span>
-          <div className="flex gap-1">
-            {ou.outcomes.slice(0, 2).map((outcome) => (
-              <OddsButton key={outcome.id} match={match} marketName={ou.name} outcome={outcome} compact />
-            ))}
-          </div>
-        </div>
-      ) : match.extraMarkets > 0 ? (
-        <Link href={`/match/${match.id}`} className={cn("mt-0.5 inline-block text-[11px] font-semibold", light ? "text-accent" : "text-accent")}>
-          +{match.extraMarkets}
+      {match.extraMarkets > 0 ? (
+        <Link href={`/match/${match.id}`} className="mt-0.5 inline-block text-[11px] font-semibold leading-none text-accent">
+          +{match.extraMarkets} &gt;
         </Link>
       ) : null}
     </article>
@@ -255,7 +242,6 @@ export function MatchRow({
       match={match}
       marketType={marketType}
       onDark={onDark}
-      showOu={!onDark && marketType === "1X2"}
       hideLeague={hideLeague}
       showBadges={showBadges}
     />
@@ -268,6 +254,7 @@ export function MatchList({
   dark,
   dateLabel,
   groupLeagues = false,
+  groupDates = false,
   showBadges = false,
 }: {
   matches: ClientMatch[];
@@ -275,6 +262,7 @@ export function MatchList({
   dark?: boolean;
   dateLabel?: string;
   groupLeagues?: boolean;
+  groupDates?: boolean;
   showBadges?: boolean;
 }) {
   const playable =
@@ -284,11 +272,12 @@ export function MatchList({
   const sample = playable[0];
   const market = sample ? marketByType(sample, marketType) : null;
   const headers = market ? market.outcomes.slice(0, 3).map((o) => o.label) : marketType === "OU" || marketType === "FHOU" ? ["Over", "Under"] : marketType === "DC" ? ["1X", "12", "X2"] : ["1", "X", "2"];
-  const groups = groupLeagues ? groupByLeague(playable) : null;
+  const leagueGroups = groupLeagues ? groupByLeague(playable) : null;
+  const dateGroups = !groupLeagues && groupDates ? groupByDate(playable) : null;
 
   if (playable.length === 0) {
     return (
-      <div className={dark ? "bg-live text-white" : "overflow-hidden rounded-md border border-line bg-white"}>
+      <div className={dark ? "bg-live text-white" : "overflow-hidden bg-white"}>
         {dateLabel ? <DateOddsHeader label={dateLabel} headers={headers} dark={dark} /> : null}
         <p className={cn("px-3 py-6 text-[13px]", dark ? "text-white/55" : "text-muted")}>No matches available</p>
       </div>
@@ -296,15 +285,13 @@ export function MatchList({
   }
 
   return (
-    <div className={dark ? "bg-live text-white" : "overflow-hidden rounded-md border border-line bg-white"}>
-      {dateLabel && groups ? (
-        <p className={cn("px-3 py-1 text-[10px] font-semibold uppercase tracking-wide", dark ? "text-white/45" : "text-muted")}>
-          {dateLabel}
-        </p>
+    <div className={dark ? "bg-live text-white" : "overflow-hidden bg-white"}>
+      {dateLabel && leagueGroups ? (
+        <p className={cn("px-3 py-1 text-[12px] font-medium", dark ? "text-white/45" : "text-[#6b7280]")}>{dateLabel}</p>
       ) : null}
-      {dateLabel && !groups ? <DateOddsHeader label={dateLabel} headers={headers} dark={dark} /> : null}
-      {groups
-        ? groups.map((group) => (
+      {dateLabel && !leagueGroups && !dateGroups ? <DateOddsHeader label={dateLabel} headers={headers} dark={dark} /> : null}
+      {leagueGroups
+        ? leagueGroups.map((group) => (
             <div key={group.slug + group.name}>
               <DateOddsHeader label={group.name} headers={headers} dark={dark} country={group.country} />
               {group.matches.map((match) => (
@@ -312,9 +299,18 @@ export function MatchList({
               ))}
             </div>
           ))
-        : playable.map((match) => (
-            <MatchRow key={match.id} match={match} marketType={marketType} compactOdds onDark={dark} showBadges={showBadges} />
-          ))}
+        : dateGroups
+          ? dateGroups.map(([day, list]) => (
+              <div key={day}>
+                <DateOddsHeader label={day} headers={headers} dark={dark} />
+                {list.map((match) => (
+                  <MatchRow key={match.id} match={match} marketType={marketType} compactOdds onDark={dark} showBadges={showBadges} />
+                ))}
+              </div>
+            ))
+          : playable.map((match) => (
+              <MatchRow key={match.id} match={match} marketType={marketType} compactOdds onDark={dark} showBadges={showBadges} />
+            ))}
     </div>
   );
 }
