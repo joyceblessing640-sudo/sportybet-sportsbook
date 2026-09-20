@@ -233,14 +233,17 @@ label {
   background: rgb(0 0 0 / 0.4);
 }
 
-/* Instant Football: one page scroller + horizontal tabs. Do not use on homepage. */
-.if-board {
-  height: 100dvh;
-  max-height: 100dvh;
+/* Instant Football: document-level vertical scroll + horizontal tabs only. */
+html:has(.if-board),
+body:has(.if-board) {
   overflow-x: clip;
   overflow-y: auto;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
+}
+.if-board {
+  min-height: 100dvh;
+  overflow: visible;
 }
 .if-h-scroll {
   overflow-x: auto;
