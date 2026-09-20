@@ -6,8 +6,9 @@ import {
   fetchFixturesByDateSafe,
   fetchLeaguesCurrent,
   fetchLiveFixtures,
-  fetchOddsByDate,
+  fetchOddsByFixture,
   hasFootballKey,
+  peekOddsByFixture,
 } from "./api";
 import {
   extraMarketsFromReal,
@@ -20,6 +21,7 @@ import {
   periodLabel,
   resolveTargetLeagues,
   resolveLeaguesFromFixtures,
+  sortOddsTargets,
   teamAbbreviation,
 } from "./map";
 import { ghanaDate } from "./time";
@@ -252,16 +254,38 @@ async function upsertFixture(item: ApiFixtureItem, leagues: ResolvedLeague[], od
   return extraMarketsFromReal(markets);
 }
 
-async function loadOddsMap(dates: string[]) {
+const MAX_ODDS_HTTP = 12;
+
+async function loadOddsMap(items: ApiFixtureItem[], leagues: ResolvedLeague[]) {
   const map = new Map<number, ApiOddsItem>();
-  // One date only — odds-by-date is expensive on the free 100-request plan.
-  const date = dates[0];
-  if (!date) return map;
-  try {
-    const rows = await fetchOddsByDate(date, FOOTBALL_TZ);
-    for (const row of rows) map.set(row.fixture.id, row);
-  } catch {
-    // Odds are optional; hide markets instead of inventing prices.
+  const ranked = sortOddsTargets(items, leagues);
+  if (!ranked.length) return map;
+
+  const existing = await prisma.market.findMany({
+    where: {
+      matchId: { in: ranked.map((item) => matchId(item.fixture.id)) },
+      type: "1X2",
+      status: "OPEN",
+    },
+    select: { matchId: true },
+  });
+  const have1x2 = new Set(existing.map((row) => row.matchId));
+
+  let http = 0;
+  for (const item of ranked) {
+    const fixtureId = item.fixture.id;
+    const live = ["LIVE", "HT"].includes(mapFixtureStatus(item.fixture.status.short));
+    const cached = peekOddsByFixture(fixtureId);
+    if (cached !== undefined) {
+      if (cached) map.set(fixtureId, cached);
+      continue;
+    }
+    // Keep stored prices for scheduled matches; only spend quota on gaps and live.
+    if (!live && have1x2.has(matchId(fixtureId))) continue;
+    if (http >= MAX_ODDS_HTTP) break;
+    http += 1;
+    const row = await fetchOddsByFixture(fixtureId, live);
+    if (row) map.set(fixtureId, row);
   }
   return map;
 }
@@ -303,7 +327,7 @@ async function syncPayload(mode: "home" | "live") {
   for (const item of all) {
     if (fixtureBelongsTo(item, leagues)) fixtures.set(item.fixture.id, item);
   }
-  const odds = await loadOddsMap(dates);
+  const odds = await loadOddsMap([...fixtures.values()], leagues);
   for (const item of fixtures.values()) {
     await upsertFixture(item, leagues, odds);
   }

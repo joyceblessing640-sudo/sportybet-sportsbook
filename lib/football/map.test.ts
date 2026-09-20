@@ -6,9 +6,10 @@ import {
   mapOddsMarkets,
   resolveLeaguesFromFixtures,
   resolveTargetLeagues,
+  sortOddsTargets,
   teamAbbreviation,
 } from "./map";
-import type { ApiOddsItem } from "./types";
+import type { ApiFixtureItem, ApiOddsItem, ResolvedLeague } from "./types";
 
 describe("mapFixtureStatus", () => {
   it("maps API-Football short codes without inventing states", () => {
@@ -127,6 +128,40 @@ describe("mapOddsMarkets", () => {
     };
     expect(mapOddsMarkets(item)).toEqual([]);
   });
+
+  it("prefers Over/Under 2.5 when the bookmaker lists several lines", () => {
+    const item: ApiOddsItem = {
+      fixture: { id: 3 },
+      bookmakers: [
+        {
+          id: 8,
+          name: "Bet365",
+          bets: [
+            {
+              id: 1,
+              name: "Match Winner",
+              values: [
+                { value: "Home", odd: "2.10" },
+                { value: "Draw", odd: "3.40" },
+                { value: "Away", odd: "3.50" },
+              ],
+            },
+            {
+              id: 5,
+              name: "Goals Over/Under",
+              values: [
+                { value: "Over 1.5", odd: "1.14" },
+                { value: "Under 1.5", odd: "5.50" },
+                { value: "Over 2.5", odd: "1.50" },
+                { value: "Under 2.5", odd: "2.62" },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    expect(mapOddsMarkets(item).find((m) => m.type === "OU")?.line).toBe("2.5");
+  });
 });
 
 describe("resolveTargetLeagues", () => {
@@ -235,5 +270,52 @@ describe("resolveLeaguesFromFixtures", () => {
     ]);
     expect(resolved.find((l) => l.slug === "premier-league")?.apiId).toBe(39);
     expect(resolved.find((l) => l.slug === "ghana-premier-league")?.apiId).toBe(268);
+  });
+});
+
+function fx(
+  id: number,
+  leagueId: number,
+  country: string,
+  name: string,
+  short: string,
+  timestamp: number,
+): ApiFixtureItem {
+  return {
+    fixture: {
+      id,
+      date: "2026-09-20T15:00:00+00:00",
+      timestamp,
+      timezone: "Africa/Accra",
+      status: { long: short, short, elapsed: null },
+    },
+    league: { id: leagueId, name, country, season: 2026 },
+    teams: {
+      home: { id: id * 10, name: "Home" },
+      away: { id: id * 10 + 1, name: "Away" },
+    },
+    goals: { home: null, away: null },
+    score: { halftime: { home: null, away: null }, fulltime: { home: null, away: null } },
+  };
+}
+
+describe("sortOddsTargets", () => {
+  it("skips finished matches and ranks live Premier League first", () => {
+    const leagues: ResolvedLeague[] = [
+      { slug: "premier-league", name: "Premier League", country: "England", apiId: 39, season: 2026 },
+      { slug: "la-liga", name: "La Liga", country: "Spain", apiId: 140, season: 2026 },
+      { slug: "ghana-premier-league", name: "Premier League", country: "Ghana", apiId: 268, season: 2026 },
+    ];
+    const ranked = sortOddsTargets(
+      [
+        fx(1, 268, "Ghana", "Premier League", "NS", 3),
+        fx(2, 140, "Spain", "La Liga", "NS", 2),
+        fx(3, 39, "England", "Premier League", "FT", 1),
+        fx(4, 39, "England", "Premier League", "1H", 4),
+        fx(5, 39, "England", "Premier League", "NS", 5),
+      ],
+      leagues,
+    );
+    expect(ranked.map((row) => row.fixture.id)).toEqual([4, 5, 2, 1]);
   });
 });

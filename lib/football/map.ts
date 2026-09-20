@@ -57,6 +57,22 @@ function parseOdd(raw: string) {
   return Math.round(n * 100);
 }
 
+function lineFromOu(value: string) {
+  return value.replace(/^(over|under)\s+/i, "").trim();
+}
+
+function overUnderPair(values: { value: string; odd: string }[], preferredLine: string) {
+  const overs = values.filter((v) => /^over /i.test(v.value));
+  const unders = values.filter((v) => /^under /i.test(v.value));
+  if (!overs.length || !unders.length) return null;
+  const preferred = overs.find((v) => lineFromOu(v.value) === preferredLine);
+  const over = preferred ?? overs[0];
+  const line = lineFromOu(over.value);
+  const under = unders.find((v) => lineFromOu(v.value) === line) ?? unders[0];
+  if (!line) return null;
+  return { line, over: over.odd, under: under.odd };
+}
+
 function outcome(code: string, label: string, odd: string) {
   const odds = parseOdd(odd);
   if (odds == null) return null;
@@ -128,7 +144,7 @@ export function mapOddsMarkets(item: ApiOddsItem | undefined): MappedMarket[] {
       continue;
     }
 
-    if (/draw no bet/i.test(label)) {
+    if (/draw no bet/i.test(label) || /^home\/away$/i.test(label)) {
       const home = values.find((v) => /^home$/i.test(v.value));
       const away = values.find((v) => /^away$/i.test(v.value));
       if (home && away) {
@@ -141,26 +157,22 @@ export function mapOddsMarkets(item: ApiOddsItem | undefined): MappedMarket[] {
     }
 
     if (/goals over\/under$/i.test(label) || /^over\/under$/i.test(label)) {
-      const over = values.find((v) => /^over /i.test(v.value));
-      const under = values.find((v) => /^under /i.test(v.value));
-      const line = (over ?? under)?.value.replace(/^(over|under)\s+/i, "") ?? null;
-      if (over && under && line) {
-        take("OU", "Over/Under", line, [
-          outcome("OVER", "Over", over.odd),
-          outcome("UNDER", "Under", under.odd),
+      const pair = overUnderPair(values, "2.5");
+      if (pair) {
+        take("OU", "Over/Under", pair.line, [
+          outcome("OVER", "Over", pair.over),
+          outcome("UNDER", "Under", pair.under),
         ].filter(Boolean) as MappedMarket["outcomes"]);
       }
       continue;
     }
 
     if (/over\/under.*first half|goals over\/under first half/i.test(label)) {
-      const over = values.find((v) => /^over /i.test(v.value));
-      const under = values.find((v) => /^under /i.test(v.value));
-      const line = (over ?? under)?.value.replace(/^(over|under)\s+/i, "") ?? null;
-      if (over && under && line) {
-        take("FHOU", "1st Half O/U", line, [
-          outcome("OVER", "Over", over.odd),
-          outcome("UNDER", "Under", under.odd),
+      const pair = overUnderPair(values, "1.5");
+      if (pair) {
+        take("FHOU", "1st Half O/U", pair.line, [
+          outcome("OVER", "Over", pair.over),
+          outcome("UNDER", "Under", pair.under),
         ].filter(Boolean) as MappedMarket["outcomes"]);
       }
       continue;
@@ -236,6 +248,43 @@ export function resolveTargetLeagues(
 
 export function fixtureBelongsTo(item: ApiFixtureItem, leagues: ResolvedLeague[]) {
   return leagues.some((league) => league.apiId === item.league.id);
+}
+
+export function isOpenForOdds(status: "SCHEDULED" | "LIVE" | "HT" | "FINISHED" | "CANCELLED") {
+  return status === "SCHEDULED" || status === "LIVE" || status === "HT";
+}
+
+const ODDS_LEAGUE_ORDER = [
+  "premier-league",
+  "la-liga",
+  "ucl",
+  "uel",
+  "serie-a",
+  "bundesliga",
+  "ligue-1",
+  "mls",
+  "ghana-premier-league",
+];
+
+export function sortOddsTargets(items: ApiFixtureItem[], leagues: ResolvedLeague[]) {
+  const slugByApi = new Map(leagues.map((league) => [league.apiId, league.slug]));
+  const rank = (item: ApiFixtureItem) => {
+    const status = mapFixtureStatus(item.fixture.status.short);
+    const live = status === "LIVE" || status === "HT" ? 0 : 1;
+    const slug = slugByApi.get(item.league.id) ?? "";
+    const league = ODDS_LEAGUE_ORDER.indexOf(slug);
+    return [live, league === -1 ? 99 : league, item.fixture.timestamp] as const;
+  };
+  return items
+    .filter((item) => isOpenForOdds(mapFixtureStatus(item.fixture.status.short)))
+    .sort((a, b) => {
+      const left = rank(a);
+      const right = rank(b);
+      for (let i = 0; i < left.length; i += 1) {
+        if (left[i] !== right[i]) return left[i] - right[i];
+      }
+      return 0;
+    });
 }
 
 export function resolveLeaguesFromFixtures(items: ApiFixtureItem[]): ResolvedLeague[] {

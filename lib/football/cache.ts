@@ -25,7 +25,9 @@ export const TTL = {
   // Free plan is 100 requests/day. Live scores refresh about once a minute.
   live: 60_000,
   fixtures: 15 * 60_000,
-  odds: 30 * 60_000,
+  odds: 4 * 60 * 60_000,
+  oddsLive: 15 * 60_000,
+  oddsEmpty: 6 * 60 * 60_000,
   leagues: 12 * 60 * 60_000,
   events: 60_000,
   error: 30_000,

@@ -140,6 +140,32 @@ export async function fetchOddsByDate(date: string, timezone: string) {
   }
 }
 
+export function peekOddsByFixture(fixtureId: number) {
+  return cacheGet<ApiOddsItem | null>(`odds:fx:${fixtureId}`);
+}
+
+function isUnavailableOddsError(error: unknown) {
+  if (!(error instanceof FootballApiError)) return false;
+  if (error.status === 403 || error.status === 404) return true;
+  return /do not have access to this date/i.test(error.message);
+}
+
+/** One fixture per request. Date-wide /odds is paginated across every league and misses ours. */
+export async function fetchOddsByFixture(fixtureId: number, live = false): Promise<ApiOddsItem | null> {
+  const key = `odds:fx:${fixtureId}`;
+  const hit = cacheGet<ApiOddsItem | null>(key);
+  if (hit !== undefined) return hit;
+  try {
+    const { items } = await request<ApiOddsItem[]>("/odds", { fixture: fixtureId }, 1);
+    const row = Array.isArray(items) ? (items[0] ?? null) : null;
+    const ttl = row ? (live ? TTL.oddsLive : TTL.odds) : TTL.oddsEmpty;
+    return cacheSet(key, row, ttl);
+  } catch (error) {
+    const ttl = isUnavailableOddsError(error) ? TTL.oddsEmpty : TTL.error;
+    return cacheSet(key, null, ttl);
+  }
+}
+
 export async function fetchFixtureEvents(fixtureId: number) {
   return collect<ApiEventItem>(
     "/fixtures/events",

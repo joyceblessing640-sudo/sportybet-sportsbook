@@ -14,7 +14,9 @@ API_FOOTBALL_KEY=your_key_here
 
 Copy `.env.example` to `.env` locally. On Vercel, add `API_FOOTBALL_KEY` to the **SportyBets** project only — do not add it to a separate predictor project.
 
-The key is read only in `lib/football/api.ts` and proxied through `/api/football/snapshot` and `/api/football/match`. Homepage Featured, Matches, Today, Next 3 Hours, and Live poll those routes. Live matches refresh about every 15 seconds; upcoming fixtures are cached longer.
+The key is read only in `lib/football/api.ts` and proxied through `/api/football/snapshot` and `/api/football/match`. Homepage Featured, Matches, Today, Next 3 Hours, and Live poll those routes. Live matches refresh about every 60 seconds; upcoming fixtures are cached longer.
+
+Odds (1X2, O/U, DC, BTTS, and others) are loaded **per fixture**. API-Football’s date-wide odds feed is paginated across every league worldwide (65+ pages), so reading the first pages does not include Premier League or La Liga. The sportsbook never invents prices: if a fixture has no bookmaker row, those markets stay hidden.
 
 If the key is missing or the provider is down, the sportsbook UI stays up and shows **Unable to load live matches** (or **No matches available**). Demo football rows are hidden from the production UI.
 
