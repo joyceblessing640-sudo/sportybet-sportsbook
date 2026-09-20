@@ -67,7 +67,7 @@ export function VirtualsView() {
                 alt={banner.alt}
                 fill
                 priority
-                quality={95}
+                unoptimized
                 className="object-cover object-center"
                 sizes="(max-width: 430px) 100vw, 430px"
               />
@@ -78,7 +78,7 @@ export function VirtualsView() {
                 src={banner.src}
                 alt={banner.alt}
                 fill
-                quality={90}
+                unoptimized
                 className="object-cover object-center"
                 sizes="(max-width: 430px) 100vw, 430px"
               />
@@ -124,8 +124,8 @@ export function VirtualsView() {
                 src={game.art}
                 alt=""
                 fill
-                quality={95}
-                className="object-cover object-center"
+                unoptimized
+                className="object-contain object-center"
                 sizes="(max-width: 360px) 46vw, (max-width: 430px) 47vw, 210px"
               />
             </div>
