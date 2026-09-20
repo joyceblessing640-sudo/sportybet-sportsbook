@@ -9,18 +9,37 @@ export function LoadCodeForm({ matches }: { matches: ClientMatch[] }) {
   const [state, action, pending] = useActionState(loadBookingCodeAction, null);
   return (
     <div className="p-4">
-      <h1 className="text-[16px] font-bold">Load Code</h1>
-      <p className="mt-1 text-[12px] text-muted">Paste a booking code to fill the bet slip. Demo codes are listed below.</p>
-      <form action={action} className="mt-4 flex gap-2">
-        <input
-          name="code"
-          placeholder="e.g. SB7K2Q"
-          className="h-11 flex-1 rounded-md border border-[#d7dbe2] px-3 text-sm uppercase outline-none focus:border-[#12a150]"
+      <h1 className="sr-only">Load Code</h1>
+      <div className="relative w-full">
+        <img
+          src="/codes/booking-code-provided.png"
+          alt=""
+          width={1080}
+          height={260}
+          className="block h-auto w-full object-contain object-left"
+          draggable={false}
         />
-        <button type="submit" disabled={pending} className="h-11 rounded-md bg-[#12a150] px-4 text-sm font-bold text-white">
-          {pending ? "Loading…" : "Load"}
-        </button>
-      </form>
+        <form action={action} className="absolute inset-0">
+          <label className="sr-only" htmlFor="booking-code-input">
+            Booking Code
+          </label>
+          <input
+            id="booking-code-input"
+            name="code"
+            autoComplete="off"
+            placeholder=""
+            className="absolute bg-transparent uppercase text-ink outline-none"
+            style={{ left: "5.5%", top: "42%", width: "66%", height: "48%" }}
+          />
+          <button
+            type="submit"
+            disabled={pending}
+            aria-label={pending ? "Loading" : "Load"}
+            className="absolute bg-transparent"
+            style={{ left: "72%", top: "42%", width: "23%", height: "48%" }}
+          />
+        </form>
+      </div>
       {state?.error ? <p className="mt-2 text-sm text-danger">{state.error}</p> : null}
       <RecommendedCodes matches={matches} />
     </div>
