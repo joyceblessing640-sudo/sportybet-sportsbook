@@ -72,7 +72,7 @@
   font-size: 12px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
   white-space: nowrap;
 }
 
@@ -100,6 +100,7 @@
   color: #fff;
   font-size: 12px;
   font-weight: 500;
+  letter-spacing: 0.01em;
   text-decoration: none;
 }
 

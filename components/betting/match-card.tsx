@@ -53,13 +53,13 @@ export function DateOddsHeader({
   return (
     <div
       className={cn(
-        "flex items-center gap-1 px-2.5 py-1 text-[11px] min-[412px]:px-3",
+        "flex items-center gap-1 px-2.5 py-1 text-[11px] leading-[14px] min-[412px]:px-3 min-[412px]:text-[12px]",
         dark ? "text-white/55" : "bg-white text-[#6b7280]",
       )}
     >
       {country ? <CountryMark country={country} /> : null}
-      <span className="min-w-0 flex-1 truncate font-medium">{label}</span>
-      <div className={cn("grid shrink-0 text-center text-[10px] font-medium", cols <= 2 ? "w-[5.5rem] grid-cols-2 min-[412px]:w-[6rem]" : "w-[8.25rem] grid-cols-3 min-[412px]:w-[8.75rem]")}>
+      <span className="min-w-0 flex-1 truncate font-medium tracking-[0.01em]">{label}</span>
+      <div className={cn("grid shrink-0 text-center text-[10px] font-medium tracking-[0.02em] min-[412px]:text-[11px]", cols <= 2 ? "w-[5.5rem] grid-cols-2 min-[412px]:w-[6rem]" : "w-[8.25rem] grid-cols-3 min-[412px]:w-[8.75rem]")}>
         {headers.slice(0, 3).map((h) => (
           <span key={h}>{h}</span>
         ))}
@@ -75,7 +75,7 @@ export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
 
   return (
     <article className="bg-white px-2.5 pb-2.5 pt-1.5 min-[412px]:px-3">
-      <div className="mb-1.5 flex items-center gap-1 text-[10px] text-muted">
+      <div className="mb-1.5 flex items-center gap-1 text-[10px] font-normal leading-none text-muted min-[412px]:text-[11px]">
         <CountryMark country={match.league.country} />
         <span className="min-w-0 flex-1 truncate">
           {match.sport.name} - {match.league.country} - {match.league.name}
@@ -85,7 +85,7 @@ export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
       <Link href={`/match/${match.id}`} className="grid grid-cols-[1fr_auto_1fr] items-center gap-1.5">
         <div className="flex flex-col items-center gap-0.5 text-center">
           <TeamBadge team={match.home} size="lg" />
-          <p className="text-[11px] font-medium leading-tight text-ink">{match.home.shortName}</p>
+          <p className="text-[11px] font-medium leading-tight tracking-[0.01em] text-ink">{match.home.shortName}</p>
         </div>
         <div className="text-center">
           {live ? (
@@ -93,28 +93,28 @@ export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
               <p className="text-[18px] font-bold tabular-nums text-ink">
                 {match.homeScore} - {match.awayScore}
               </p>
-              <p className="mt-0.5 text-[10px] font-semibold text-accent">
+              <p className="mt-0.5 text-[10px] font-medium text-accent">
                 Live {kick} {match.periodLabel ?? ""}
               </p>
             </>
           ) : (
             <>
-              <p className="text-[13px] font-bold text-[#9aa3b2]">VS</p>
+              <p className="text-[13px] font-medium tracking-[0.04em] text-[#9aa3b2]">VS</p>
               <p className="mt-0.5 text-[10px] text-muted">{kick}</p>
             </>
           )}
-          <p className="mt-0.5 text-[10px] font-bold text-ink">1X2</p>
+          <p className="mt-0.5 text-[10px] font-semibold tracking-[0.02em] text-ink">1X2</p>
         </div>
         <div className="flex flex-col items-center gap-0.5 text-center">
           <TeamBadge team={match.away} size="lg" />
-          <p className="text-[11px] font-medium leading-tight text-ink">{match.away.shortName}</p>
+          <p className="text-[11px] font-medium leading-tight tracking-[0.01em] text-ink">{match.away.shortName}</p>
         </div>
       </Link>
       {market ? (
         <div className="mt-1.5 grid grid-cols-3 gap-1">
           {market.outcomes.slice(0, 3).map((outcome) => (
             <div key={outcome.id} className="text-center">
-              <p className="mb-0.5 text-[10px] text-muted">{outcome.label}</p>
+              <p className="mb-0.5 text-[10px] font-medium tracking-[0.02em] text-muted">{outcome.label}</p>
               <OddsButton match={match} marketName={market.name} outcome={outcome} compact hideLabel />
             </div>
           ))}
@@ -158,7 +158,7 @@ export function MatchCard({
         onDark ? "on-dark border-white/10 bg-transparent" : "border-[#eef0f3] bg-white",
       )}
     >
-      <div className="mb-1 flex min-w-0 items-center gap-1 text-[10px] leading-none">
+      <div className="mb-1 flex min-w-0 items-center gap-1 text-[10px] font-normal leading-none tracking-[0.01em] min-[412px]:text-[11px]">
         {showBadges && match.isHot ? (
           <span className="inline-flex shrink-0 items-center gap-px bg-[#e31c23] px-1 py-px text-[8px] font-black tracking-wide text-white">
             HOT
@@ -186,11 +186,11 @@ export function MatchCard({
       </div>
       <div className="flex min-w-0 items-center gap-1.5">
         <Link href={`/match/${match.id}`} className="min-w-0 flex-1">
-          <p className={cn("truncate text-[12px] leading-[15px]", light ? "text-ink" : "text-white")}>{match.home.name}</p>
-          <p className={cn("truncate text-[12px] leading-[15px]", light ? "text-ink" : "text-white")}>{match.away.name}</p>
+          <p className={cn("truncate text-[12px] font-medium leading-[15px] tracking-[0.01em] min-[412px]:text-[13px] min-[412px]:leading-4", light ? "text-ink" : "text-white")}>{match.home.name}</p>
+          <p className={cn("truncate text-[12px] font-medium leading-[15px] tracking-[0.01em] min-[412px]:text-[13px] min-[412px]:leading-4", light ? "text-ink" : "text-white")}>{match.away.name}</p>
         </Link>
         {live ? (
-          <div className={cn("w-3.5 shrink-0 text-right text-[12px] font-bold leading-[15px] tabular-nums", light ? "text-ink" : "text-white")}>
+          <div className={cn("w-3.5 shrink-0 text-right text-[12px] font-semibold leading-[15px] tabular-nums min-[412px]:text-[13px] min-[412px]:leading-4", light ? "text-ink" : "text-white")}>
             <p>{match.homeScore}</p>
             <p>{match.awayScore}</p>
           </div>
@@ -213,7 +213,7 @@ export function MatchCard({
         )}
       </div>
       {match.extraMarkets > 0 ? (
-        <Link href={`/match/${match.id}`} className="mt-px inline-block text-[10px] font-semibold leading-none text-accent">
+        <Link href={`/match/${match.id}`} className="mt-px inline-block text-[10px] font-medium leading-none tracking-[0.01em] text-accent min-[412px]:text-[11px]">
           +{match.extraMarkets} &gt;
         </Link>
       ) : null}
@@ -287,7 +287,7 @@ export function MatchList({
   return (
     <div className={dark ? "bg-live text-white" : "overflow-hidden bg-white"}>
       {dateLabel && leagueGroups ? (
-        <p className={cn("px-2.5 py-1 text-[11px] font-medium", dark ? "text-white/45" : "text-[#6b7280]")}>{dateLabel}</p>
+        <p className={cn("px-2.5 py-1 text-[11px] font-medium tracking-[0.01em]", dark ? "text-white/45" : "text-[#6b7280]")}>{dateLabel}</p>
       ) : null}
       {dateLabel && !leagueGroups && !dateGroups ? <DateOddsHeader label={dateLabel} headers={headers} dark={dark} /> : null}
       {leagueGroups

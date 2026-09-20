@@ -40,7 +40,7 @@ export function SportsNav() {
                 )}
               >
                 <SportIcon name={item.icon} className="h-[18px] w-[18px]" />
-                <span className="text-[10px] font-semibold leading-none">{item.label}</span>
+                <span className="text-[10px] font-medium leading-none tracking-[0.01em]">{item.label}</span>
                 {active ? <span className="absolute inset-x-2 bottom-0 h-0.5 rounded-t bg-white" /> : null}
               </Link>
             );
@@ -59,7 +59,7 @@ export function SportsNav() {
               <span className="rounded-[1px] bg-current opacity-80" />
               <span className="rounded-[1px] bg-current opacity-80" />
             </span>
-            <span className="text-[10px] font-semibold leading-none sm:text-[12px]">
+            <span className="text-[10px] font-medium leading-none tracking-[0.01em] sm:text-[12px]">
               More <span className="hidden sm:inline">Sports</span>
             </span>
             <ChevronDown className={cn("hidden h-3.5 w-3.5 sm:inline transition-transform duration-200", open && "rotate-180")} />

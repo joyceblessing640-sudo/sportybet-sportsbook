@@ -50,7 +50,7 @@ export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
             <span aria-hidden>🔥</span>
           </span>
         ) : null}
-        <span className="min-w-0 truncate text-[11px] font-semibold text-accent underline decoration-accent decoration-1 underline-offset-2">
+        <span className="min-w-0 truncate text-[11px] font-medium tracking-[0.01em] text-accent underline decoration-accent decoration-1 underline-offset-2">
           {match.sport.name} - {leagueName}
         </span>
         <Link href={`/match/${match.id}`} aria-label="Match statistics" className="ml-auto shrink-0">
@@ -67,10 +67,10 @@ export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
             {kick.live ? (
               <>
                 <p className="text-[16px] font-bold tabular-nums leading-none text-ink min-[412px]:text-[18px]">{kick.score}</p>
-                <p className="mt-0.5 text-[11px] font-semibold text-accent">{kick.clock}</p>
+                <p className="mt-0.5 text-[11px] font-medium text-accent">{kick.clock}</p>
               </>
             ) : (
-              <p className="flex items-center justify-center gap-1.5 text-[12px] font-bold leading-none text-ink min-[375px]:text-[13px]">
+              <p className="flex items-center justify-center gap-1.5 text-[12px] font-semibold leading-none tracking-[0.01em] text-ink min-[375px]:text-[13px]">
                 <span>{kick.time}</span>
                 <span className="inline-block h-3 w-px shrink-0 bg-[#c5cad3]" aria-hidden />
                 <span>{kick.day}</span>
@@ -83,9 +83,9 @@ export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
         </Link>
 
         <div className="mt-1.5 grid grid-cols-3 items-center">
-          <p className="truncate px-0.5 text-center text-[11px] font-medium leading-tight text-[#8a9199]">{match.home.name}</p>
-          {market ? <p className="text-center text-[11px] font-bold leading-none text-[#12a150] min-[412px]:text-[12px]">1X2</p> : <span />}
-          <p className="truncate px-0.5 text-center text-[11px] font-medium leading-tight text-[#8a9199]">{match.away.name}</p>
+          <p className="truncate px-0.5 text-center text-[11px] font-medium leading-tight tracking-[0.01em] text-[#8a9199]">{match.home.name}</p>
+          {market ? <p className="text-center text-[11px] font-semibold leading-none tracking-[0.02em] text-[#12a150] min-[412px]:text-[12px]">1X2</p> : <span />}
+          <p className="truncate px-0.5 text-center text-[11px] font-medium leading-tight tracking-[0.01em] text-[#8a9199]">{match.away.name}</p>
         </div>
 
         {market ? (

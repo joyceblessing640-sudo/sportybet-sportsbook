@@ -40,11 +40,11 @@ export function LiveBoard({
       <div className="flex items-end gap-1.5 px-2.5 pt-1.5 min-[412px]:px-3 min-[412px]:pt-2">
         {homeLayout ? (
           <>
-            <p className="shrink-0 pb-1 text-[13px] font-bold leading-none min-[412px]:text-[14px]">Live</p>
+            <p className="shrink-0 pb-1 text-[13px] font-semibold leading-none tracking-[0.01em] min-[412px]:text-[14px]">Live</p>
             <span className="mb-1.5 shrink-0 text-white/35">|</span>
           </>
         ) : null}
-        <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto text-[11px] font-semibold min-[412px]:gap-2.5 min-[412px]:text-[12px]">
+        <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto text-[11px] font-medium tracking-[0.01em] min-[412px]:gap-2.5 min-[412px]:text-[12px]">
           {sportTabs.map((tab) => (
             <button
               key={tab.id}
@@ -61,7 +61,7 @@ export function LiveBoard({
         </div>
       </div>
       <div className="flex items-end gap-1.5 px-2.5 min-[412px]:px-3">
-        <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto pt-1.5 text-[11px] min-[412px]:gap-2.5">
+        <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto pt-1.5 text-[11px] font-medium tracking-[0.01em] min-[412px]:gap-2.5">
           {LIST_MARKET_TABS.map((item) => (
             <button
               key={item.id}
@@ -114,7 +114,7 @@ export function LiveBoard({
           </div>
         )}
       </div>
-      <div className="flex items-center px-2.5 py-0.5 text-[10px] text-white/45 min-[412px]:px-3">
+      <div className="flex items-center px-2.5 py-0.5 text-[10px] font-medium tracking-[0.02em] text-white/45 min-[412px]:px-3 min-[412px]:text-[11px]">
         <span className="min-w-0 flex-1" />
         <div className={cn("grid shrink-0 text-center", headers.length === 2 ? "w-[5.5rem] grid-cols-2 min-[412px]:w-[6rem]" : "w-[8.25rem] grid-cols-3 min-[412px]:w-[8.75rem]")}>
           {headers.map((h) => (

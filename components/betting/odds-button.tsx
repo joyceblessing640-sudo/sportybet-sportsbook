@@ -41,7 +41,7 @@ export function OddsButton({
         {hideLabel ? null : (
           <span
             className={cn(
-              "font-semibold leading-none",
+              "font-medium leading-none tracking-[0.01em]",
               spread ? "text-[11px]" : "text-[9px]",
               selected ? "text-white/90" : "text-[#5b6b63]",
             )}
@@ -49,7 +49,7 @@ export function OddsButton({
             {outcome.label}
           </span>
         )}
-        <span className="font-bold tabular-nums leading-tight">{formatOdds(outcome.odds)}</span>
+        <span className="font-semibold tabular-nums leading-tight tracking-[0.01em]">{formatOdds(outcome.odds)}</span>
       </button>
     </form>
   );

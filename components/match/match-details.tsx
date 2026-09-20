@@ -88,8 +88,8 @@ export function MatchDetails({
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[13px] font-bold">{match.league.name}</p>
-          <p className="text-[10px] text-white/70">
+          <p className="truncate text-[13px] font-semibold tracking-[0.01em]">{match.league.name}</p>
+          <p className="text-[10px] font-normal text-white/70">
             {live ? `Live ${match.clock}` : formatKickoffDay(match.startTime)}
           </p>
         </div>
@@ -104,7 +104,7 @@ export function MatchDetails({
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
           <div className="flex flex-col items-center gap-1 text-center">
             <TeamBadge team={match.home} size="md" />
-            <p className="text-[12px] font-bold">{match.home.name}</p>
+            <p className="text-[12px] font-medium tracking-[0.01em]">{match.home.name}</p>
           </div>
           <div className="text-center">
             {live || match.status === "FINISHED" ? (
@@ -112,9 +112,9 @@ export function MatchDetails({
                 {match.homeScore} - {match.awayScore}
               </p>
             ) : (
-              <p className="text-[13px] font-bold text-[#9aa3b2]">VS</p>
+              <p className="text-[13px] font-medium tracking-[0.04em] text-[#9aa3b2]">VS</p>
             )}
-            <p className="mt-0.5 text-[10px] font-semibold uppercase text-muted">{match.status === "FINISHED" ? "FT" : match.status}</p>
+            <p className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.02em] text-muted">{match.status === "FINISHED" ? "FT" : match.status}</p>
             {match.htHomeScore != null && match.htAwayScore != null ? (
               <p className="mt-0.5 text-[10px] text-muted">
                 HT {match.htHomeScore}-{match.htAwayScore}
@@ -124,13 +124,13 @@ export function MatchDetails({
           </div>
           <div className="flex flex-col items-center gap-1 text-center">
             <TeamBadge team={match.away} size="md" />
-            <p className="text-[12px] font-bold">{match.away.name}</p>
+            <p className="text-[12px] font-medium tracking-[0.01em]">{match.away.name}</p>
           </div>
         </div>
       </section>
       {events.length ? (
         <div className="mx-2.5 mt-2 rounded-md bg-white p-2.5">
-          <p className="mb-1.5 text-[13px] font-bold">Match events</p>
+          <p className="mb-1.5 text-[13px] font-semibold tracking-[0.01em]">Match events</p>
           <ul className="space-y-1.5 text-[12px] text-[#374151]">
             {events.map((event, index) => (
               <li key={`${event.elapsed}-${event.player}-${index}`}>
@@ -150,7 +150,7 @@ export function MatchDetails({
             type="button"
             onClick={() => setTab(item.id)}
             className={cn(
-              "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold",
+              "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium tracking-[0.01em]",
               tab === item.id ? "bg-brand text-white" : "bg-[#f3f4f6] text-[#4b5563]",
             )}
           >
@@ -160,7 +160,7 @@ export function MatchDetails({
       </div>
       {market ? (
         <div className="m-2.5 rounded-md bg-white p-2.5">
-          <p className="mb-1.5 text-[13px] font-bold">
+          <p className="mb-1.5 text-[13px] font-semibold tracking-[0.01em]">
             {market.name}
             {market.line ? ` (${market.line})` : ""}
           </p>

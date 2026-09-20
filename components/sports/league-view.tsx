@@ -33,8 +33,8 @@ export function LeagueView({
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div>
-          <p className="text-[13px] font-bold">{league.name}</p>
-          <p className="text-[10px] text-white/70">
+          <p className="text-[13px] font-semibold tracking-[0.01em]">{league.name}</p>
+          <p className="text-[10px] font-normal text-white/70">
             {league.country} · {league.sport}
           </p>
         </div>
@@ -46,7 +46,7 @@ export function LeagueView({
             type="button"
             onClick={() => setMarket(item.id)}
             className={cn(
-              "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold",
+              "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium tracking-[0.01em]",
               market === item.id ? "bg-brand text-white" : "bg-[#f3f4f6] text-[#4b5563]",
             )}
           >
@@ -60,7 +60,7 @@ export function LeagueView({
         ) : (
           grouped.map(([day, list]) => (
             <section key={day}>
-              <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#6b7280]">{day}</h2>
+              <h2 className="mb-2 text-xs font-medium uppercase tracking-wide text-[#6b7280]">{day}</h2>
               <div className="overflow-hidden rounded-md border border-line bg-white">
             {list.map((match) => (
               <MatchRow key={match.id} match={match} marketType={market} compactOdds />

@@ -74,7 +74,7 @@ export function SportsView({
             className="h-8 pl-8 text-[12px] min-[412px]:h-9"
           />
         </div>
-        <div className="mt-2 grid grid-cols-5 text-center text-[10px] font-medium text-white/90 min-[412px]:text-[11px]">
+        <div className="mt-2 grid grid-cols-5 text-center text-[10px] font-medium tracking-[0.01em] text-white/90 min-[412px]:text-[11px]">
           <Link href="/load-code">Load Code</Link>
           <Link href="/virtuals">Virtuals</Link>
           <Link href="/games">Jackpot</Link>
@@ -83,7 +83,7 @@ export function SportsView({
         </div>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto bg-white px-2.5 pt-2 text-[12px] font-semibold min-[412px]:px-3 min-[412px]:pt-2.5">
+      <div className="flex gap-3 overflow-x-auto bg-white px-2.5 pt-2 text-[12px] font-medium tracking-[0.01em] min-[412px]:px-3 min-[412px]:pt-2.5">
         {LIVE_SPORT_TABS.map((tab) => (
           <button
             key={tab.id}
@@ -106,7 +106,7 @@ export function SportsView({
         ))}
       </div>
 
-      <div className="mt-1.5 grid grid-cols-3 border-b border-[#eceff3] bg-white text-center text-[12px] font-semibold">
+      <div className="mt-1.5 grid grid-cols-3 border-b border-[#eceff3] bg-white text-center text-[12px] font-medium tracking-[0.01em]">
         {(["highlights", "today", "countries"] as const).map((id) => (
           <button
             key={id}
@@ -176,7 +176,7 @@ export function SportsView({
                 type="button"
                 onClick={() => setMarket(item.id)}
                 className={cn(
-                  "shrink-0 pb-1 text-xs font-semibold",
+                  "shrink-0 pb-1 text-xs font-medium tracking-[0.01em]",
                   market === item.id ? "border-b-2 border-odds text-odds" : "text-[#6b7280]",
                 )}
               >
@@ -203,7 +203,7 @@ export function SportsView({
               <button
                 type="button"
                 onClick={() => setLimit((n) => n + 24)}
-                className="h-9 w-full rounded-md border border-line bg-white text-[12px] font-semibold text-brand"
+                className="h-9 w-full rounded-md border border-line bg-white text-[12px] font-semibold tracking-[0.01em] text-brand"
               >
                 Load more matches
               </button>

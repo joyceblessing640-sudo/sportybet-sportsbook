@@ -18,6 +18,12 @@
   overflow: visible;
   touch-action: pan-y;
   padding-bottom: calc(48px + env(safe-area-inset-bottom));
+  font-family: var(--font-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .if-chrome {
@@ -54,16 +60,18 @@
   min-width: 0;
   margin: 0;
   font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.2;
 }
 
 .if-account {
   min-width: 96px;
   padding-right: 8px;
   text-align: right;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 .if-account .sep {
@@ -87,15 +95,17 @@
 .if-wallet small {
   display: block;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   opacity: 0.9;
 }
 
 .if-wallet strong {
   display: block;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
 }
 
 .if-leagues-wrap {
@@ -127,7 +137,8 @@
   flex: 1;
   min-width: 0;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 .if-leagues button {
@@ -142,6 +153,7 @@
 
 .if-leagues button[aria-current="true"] {
   color: #fff;
+  font-weight: 500;
 }
 
 .if-leagues button[aria-current="true"]::after {
@@ -195,9 +207,9 @@
   border-radius: 3px;
   background: var(--if-green);
   color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .if-switch {
@@ -249,7 +261,8 @@
   min-width: 0;
   align-items: stretch;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 400;
+  letter-spacing: 0.01em;
   color: #6b7280;
 }
 
@@ -265,6 +278,7 @@
 
 .if-markets button[aria-current="true"] {
   color: var(--if-green);
+  font-weight: 500;
 }
 
 .if-markets button[aria-current="true"]::after {
@@ -302,7 +316,9 @@
   min-width: 0;
   flex: 1;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
 }
 
 .if-info {
@@ -315,7 +331,7 @@
   background: #cfd4dc;
   color: #fff;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   font-style: italic;
   line-height: 1;
   padding: 0;
@@ -327,7 +343,8 @@
   grid-template-columns: 1fr 1fr 1fr;
   text-align: center;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   color: var(--if-muted);
 }
 
@@ -381,9 +398,9 @@
 
 .if-abbr {
   font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
   color: var(--if-ink);
   white-space: nowrap;
   overflow: hidden;
@@ -414,10 +431,10 @@
 
 .if-vs {
   padding: 3px 2px 0;
-  font-size: 9px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 500;
   color: #b0b7c1;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
 
 .if-stars {
@@ -435,10 +452,11 @@
 
 .if-more {
   margin-top: 3px;
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--if-muted);
   line-height: 1;
+  letter-spacing: 0.01em;
 }
 
 .if-odds {
@@ -455,9 +473,11 @@
   border-radius: 2px;
   background: var(--if-odd-bg);
   color: var(--if-odd);
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1;
   touch-action: pan-y;
 }
 
@@ -483,8 +503,9 @@
 .if-dock button {
   border: 0;
   color: #fff;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   touch-action: manipulation;
 }
 
@@ -594,7 +615,7 @@
   place-items: center;
   border-radius: 99px;
   font-size: 8px;
-  font-weight: 800;
+  font-weight: 700;
   color: #fff;
 }
 
@@ -610,4 +631,46 @@
 
 .if-badge-cwc {
   background: #c9a227;
+}
+
+@media (min-width: 390px) {
+  .if-abbr {
+    font-size: 12.5px;
+  }
+
+  .if-league-name {
+    font-size: 12.5px;
+  }
+
+  .if-odds button {
+    font-size: 14.5px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .if-top h1 {
+    font-size: 16px;
+  }
+
+  .if-leagues {
+    font-size: 13px;
+  }
+
+  .if-markets {
+    font-size: 12px;
+  }
+
+  .if-abbr {
+    font-size: 13px;
+  }
+
+  .if-odds button {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .if-dock button {
+    font-size: 14px;
+    font-weight: 600;
+  }
 }

@@ -41,9 +41,9 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
   return (
     <section className="mt-0 bg-white">
       <div className="flex items-end gap-1.5 border-b border-line px-2.5 pt-1.5 min-[412px]:px-3 min-[412px]:pt-2">
-        <p className="shrink-0 pb-1 text-[13px] font-bold leading-none text-ink min-[412px]:text-[14px]">Sports</p>
+        <p className="shrink-0 pb-1 text-[13px] font-semibold leading-none tracking-[0.01em] text-ink min-[412px]:text-[14px]">Sports</p>
         <span className="mb-1.5 shrink-0 text-[#d1d5db]">|</span>
-        <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto text-[11px] font-semibold min-[412px]:gap-2.5 min-[412px]:text-[12px]">
+        <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto text-[11px] font-medium tracking-[0.01em] min-[412px]:gap-2.5 min-[412px]:text-[12px]">
           {HOME_SPORT_TABS.map((tab) => (
             <button
               key={tab.id}
@@ -59,7 +59,7 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-3 border-b border-line text-center text-[12px] font-semibold">
+      <div className="grid grid-cols-3 border-b border-line text-center text-[12px] font-medium tracking-[0.01em]">
         {(["highlights", "today", "countries"] as const).map((id) => (
           <button
             key={id}
@@ -88,7 +88,7 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
         </div>
       ) : (
         <>
-          <div className="no-scrollbar flex gap-2 overflow-x-auto px-2.5 pt-1.5 text-[11px] font-semibold min-[412px]:gap-2.5 min-[412px]:px-3">
+          <div className="no-scrollbar flex gap-2 overflow-x-auto px-2.5 pt-1.5 text-[11px] font-medium tracking-[0.01em] min-[412px]:gap-2.5 min-[412px]:px-3">
             {HOME_MARKETS.map((item) => (
               <button
                 key={item.id}

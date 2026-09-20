@@ -104,7 +104,7 @@ export function HomeView({
             <Link
               key={item.label}
               href={item.href}
-              className="flex flex-col items-center gap-px text-[8.5px] leading-tight text-[#4b5563] min-[375px]:text-[9px] min-[412px]:text-[10px]"
+              className="flex flex-col items-center gap-px text-[9px] font-normal leading-tight tracking-[0.01em] text-[#4b5563] min-[412px]:text-[10px]"
             >
               <span className="grid h-6 w-6 place-items-center text-[#374151] min-[412px]:h-7 min-[412px]:w-7">
                 <Icon className="h-[16px] w-[16px] min-[412px]:h-[18px] min-[412px]:w-[18px]" />
@@ -121,7 +121,7 @@ export function HomeView({
             key={card.label}
             href={card.href}
             className={cn(
-              "h-[40px] w-[92px] shrink-0 rounded-md border border-[#eceff3] border-t-[2px] bg-white px-1.5 py-1 text-[9px] font-bold leading-tight text-[#2b3038] shadow-[0_1px_3px_rgba(16,24,40,0.08)] min-[375px]:h-[42px] min-[375px]:w-[98px] min-[375px]:text-[10px] min-[412px]:h-[46px] min-[412px]:w-[108px] min-[430px]:w-[112px]",
+              "h-[40px] w-[92px] shrink-0 rounded-md border border-[#eceff3] border-t-[2px] bg-white px-1.5 py-1 text-[9px] font-semibold leading-tight tracking-[0.01em] text-[#2b3038] shadow-[0_1px_3px_rgba(16,24,40,0.08)] min-[375px]:h-[42px] min-[375px]:w-[98px] min-[375px]:text-[10px] min-[412px]:h-[46px] min-[412px]:w-[108px] min-[430px]:w-[112px]",
               card.border,
             )}
           >
@@ -130,8 +130,8 @@ export function HomeView({
         ))}
       </div>
 
-      <div className="flex items-center gap-2 overflow-x-auto bg-white px-2.5 pt-2 text-[12px] font-semibold min-[412px]:gap-2.5 min-[412px]:px-3 min-[412px]:text-[13px]">
-        <span className="shrink-0 text-[13px] font-black text-ink min-[412px]:text-[14px]">Featured</span>
+      <div className="flex items-center gap-2 overflow-x-auto bg-white px-2.5 pt-2 text-[12px] font-medium tracking-[0.01em] min-[412px]:gap-2.5 min-[412px]:px-3 min-[412px]:text-[13px]">
+        <span className="shrink-0 text-[13px] font-semibold text-ink min-[412px]:text-[14px]">Featured</span>
         <span className="h-3 w-px shrink-0 bg-[#d1d5db]" />
         {CONTENT_TABS.map((tab) => (
           <button
@@ -172,7 +172,7 @@ export function HomeView({
                   />
                   {selected ? (
                     <>
-                      <span className="text-[11px] font-semibold leading-none text-ink min-[412px]:text-[12px]">{league.name}</span>
+                      <span className="text-[11px] font-medium leading-none tracking-[0.01em] text-ink min-[412px]:text-[12px]">{league.name}</span>
                       <span
                         aria-hidden
                         className="pointer-events-none absolute left-1/2 top-[calc(100%-5px)] z-[1] h-2.5 w-2.5 -translate-x-1/2 rotate-45 border-b-[1.5px] border-r-[1.5px] border-[#d4d8de] bg-white"

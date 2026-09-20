@@ -37,8 +37,8 @@ export function BetSlipPanel({
     <section className={cn("flex h-full flex-col bg-white", embedded && "border-l border-line")}>
       <header className="flex items-center justify-between border-b border-line px-2.5 py-1.5">
         <div>
-          <p className="text-[12px] font-bold text-ink">Betslip</p>
-          <p className="text-[10px] text-muted">
+          <p className="text-[13px] font-semibold tracking-[0.01em] text-ink">Betslip</p>
+          <p className="text-[10px] font-normal text-muted">
             {items.length} selection{items.length === 1 ? "" : "s"}
           </p>
         </div>
@@ -64,7 +64,7 @@ export function BetSlipPanel({
           ) : null}
         </div>
       </header>
-      <div className="grid grid-cols-3 border-b border-line text-[11px] font-semibold">
+      <div className="grid grid-cols-3 border-b border-line text-[12px] font-medium tracking-[0.01em]">
         {(["SINGLE", "MULTI", "SYSTEM"] as const).map((item) => (
           <button
             key={item}
@@ -82,22 +82,22 @@ export function BetSlipPanel({
       <div className="flex-1 overflow-y-auto">
         {items.length === 0 ? (
           <div className="px-5 py-10 text-center">
-            <p className="text-[13px] font-semibold text-ink">Your slip is empty</p>
-            <p className="mt-1 text-[12px] text-muted">Tap an odd to add a selection. Demo prices only.</p>
+            <p className="text-[13px] font-medium tracking-[0.01em] text-ink">Your slip is empty</p>
+            <p className="mt-1 text-[12px] font-normal text-muted">Tap an odd to add a selection. Demo prices only.</p>
           </div>
         ) : (
           items.map((item) => (
             <article key={item.outcomeId} className="sheet-up border-b border-[#f1f3f7] px-2.5 py-2">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="text-[10px] text-muted">{item.league}</p>
-                  <p className="truncate text-[12px] font-semibold text-ink">{item.matchLabel}</p>
-                  <p className="text-[11px] text-muted">
+                  <p className="text-[10px] font-normal text-muted">{item.league}</p>
+                  <p className="truncate text-[12px] font-medium tracking-[0.01em] text-ink">{item.matchLabel}</p>
+                  <p className="text-[11px] font-normal text-muted">
                     {item.marketName} · {item.outcomeLabel}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[13px] font-bold text-odds">{formatOdds(item.odds)}</span>
+                  <span className="text-[13px] font-semibold tabular-nums tracking-[0.01em] text-odds">{formatOdds(item.odds)}</span>
                   <form action={removeSlipSelection}>
                     <input type="hidden" name="outcomeId" value={item.outcomeId} />
                     <button type="submit" aria-label="Remove selection" className="text-danger">
@@ -113,8 +113,8 @@ export function BetSlipPanel({
       <form action={action} className="border-t border-line p-2.5">
         <input type="hidden" name="type" value={tab} />
         <div className="mb-1.5 flex items-center justify-between text-[12px]">
-          <span className="text-muted">Total odds</span>
-          <span className="font-bold">{items.length ? formatOdds(summary.totalOdds) : "0.00"}</span>
+          <span className="font-normal text-muted">Total odds</span>
+          <span className="font-semibold tabular-nums">{items.length ? formatOdds(summary.totalOdds) : "0.00"}</span>
         </div>
         {tab === "SYSTEM" && items.length >= 3 ? (
           <p className="mb-2 text-[11px] text-muted">
@@ -124,8 +124,8 @@ export function BetSlipPanel({
         <label className="mb-1.5 block text-[11px] font-medium text-muted">Stake (GHS)</label>
         <Input name="stake" value={stake} onChange={(e) => setStake(e.target.value)} inputMode="decimal" placeholder="10.00" className="h-8" />
         <div className="mt-1.5 flex items-center justify-between text-[12px]">
-          <span className="text-muted">Potential win</span>
-          <span className="font-bold text-brand">{formatGhs(summary.potentialWin)}</span>
+          <span className="font-normal text-muted">Potential win</span>
+          <span className="font-semibold tabular-nums text-brand">{formatGhs(summary.potentialWin)}</span>
         </div>
         {invalidCombo && items.length > 0 ? (
           <p className="mt-2 text-[11px] text-danger">
