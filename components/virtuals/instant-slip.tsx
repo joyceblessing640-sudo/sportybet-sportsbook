@@ -44,7 +44,7 @@ export function InstantSlipPanel() {
       const ticket = placeDemoBet({ type: tab, stakePesewas, items });
       clear();
       closeInstantSlip();
-      toast.success("Demo bet placed — no real money");
+      toast.success("Demo bet placed — no real money", { duration: 1800 });
       router.push("/bets");
       return ticket;
     } catch (err) {

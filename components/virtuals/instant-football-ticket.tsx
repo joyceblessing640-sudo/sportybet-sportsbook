@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import { toast } from "sonner";
 import { DemoCrest } from "@/components/virtuals/demo-crest";
 import { formatGhs, formatOdds } from "@/lib/money";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ export function InstantFootballTicket({ ticketId }: { ticketId: string }) {
     const load = () => setTicket(getDemoTicket(ticketId));
     load();
     setReady(true);
+    toast.dismiss();
     return subscribeDemoTickets(load);
   }, [ticketId]);
 
@@ -55,7 +57,6 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   const [cursor, setCursor] = useState(ticket.status === "SETTLED" ? 999 : 0);
 
   const pick = ticket.picks[index];
-  const match = pick ? getDemoMatch(pick.matchId) : null;
   const sim = useMemo(
     () => (pick ? simulateDemoPick(pick) : null),
     [pick],
@@ -144,7 +145,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
           >
             Kick Off
           </button>
-        ) : (
+        ) : settled ? null : (
           <div className="mt-3 flex gap-2">
             {(["1x", "2x"] as const).map((item) => (
               <button
@@ -178,7 +179,6 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
               </div>
               <TeamSide pick={pick} side="away" />
             </div>
-            {match ? null : null}
             {ticket.picks.length > 1 ? (
               <p className="mt-2 text-center text-[11px] text-white/45">
                 Match {index + 1}/{ticket.picks.length}
@@ -187,29 +187,8 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
           </div>
         ) : null}
 
-        {shown.length > 0 ? (
-          <ol className="mt-4 space-y-1.5">
-            {shown.map((event: SimEvent, i) => (
-              <li
-                key={`${event.minute}-${event.type}-${i}`}
-                className={cn(
-                  "flex items-center justify-between rounded-lg px-3 py-2 text-[12px]",
-                  event.type === "GOAL" ? "bg-[#12a150] font-bold" : "bg-[#23262e] text-white/85",
-                )}
-              >
-                <span>
-                  {event.minute}' {event.label}
-                </span>
-                <span className="tabular-nums">
-                  {event.homeScore}-{event.awayScore}
-                </span>
-              </li>
-            ))}
-          </ol>
-        ) : null}
-
         {settled ? (
-          <div className="mt-4 rounded-xl bg-[#1f232b] px-3 py-4 text-center">
+          <div className="mt-4 rounded-xl bg-[#1f232b] px-3 py-4 text-center" data-testid="demo-result">
             <p className="text-[11px] font-bold uppercase tracking-wide text-white/50">Final result · demo</p>
             <p className={cn("mt-1 text-[22px] font-black", ticket.won ? "text-[#7dffb1]" : "text-[#ff8b8b]")}>
               {ticket.won ? "WON" : "LOST"}
@@ -232,6 +211,27 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
               Back to matches
             </Link>
           </div>
+        ) : null}
+
+        {shown.length > 0 ? (
+          <ol className="mt-4 space-y-1.5">
+            {(settled ? shown.filter((event) => event.type === "GOAL" || event.type === "KICK_OFF" || event.type === "FT") : shown).map((event: SimEvent, i) => (
+              <li
+                key={`${event.minute}-${event.type}-${i}`}
+                className={cn(
+                  "flex items-center justify-between rounded-lg px-3 py-2 text-[12px]",
+                  event.type === "GOAL" ? "bg-[#12a150] font-bold" : "bg-[#23262e] text-white/85",
+                )}
+              >
+                <span>
+                  {event.minute}' {event.label}
+                </span>
+                <span className="tabular-nums">
+                  {event.homeScore}-{event.awayScore}
+                </span>
+              </li>
+            ))}
+          </ol>
         ) : null}
       </div>
     </div>
