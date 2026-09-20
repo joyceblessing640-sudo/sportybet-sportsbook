@@ -52,7 +52,7 @@ export function AppShell({ children, slipItems }: { children: ReactNode; slipIte
         </div>
       )}
       <div className="mx-auto flex max-w-[1440px]">
-        <main className="min-w-0 flex-1 bottom-pad">
+        <main className={hideFooter ? "min-w-0 flex-1" : "min-w-0 flex-1 bottom-pad"}>
           {children}
           {hideFooter ? null : <SiteFooter />}
         </main>
@@ -62,7 +62,7 @@ export function AppShell({ children, slipItems }: { children: ReactNode; slipIte
           </div>
         )}
       </div>
-      <BottomNav onOpenMenu={() => setMenuOpen(true)} />
+      {hideFooter ? null : <BottomNav onOpenMenu={() => setMenuOpen(true)} />}
       {hideTop ? null : <BetSlipFab key={slipItems.length} items={slipItems} onOpen={openMobileSlip} />}
       {hideTop ? null : (
         <div id={MOBILE_SLIP_ID} popover="auto" data-testid="betslip-sheet" className="betslip-popover lg:hidden">
