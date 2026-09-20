@@ -1,17 +1,43 @@
 import type { DemoTeam } from "@/lib/virtuals/demo-board";
 
-export function DemoCrest({ team, size = 24 }: { team: DemoTeam; size?: number }) {
+/** Small square slot; the crest itself keeps its native ratio via object-fit: contain. */
+export function DemoCrest({ team, size = 16 }: { team: DemoTeam; size?: number }) {
   return (
-    // Screenshot crest from the Instant Football reference board.
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={team.logo}
-      alt=""
-      width={size}
-      height={size}
-      className="shrink-0 object-contain object-center"
-      style={{ width: size, height: size }}
-    />
+    <span
+      className="if-crest"
+      aria-hidden
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: size,
+        height: size,
+        minWidth: size,
+        minHeight: size,
+        maxWidth: size,
+        maxHeight: size,
+        flexShrink: 0,
+        overflow: "hidden",
+        lineHeight: 0,
+      }}
+    >
+      {/* Screenshot crest from the Instant Football board. Never stretch. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={team.logo}
+        alt=""
+        draggable={false}
+        style={{
+          display: "block",
+          width: "100%",
+          height: "100%",
+          maxWidth: "100%",
+          maxHeight: "100%",
+          objectFit: "contain",
+          objectPosition: "center",
+        }}
+      />
+    </span>
   );
 }
 
