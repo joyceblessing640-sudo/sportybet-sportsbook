@@ -3,9 +3,17 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import { Logo } from "@/components/brand/logo";
 import { useAuth } from "@/components/providers";
-import { formatGhs } from "@/lib/money";
+import { PESEWAS_PER_GHS } from "@/lib/money";
+import "./header.css";
+
+function formatHeaderBalance(pesewas: number) {
+  const amount = (pesewas / PESEWAS_PER_GHS).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  return `GHS ${amount}`;
+}
 
 export function Header({ onMenu }: { onMenu?: () => void }) {
   void onMenu;
@@ -13,48 +21,50 @@ export function Header({ onMenu }: { onMenu?: () => void }) {
   const router = useRouter();
 
   return (
-    <header className="bg-header text-white">
-      <div className="mx-auto flex h-10 max-w-[1440px] items-center gap-1.5 px-2.5 min-[412px]:h-[42px] min-[412px]:px-3 lg:h-12">
-        <Logo />
-        <div className="ml-auto flex items-center gap-1.5">
-          <button
-            type="button"
-            aria-label="Search"
-            className="grid h-8 w-8 place-items-center"
-            onClick={() => router.push("/sports")}
-          >
-            <Search className="h-4 w-4" />
+    <header className="sb-top">
+      <div className="sb-top-inner">
+        <Link href="/" className="sb-wordmark" aria-label="SportyBet home">
+          <span className="sb-s">
+            S<i />
+          </span>
+          portyBet
+        </Link>
+        <div className="sb-top-actions">
+          <button type="button" className="sb-search" aria-label="Search" onClick={() => router.push("/sports")}>
+            <Search size={22} strokeWidth={2.25} />
           </button>
           {user ? (
-            <>
-              <Link href="/deposit" className="text-right leading-tight">
-                <p className="text-[10px] font-bold tabular-nums min-[412px]:text-[11px]">{formatGhs(user.wallet?.balancePesewas ?? 0)}</p>
-              </Link>
-              <Link
-                href="/deposit"
-                className="inline-flex h-[26px] items-center rounded-md bg-white px-2 text-[11px] font-bold text-header min-[412px]:h-7 min-[412px]:px-2.5"
-              >
-                Deposit
-              </Link>
-            </>
+            <Link href="/me" className="sb-balance" aria-label={formatHeaderBalance(user.wallet?.balancePesewas ?? 0)}>
+              <HeaderAvatar />
+              <span>{formatHeaderBalance(user.wallet?.balancePesewas ?? 0)}</span>
+            </Link>
           ) : (
-            <>
-              <Link
-                href="/register"
-                className="inline-flex h-[26px] items-center rounded-md border border-white px-2 text-[11px] font-bold text-white min-[412px]:h-7 min-[412px]:px-2.5"
-              >
-                Join Now
-              </Link>
-              <Link
-                href="/login"
-                className="inline-flex h-[26px] items-center rounded-md border border-white bg-white px-2 text-[11px] font-bold text-header min-[412px]:h-7 min-[412px]:px-2.5"
-              >
+            <div className="sb-guest">
+              <Link href="/register">Join Now</Link>
+              <Link href="/login" className="login">
                 Login
               </Link>
-            </>
+            </div>
           )}
         </div>
       </div>
     </header>
+  );
+}
+
+function HeaderAvatar() {
+  return (
+    <svg className="sb-avatar" viewBox="0 0 36 36" aria-hidden>
+      <defs>
+        <linearGradient id="sb-avatar-sky" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="#f7e3c8" />
+          <stop offset="55%" stopColor="#e8c49a" />
+          <stop offset="100%" stopColor="#c48a58" />
+        </linearGradient>
+      </defs>
+      <circle cx="18" cy="18" r="18" fill="url(#sb-avatar-sky)" />
+      <circle cx="18" cy="14.5" r="6.2" fill="#2b1d16" />
+      <path d="M8.5 34c1.8-7.2 5.8-11 9.5-11s7.7 3.8 9.5 11" fill="#1f1612" />
+    </svg>
   );
 }

@@ -1,0 +1,131 @@
+.sb-top {
+  background: #e31837;
+  color: #fff;
+}
+
+.sb-top-inner {
+  display: flex;
+  align-items: center;
+  height: 54px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 12px 0 16px;
+}
+
+.sb-wordmark {
+  display: flex;
+  align-items: baseline;
+  color: #fff;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.sb-s {
+  position: relative;
+  display: inline-block;
+}
+
+.sb-s i {
+  position: absolute;
+  left: 0.07em;
+  bottom: 0.04em;
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: inset 0 0 0 1.5px #e31837;
+}
+
+.sb-top-actions {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 10px;
+}
+
+.sb-search {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.sb-balance {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 3px 12px 3px 3px;
+  border: 1.5px solid #fff;
+  border-radius: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.sb-avatar {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: block;
+}
+
+.sb-guest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sb-guest a {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border: 1.5px solid #fff;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.sb-guest a.login {
+  background: #fff;
+  color: #e31837;
+}
+
+@media (min-width: 412px) {
+  .sb-top-inner {
+    height: 56px;
+    padding: 0 16px 0 18px;
+  }
+
+  .sb-wordmark {
+    font-size: 23px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sb-top-inner {
+    height: 58px;
+    padding: 0 20px;
+  }
+
+  .sb-wordmark {
+    font-size: 24px;
+  }
+}
