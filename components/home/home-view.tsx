@@ -103,7 +103,7 @@ export function HomeView({
           <Link
             key={promo.title}
             href={promo.href}
-            className="relative h-[66px] w-[66px] shrink-0 overflow-hidden rounded-[8px] min-[390px]:h-[68px] min-[390px]:w-[68px] min-[430px]:h-[72px] min-[430px]:w-[72px]"
+            className="relative h-[64px] w-[64px] shrink-0 overflow-hidden rounded-[8px] min-[412px]:h-[66px] min-[412px]:w-[66px] min-[430px]:h-[68px] min-[430px]:w-[68px]"
           >
             <img
               src={promo.src}
@@ -140,7 +140,7 @@ export function HomeView({
             key={card.label}
             href={card.href}
             className={cn(
-              "h-[54px] w-[124px] shrink-0 rounded-md border border-[#eceff3] border-t-[3px] bg-white px-2 py-1.5 text-[11px] font-bold leading-tight text-[#2b3038] shadow-[0_1px_3px_rgba(16,24,40,0.08)]",
+              "h-[54px] w-[116px] shrink-0 rounded-md border border-[#eceff3] border-t-[3px] bg-white px-2 py-1.5 text-[11px] font-bold leading-tight text-[#2b3038] shadow-[0_1px_3px_rgba(16,24,40,0.08)] min-[412px]:w-[124px]",
               card.border,
             )}
           >
@@ -189,7 +189,7 @@ export function HomeView({
                     alt=""
                     width={40}
                     height={40}
-                    className={cn("object-contain", selected ? "h-4 w-4" : "h-7 w-7")}
+                    className={cn("object-contain contrast-125 brightness-[0.72]", selected ? "h-4 w-4 brightness-100 contrast-100" : "h-7 w-7")}
                   />
                   {selected ? <span className="text-[13px] font-semibold text-ink">{league.name}</span> : null}
                 </Link>

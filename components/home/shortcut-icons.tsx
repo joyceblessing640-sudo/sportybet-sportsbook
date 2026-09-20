@@ -30,8 +30,9 @@ export function IconCrash({ className }: { className?: string }) {
 export function IconAviator({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={cn("text-[#d0122d]", className)} fill="currentColor" aria-hidden>
-      <path d="M3.2 13.4 20.6 4.6c.7-.4 1.5.4 1.1 1.1l-8.6 17.3c-.4.9-1.7.8-2-.2l-1.8-6.4-6.3-1.7c-1-.3-1.1-1.6-.2-2.1Z" />
-      <path d="M10.6 15.1 14.2 9.4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M2.8 12.2 21.2 5.4c.55-.2.95.45.62.92L14.4 20.8c-.28.4-.9.32-1.06-.14l-1.7-5.1-5.5-1.55c-.85-.24-.95-1.35-.14-1.72l.8-.4Z" />
+      <path d="M11.2 14.7 15.4 8.6" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M8.2 13.2h6.4" stroke="#fff" strokeWidth="1.15" strokeLinecap="round" opacity=".7" />
     </svg>
   );
 }

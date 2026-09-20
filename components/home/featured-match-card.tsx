@@ -65,7 +65,7 @@ export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
       <Link href={`/match/${match.id}`} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
         <div className="flex flex-col items-center gap-1.5 text-center">
           <TeamMark team={match.home} />
-          <p className="text-[12px] font-medium leading-tight text-[#6b7280]">{match.home.name}</p>
+          <p className="text-[12px] font-medium leading-tight text-[#8a9199]">{match.home.name}</p>
         </div>
         <div className="text-center">
           {live ? (
@@ -78,11 +78,11 @@ export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
           ) : (
             <p className="text-[16px] font-bold text-ink">{kickLabel(match)}</p>
           )}
-          <p className="mt-1.5 text-[13px] font-bold text-accent">1X2</p>
+          <p className="mt-1.5 text-[13px] font-bold text-[#12a150]">1X2</p>
         </div>
         <div className="flex flex-col items-center gap-1.5 text-center">
           <TeamMark team={match.away} />
-          <p className="text-[12px] font-medium leading-tight text-[#6b7280]">{match.away.name}</p>
+          <p className="text-[12px] font-medium leading-tight text-[#8a9199]">{match.away.name}</p>
         </div>
       </Link>
       {market ? (

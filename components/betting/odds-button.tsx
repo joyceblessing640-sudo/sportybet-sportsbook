@@ -32,7 +32,7 @@ export function OddsButton({
         className={cn(
           "odds-btn flex h-full w-full min-w-0 items-center justify-center px-1",
           spread
-            ? "h-[38px] flex-row justify-between px-2.5 text-[15px]"
+            ? "h-[38px] flex-row justify-between px-3 text-[15px]"
             : compact
               ? "h-8 flex-col text-[13px]"
               : "h-10 flex-col text-xs",
