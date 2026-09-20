@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { format } from "date-fns";
+import { BarChart2 } from "lucide-react";
 import { CountryMark } from "@/components/brand/country-mark";
 import type { ClientMatch } from "@/lib/serialize";
 import { OddsButton } from "./odds-button";
@@ -44,7 +45,7 @@ export function DateOddsHeader({
     >
       {country ? <CountryMark country={country} /> : null}
       <span className="min-w-0 flex-1 truncate uppercase tracking-wide">{label}</span>
-      <div className="grid w-[9.75rem] grid-cols-3 text-center sm:w-[11rem]">
+      <div className={cn("grid text-center", headers.length === 2 ? "w-[6.5rem] grid-cols-2" : "w-[9.75rem] grid-cols-3 sm:w-[11rem]")}>
         {headers.slice(0, 3).map((h) => (
           <span key={h}>{h}</span>
         ))}
@@ -59,45 +60,52 @@ export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
   const kick = live ? match.clock : format(new Date(match.startTime), "HH:mm");
 
   return (
-    <article className="card-hover w-[268px] shrink-0 rounded-md border border-line bg-white p-2.5">
-      <div className="mb-1.5 flex items-center gap-1.5 text-[10px]">
-        {live ? <span className="live-dot" aria-hidden /> : null}
-        {live ? <span className="font-bold uppercase tracking-wide text-brand">Live</span> : null}
+    <article className="bg-white px-3 pb-3 pt-2">
+      <div className="mb-2 flex items-center gap-1.5 text-[11px] text-muted">
         <CountryMark country={match.league.country} />
-        <span className="min-w-0 truncate font-medium text-muted">
-          {match.league.country} · {match.league.name}
+        <span className="min-w-0 flex-1 truncate">
+          {match.sport.name} - {match.league.country} - {match.league.name}
         </span>
-        <span className="ml-auto tabular-nums text-muted">{kick}</span>
+        <BarChart2 className="h-3.5 w-3.5 shrink-0 text-[#c5cad3]" />
       </div>
-      <Link href={`/match/${match.id}`} className="block">
-        <p className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
-          <TeamBadge team={match.home} size="sm" />
-          <span className="min-w-0 flex-1 truncate">{match.home.shortName}</span>
-          {live ? <span className="tabular-nums font-bold">{match.homeScore}</span> : null}
-        </p>
-        <p className="mt-1 flex items-center gap-1.5 text-[13px] font-semibold text-ink">
-          <TeamBadge team={match.away} size="sm" />
-          <span className="min-w-0 flex-1 truncate">{match.away.shortName}</span>
-          {live ? <span className="tabular-nums font-bold">{match.awayScore}</span> : null}
-        </p>
+      <Link href={`/match/${match.id}`} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+        <div className="flex flex-col items-center gap-1 text-center">
+          <TeamBadge team={match.home} size="lg" />
+          <p className="text-[12px] font-medium leading-tight text-ink">{match.home.shortName}</p>
+        </div>
+        <div className="text-center">
+          {live ? (
+            <>
+              <p className="text-[22px] font-bold tabular-nums text-ink">
+                {match.homeScore} - {match.awayScore}
+              </p>
+              <p className="mt-0.5 text-[11px] font-semibold text-accent">
+                Live {kick} {match.periodLabel ?? ""}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-[16px] font-bold text-[#9aa3b2]">VS</p>
+              <p className="mt-0.5 text-[11px] text-muted">{kick}</p>
+            </>
+          )}
+          <p className="mt-1 text-[11px] font-bold text-ink">1X2</p>
+        </div>
+        <div className="flex flex-col items-center gap-1 text-center">
+          <TeamBadge team={match.away} size="lg" />
+          <p className="text-[12px] font-medium leading-tight text-ink">{match.away.shortName}</p>
+        </div>
       </Link>
       {market ? (
-        <div className="mt-2 flex gap-1">
+        <div className="mt-2 grid grid-cols-3 gap-1.5">
           {market.outcomes.slice(0, 3).map((outcome) => (
-            <OddsButton
-              key={outcome.id}
-              match={match}
-              marketName={market.name}
-              outcome={outcome}
-              compact
-              hideLabel={market.outcomes.length > 2}
-            />
+            <div key={outcome.id} className="text-center">
+              <p className="mb-1 text-[11px] text-muted">{outcome.label}</p>
+              <OddsButton match={match} marketName={market.name} outcome={outcome} compact hideLabel />
+            </div>
           ))}
         </div>
       ) : null}
-      <Link href={`/match/${match.id}`} className="mt-1.5 inline-block text-[11px] font-semibold text-brand">
-        +{match.extraMarkets} markets
-      </Link>
     </article>
   );
 }
@@ -120,51 +128,50 @@ export function MatchCard({
   const live = match.status === "LIVE" || match.status === "HT";
   const kick = live ? match.clock : format(new Date(match.startTime), "HH:mm");
   const light = !onDark;
+  const cols = Math.min(market?.outcomes.length ?? 3, 3);
+  const oddsWidth = cols === 2 ? "w-[6.5rem]" : "w-[9.75rem] sm:w-[11rem]";
 
   return (
     <article
       className={cn(
-        "card-hover border-b px-3 py-2",
-        onDark ? "border-white/10 bg-transparent" : "border-line bg-white",
+        "border-b px-3 py-2",
+        onDark ? "on-dark border-white/10 bg-transparent" : "border-line bg-white",
       )}
     >
-      {hideLeague ? (
-        <div className="mb-1 flex items-center justify-end text-[11px]">
-          {live ? <span className="mr-auto flex items-center gap-1.5 font-bold uppercase tracking-wide text-brand"><span className="live-dot" /> Live</span> : null}
-          <span className={cn("tabular-nums", light ? "text-muted" : "text-white/55")}>{kick}</span>
-        </div>
-      ) : (
       <div className="mb-1 flex items-center gap-1.5 text-[11px]">
-        {live ? <span className="live-dot" aria-hidden /> : null}
-        {live ? <span className="font-bold uppercase tracking-wide text-brand">Live</span> : null}
-        <CountryMark country={match.league.country} />
-        <span className={cn("min-w-0 truncate font-medium", light ? "text-muted" : "text-white/60")}>
-          {match.league.country} · {match.league.name}
+        <span className={cn("tabular-nums font-semibold", live ? "text-accent" : light ? "text-muted" : "text-white/70")}>
+          {kick}
+          {live && match.periodLabel ? ` ${match.periodLabel}` : ""}
         </span>
-        <span className={cn("ml-auto tabular-nums", light ? "text-muted" : "text-white/55")}>{kick}</span>
+        {hideLeague ? null : (
+          <span className={cn("min-w-0 truncate", light ? "text-muted" : "text-white/55")}>
+            {match.league.country} - {match.league.name}
+          </span>
+        )}
+        <BarChart2 className={cn("ml-auto h-3.5 w-3.5 shrink-0", light ? "text-[#c5cad3]" : "text-white/35")} />
       </div>
-      )}
-      <div className="grid grid-cols-[minmax(0,1fr)_auto_9.75rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_auto_11rem]">
+      <div
+        className={cn(
+          "grid items-center gap-2",
+          cols === 2
+            ? "grid-cols-[minmax(0,1fr)_auto_6.5rem]"
+            : "grid-cols-[minmax(0,1fr)_auto_9.75rem] sm:grid-cols-[minmax(0,1fr)_auto_11rem]",
+        )}
+      >
         <Link href={`/match/${match.id}`} className="min-w-0">
-          <p className={cn("flex items-center gap-1.5 truncate text-[13px] font-medium", light ? "text-ink" : "text-white")}>
-            <TeamBadge team={match.home} size="sm" />
-            <span className="min-w-0 truncate">{match.home.shortName}</span>
-          </p>
-          <p className={cn("mt-1 flex items-center gap-1.5 truncate text-[13px] font-medium", light ? "text-ink" : "text-white")}>
-            <TeamBadge team={match.away} size="sm" />
-            <span className="min-w-0 truncate">{match.away.shortName}</span>
-          </p>
+          <p className={cn("truncate text-[13px] font-medium", light ? "text-ink" : "text-white")}>{match.home.shortName}</p>
+          <p className={cn("mt-0.5 truncate text-[13px] font-medium", light ? "text-ink" : "text-white")}>{match.away.shortName}</p>
         </Link>
         {live ? (
           <div className={cn("w-4 text-right text-[13px] font-bold tabular-nums", light ? "text-ink" : "text-white")}>
             <p>{match.homeScore}</p>
-            <p className="mt-1">{match.awayScore}</p>
+            <p className="mt-0.5">{match.awayScore}</p>
           </div>
         ) : (
           <span className="w-0" />
         )}
         {market ? (
-          <div className="flex gap-1">
+          <div className={cn("flex gap-1", oddsWidth)}>
             {market.outcomes.slice(0, 3).map((outcome) => (
               <OddsButton
                 key={outcome.id}
@@ -182,8 +189,8 @@ export function MatchCard({
       </div>
       {showOu && ou ? (
         <div className="mt-1.5 grid grid-cols-[minmax(0,1fr)_auto_9.75rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_auto_11rem]">
-          <Link href={`/match/${match.id}`} className={cn("text-[11px] font-semibold", light ? "text-brand" : "text-[#8dffb8]")}>
-            +{match.extraMarkets} markets
+          <Link href={`/match/${match.id}`} className={cn("text-[11px] font-semibold", light ? "text-accent" : "text-accent")}>
+            +{match.extraMarkets}
           </Link>
           <span className={cn("text-[10px] font-semibold", light ? "text-muted" : "text-white/50")}>{ou.line ?? "O/U"}</span>
           <div className="flex gap-1">
@@ -193,8 +200,8 @@ export function MatchCard({
           </div>
         </div>
       ) : (
-        <Link href={`/match/${match.id}`} className={cn("mt-1 inline-block text-[11px] font-semibold", light ? "text-muted" : "text-white/45")}>
-          +{match.extraMarkets} markets
+        <Link href={`/match/${match.id}`} className={cn("mt-0.5 inline-block text-[11px] font-semibold", light ? "text-accent" : "text-accent")}>
+          +{match.extraMarkets}
         </Link>
       )}
     </article>

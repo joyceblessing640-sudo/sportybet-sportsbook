@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CircleHelp } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import { getUserBets } from "@/lib/betting";
 import { prisma } from "@/lib/db";
@@ -16,7 +17,7 @@ export default async function BetsPage({
   searchParams: Promise<{ tab?: string }>;
 }) {
   const { tab } = await searchParams;
-  const current = tab === "settled" ? "SETTLED" : tab === "cancelled" ? "CANCELLED" : "OPEN";
+  const current = tab === "settled" || tab === "history" ? "SETTLED" : tab === "cancelled" ? "CANCELLED" : "OPEN";
   const session = await getSession();
   const data = session ? await getUserBets(session.id, current) : { items: [], total: 0, page: 1, pageSize: 20 };
 
@@ -29,62 +30,70 @@ export default async function BetsPage({
       awayTeam: true,
       markets: { include: { outcomes: { where: { active: true } } } },
     },
-    take: 6,
+    take: 8,
   });
   const codes = await Promise.all(
     featured.map(async (m) => serializeMatch({ ...m, clock: await liveMinute(m.startTime, m.status) })),
   );
 
   return (
-    <div>
-      <header className="flex items-center justify-between bg-header px-3 py-2.5 text-white">
-        <Link href="/how-to-play" className="text-xs">
-          How to Cashout?
+    <div className="min-h-dvh bg-[#f4f5f7]">
+      <header className="flex items-center justify-between bg-[#2a2d36] px-3 py-2.5 text-white">
+        <Link href="/how-to-play" className="inline-flex items-center gap-1 text-[12px]">
+          <CircleHelp className="h-3.5 w-3.5" /> How to Cashout?
         </Link>
         {!session ? (
-          <div className="text-xs font-semibold">
+          <div className="text-[12px] font-semibold">
             <Link href="/register">Register</Link>
-            <span className="mx-2 text-white/40">|</span>
+            <span className="mx-1.5 text-white/40">|</span>
             <Link href="/login">Login</Link>
           </div>
         ) : (
-          <span className="text-xs text-white/70">{session.username}</span>
+          <span className="text-[12px] text-white/70">{session.username}</span>
         )}
       </header>
-      <div className="grid grid-cols-3 bg-white text-sm font-semibold">
-        {[
-          { id: "OPEN", label: "Open Bets", href: "/bets" },
-          { id: "SETTLED", label: "Settled", href: "/bets?tab=settled" },
-          { id: "CANCELLED", label: "Cancelled", href: "/bets?tab=cancelled" },
-        ].map((item) => (
-          <Link
-            key={item.id}
-            href={item.href}
-            className={cn("py-3 text-center", current === item.id ? "border-b-2 border-brand text-brand" : "text-[#6b7280]")}
-          >
-            {item.label}
-          </Link>
-        ))}
+      <div className="grid grid-cols-2 bg-[#e8eaee] text-[14px] font-semibold">
+        <Link
+          href="/bets"
+          className={cn("py-3 text-center", current === "OPEN" ? "bg-white text-ink" : "bg-transparent text-muted")}
+        >
+          Open Bets
+        </Link>
+        <Link
+          href="/bets?tab=history"
+          className={cn("py-3 text-center", current === "SETTLED" ? "bg-white text-ink" : "bg-transparent text-muted")}
+        >
+          Bet History
+        </Link>
       </div>
       {!session ? (
         <div className="bg-white px-6 py-10 text-center">
-          <p className="text-sm text-muted">Please log in to see your bets and cashout.</p>
-          <Link href="/login?next=/bets" className="mt-4 inline-flex h-10 items-center rounded-md border border-odds px-6 text-sm font-bold text-odds">
+          <p className="text-[14px] leading-relaxed text-muted">
+            Please Log In to see your Open
+            <br />
+            Bets and Cashout Bets
+          </p>
+          <Link
+            href="/login?next=/bets"
+            className="mt-5 inline-flex h-10 items-center rounded-md border border-accent px-10 text-[14px] font-bold text-accent"
+          >
             Login
           </Link>
         </div>
       ) : data.items.length === 0 ? (
-        <div className="bg-white px-6 py-10 text-center text-sm text-muted">No {current.toLowerCase()} bets yet.</div>
+        <div className="bg-white px-6 py-10 text-center text-sm text-muted">
+          No {current === "OPEN" ? "open" : "history"} bets yet.
+        </div>
       ) : (
-        <div className="space-y-3 p-3">
+        <div className="space-y-2 p-3">
           {data.items.map((bet) => (
-            <article key={bet.id} className="rounded-md border border-line bg-white p-3">
-              <div className="flex items-center justify-between text-xs text-muted">
+            <article key={bet.id} className="rounded-md bg-white p-3">
+              <div className="flex items-center justify-between text-[11px] text-muted">
                 <span>{bet.publicId}</span>
                 <span>{bet.createdAt.toLocaleString()}</span>
               </div>
-              <p className="mt-1 text-xs font-bold uppercase text-brand">{bet.status}</p>
-              <ul className="mt-2 space-y-1 text-sm">
+              <p className="mt-1 text-[11px] font-bold uppercase text-accent">{bet.status}</p>
+              <ul className="mt-2 space-y-1 text-[13px]">
                 {bet.selections.map((sel) => (
                   <li key={sel.id}>
                     <span className="font-medium">
@@ -97,18 +106,18 @@ export default async function BetsPage({
                   </li>
                 ))}
               </ul>
-              <div className="mt-3 grid grid-cols-3 text-xs">
+              <div className="mt-3 grid grid-cols-3 text-[11px] text-muted">
                 <div>
                   Odds
-                  <p className="font-bold">{formatOdds(bet.totalOdds)}</p>
+                  <p className="font-bold text-ink">{formatOdds(bet.totalOdds)}</p>
                 </div>
                 <div>
                   Stake
-                  <p className="font-bold">{formatGhs(bet.stakePesewas)}</p>
+                  <p className="font-bold text-ink">{formatGhs(bet.stakePesewas)}</p>
                 </div>
                 <div>
                   To win
-                  <p className="font-bold">{formatGhs(bet.potentialWinPesewas)}</p>
+                  <p className="font-bold text-ink">{formatGhs(bet.potentialWinPesewas)}</p>
                 </div>
               </div>
             </article>

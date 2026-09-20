@@ -32,7 +32,7 @@ export function CountryMark({
         "grid h-4 w-4 shrink-0 place-items-center rounded-[3px] text-[8px] font-black text-white",
         className,
       )}
-      style={{ background: TONES[country] ?? "#0b3d2e" }}
+        style={{ background: TONES[country] ?? "#e31837" }}
       aria-hidden
     >
       {letters}

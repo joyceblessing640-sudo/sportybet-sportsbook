@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 import { MatchList } from "@/components/betting/match-card";
 import { Input } from "@/components/ui/input";
 import type { ClientMatch } from "@/lib/serialize";
-import { LIST_MARKET_TABS, LIVE_SPORT_TABS } from "@/lib/constants";
+import { MARKET_TABS, LIVE_SPORT_TABS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
@@ -170,7 +170,7 @@ export function SportsView({
       ) : (
         <>
           <div className="no-scrollbar flex gap-3 overflow-x-auto bg-white px-3 py-2">
-            {LIST_MARKET_TABS.map((item) => (
+            {MARKET_TABS.map((item) => (
               <button
                 key={item.id}
                 type="button"

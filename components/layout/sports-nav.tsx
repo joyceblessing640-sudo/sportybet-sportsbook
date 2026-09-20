@@ -22,7 +22,7 @@ export function SportsNav() {
   }, []);
 
   return (
-    <div className="border-b border-white/10 bg-[#0f4a38] text-white">
+    <div className="border-b border-white/15 bg-header text-white">
       <div className="relative mx-auto flex max-w-[1440px] items-stretch">
         <nav className="no-scrollbar flex min-w-0 flex-1 items-stretch overflow-x-auto">
           {PRIMARY_SPORTS.map((item) => {
@@ -35,19 +35,19 @@ export function SportsNav() {
                 key={item.href + item.label}
                 href={item.href}
                 className={cn(
-                  "relative flex w-[4.35rem] shrink-0 flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-white/75 transition-colors duration-200 hover:text-white sm:w-[4.75rem]",
+                  "relative flex w-[4.35rem] shrink-0 flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-white/80 transition-colors duration-200 hover:text-white sm:w-[4.75rem]",
                   active && "text-white",
                 )}
               >
                 <SportIcon name={item.icon} className="h-[18px] w-[18px]" />
                 <span className="text-[10px] font-semibold leading-none">{item.label}</span>
-                {active ? <span className="absolute inset-x-2 bottom-0 h-0.5 rounded-t bg-[#8dffb8]" /> : null}
+                {active ? <span className="absolute inset-x-2 bottom-0 h-0.5 rounded-t bg-white" /> : null}
               </Link>
             );
           })}
         </nav>
-        <div className="pointer-events-none absolute inset-y-0 right-[4.35rem] w-6 bg-gradient-to-l from-[#0f4a38] sm:right-[5.75rem]" />
-        <div ref={wrap} className="relative z-10 shrink-0 bg-[#0f4a38]">
+        <div className="pointer-events-none absolute inset-y-0 right-[4.35rem] w-6 bg-gradient-to-l from-header sm:right-[5.75rem]" />
+        <div ref={wrap} className="relative z-10 shrink-0 bg-header">
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -71,7 +71,7 @@ export function SportsNav() {
                   key={item.label}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="block px-3 py-2 text-[12px] text-ink hover:bg-brand-soft hover:text-brand"
+                  className="block px-3 py-2 text-[12px] text-ink hover:bg-brand-soft hover:text-header"
                 >
                   {item.label}
                 </Link>

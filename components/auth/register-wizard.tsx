@@ -92,7 +92,7 @@ export function RegisterWizard() {
 
   return (
     <AuthShell>
-      <h1 className="mt-6 text-center text-[22px] font-black leading-tight text-ink">
+      <h1 className="mt-10 text-center text-[22px] font-bold leading-tight text-[#1a1d24]">
         Join SportyBets
         <br />
         with your mobile number
@@ -104,11 +104,11 @@ export function RegisterWizard() {
             <span
               className={cn(
                 "h-4 w-4 rounded-full border-2 bg-white",
-                index <= stepIndex ? "border-[#12a150]" : "border-[#d1d5db]",
-                index < stepIndex && "bg-[#12a150]",
+                index < stepIndex ? "border-[#12a150] bg-[#12a150]" : "border-[#d1d5db]",
+                index === stepIndex && "border-[#9aa3b2]",
               )}
             />
-            <span className={cn(index === stepIndex && "font-semibold text-[#6b7280]")}>{item.label}</span>
+            <span className={cn(index === stepIndex && "font-medium text-[#6b7280]")}>{item.label}</span>
           </li>
         ))}
       </ol>

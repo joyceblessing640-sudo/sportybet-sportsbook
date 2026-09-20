@@ -20,10 +20,7 @@ export function LoginForm() {
       <form action={action} method="post" className="flex flex-1 flex-col pt-6">
         <input type="hidden" name="next" value={next} />
         <div className="space-y-3">
-          <div
-            className="flex h-12 items-center rounded-md border bg-white focus-within:border-[#12a150]"
-            style={{ borderColor: phone ? "#12a150" : "#d7dbe2" }}
-          >
+          <div className="flex h-12 items-center rounded-md border border-[#d7dbe2] bg-white focus-within:border-[#12a150]">
             <span className="shrink-0 border-r border-[#e5e7eb] px-3 text-sm text-[#6b7280]">+233</span>
             <input
               name="identifier"

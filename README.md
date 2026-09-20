@@ -1,6 +1,6 @@
 # SportyBets
 
-SportyBets is a demo sportsbook web app with a compact green-and-white sportsbook interface. Layout and navigation follow modern betting apps. Branding, logo, and copy are original — this product is not affiliated with any third-party operator.
+SportyBets is a demo sportsbook web app with a compact red-and-white sportsbook interface. Layout, density, and navigation follow common mobile sportsbook patterns. Branding, logo, and copy are original — this product is not affiliated with any third-party operator.
 
 **18+ only. Play responsibly. Betting can be addictive.** Matches, odds, balances, and payments in this repository are **demo data** unless you connect a real sports feed and payment provider.
 
@@ -34,7 +34,7 @@ The app listens on [http://127.0.0.1:43141](http://127.0.0.1:43141).
 
 The demo player wallet is pre-funded so you can place tickets. Log in with **+233 240000001** / `DemoPass123!` (email `demo@sportbet.test` also works). Deposits and withdrawals stay **Pending** until an admin confirms them. The UI never marks a payment successful on its own.
 
-Registration is a three-step Ghana mobile flow (number → demo OTP `123456` → username/password). This UI is original SPORTBET software inspired by common sportsbook layouts. It does not copy another operator's source code, trademarks, or licences.
+Registration is a three-step Ghana mobile flow (number → demo OTP `123456` → username/password). This UI is original SportyBets software. It does not copy another operator's source code, trademarks, or licences.
 
 ## Scripts
 

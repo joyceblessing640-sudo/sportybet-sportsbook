@@ -2,29 +2,40 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { format } from "date-fns";
-import { FeaturedMatchCard, MatchList, MatchRow } from "@/components/betting/match-card";
+import { FeaturedMatchCard, MatchList } from "@/components/betting/match-card";
 import { CountryMark } from "@/components/brand/country-mark";
+import { RecommendedCodes } from "@/components/bets/recommended-codes";
+import {
+  IconAllSports,
+  IconCrash,
+  IconLiveTv,
+  IconLoadCode,
+  IconMore,
+  IconVirtuals,
+} from "@/components/home/shortcut-icons";
+import { LiveBoard } from "@/components/live/live-board";
 import { CRASH_GAMES } from "@/lib/games";
-import { MORE_SPORTS } from "@/lib/constants";
 import type { ClientMatch } from "@/lib/serialize";
 import { cn } from "@/lib/utils";
 
-function SectionHead({ title, href, count }: { title: string; href?: string; count?: number }) {
-  return (
-    <div className="flex items-center justify-between px-3 py-2">
-      <h2 className="text-[13px] font-bold text-ink">
-        {title}
-        {typeof count === "number" ? <span className="ml-1 font-medium text-muted">({count})</span> : null}
-      </h2>
-      {href ? (
-        <Link href={href} className="text-[11px] font-semibold text-brand">
-          See all
-        </Link>
-      ) : null}
-    </div>
-  );
-}
+const PROMOS = [
+  { href: "/games/lucky-numbers", title: "Lucky Numbers", art: "from-[#1e3a5f] via-[#7f1d1d] to-[#111827]", motif: "⚽" },
+  { href: "/promotions", title: "Night Cup", art: "from-[#111827] via-[#7c2d12] to-[#1e1b4b]", motif: "🏆" },
+  { href: "/games/jet-rush", title: "Jet Rush", art: "from-[#0f766e] via-[#155e75] to-[#111827]", motif: "✈" },
+  { href: "/games", title: "Studio Games", art: "from-[#9d174d] via-[#7f1d1d] to-[#111827]", motif: "🎰" },
+  { href: "/bets", title: "Quick Slip", art: "from-[#14532d] via-[#166534] to-[#111827]", motif: "●" },
+];
+
+const SHORTCUTS = [
+  { href: "/sports", label: "All Sports", Icon: IconAllSports },
+  { href: "/live", label: "Live", Icon: IconLiveTv },
+  { href: "/games/sky-rise", label: "Crash", Icon: IconCrash },
+  { href: "/load-code", label: "Load Code", Icon: IconLoadCode },
+  { href: "/virtuals", label: "Virtuals", Icon: IconVirtuals },
+  { href: "/sports", label: "More", Icon: IconMore },
+];
+
+const CONTENT_TABS = ["Matches", "Games", "Codes", "Virtuals"] as const;
 
 export function HomeView({
   featured,
@@ -41,158 +52,136 @@ export function HomeView({
   promotions: { id: string; title: string; subtitle: string; href: string; theme: string }[];
   leagues: { name: string; slug: string; country: string }[];
 }) {
-  const [liveMarket, setLiveMarket] = useState("1X2");
+  void promotions;
+  void upcoming;
+  const [contentTab, setContentTab] = useState<(typeof CONTENT_TABS)[number]>("Matches");
   const footballToday = useMemo(() => today.filter((m) => m.sport.id === "football"), [today]);
-  const other = useMemo(() => today.filter((m) => m.sport.id !== "football").slice(0, 8), [today]);
+  const featuredMatch = featured[0] ?? live[0] ?? footballToday[0];
 
   return (
-    <div className="pb-2">
+    <div className="bg-[#f4f5f7]">
       <div className="no-scrollbar flex gap-2 overflow-x-auto bg-white px-3 py-2">
-        {leagues.map((league) => (
+        {PROMOS.map((promo) => (
           <Link
-            key={league.slug}
-            href={`/sports/football/${league.slug}`}
-            className="flex shrink-0 items-center gap-1.5 rounded-full border border-line px-2.5 py-1 text-[11px] font-semibold text-ink transition-colors duration-150 hover:border-brand hover:text-brand"
-          >
-            <CountryMark country={league.country} />
-            {league.name}
-          </Link>
-        ))}
-      </div>
-
-      <SectionHead title="Featured matches" href="/sports/football" count={featured.length} />
-      <div className="no-scrollbar flex gap-2 overflow-x-auto px-3 pb-2">
-        {featured.length === 0 ? (
-          <p className="rounded-md bg-white px-3 py-6 text-[13px] text-muted">No featured demo matches.</p>
-        ) : (
-          featured.map((match) => <FeaturedMatchCard key={match.id} match={match} />)
-        )}
-      </div>
-
-      <section className="mt-1 bg-live text-white">
-        <div className="flex items-center justify-between px-3 py-2">
-          <h2 className="flex items-center gap-2 text-[13px] font-bold">
-            <span className="live-dot" /> Live matches
-          </h2>
-          <Link href="/live" className="text-[11px] font-semibold text-[#8dffb8]">
-            All live {live.length}
-          </Link>
-        </div>
-        <div className="no-scrollbar flex gap-3 overflow-x-auto px-3 text-[11px]">
-          {["1X2", "OU", "DC"].map((id) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setLiveMarket(id)}
-              className={cn("shrink-0 pb-1.5", liveMarket === id ? "border-b-2 border-brand text-white" : "text-white/50")}
-            >
-              {id === "OU" ? "O/U" : id}
-            </button>
-          ))}
-        </div>
-        {live.length === 0 ? (
-          <p className="px-3 py-6 text-[13px] text-white/55">No live demo events right now.</p>
-        ) : (
-          live.slice(0, 6).map((match) => (
-            <MatchRow key={match.id} match={match} marketType={liveMarket} compactOdds onDark />
-          ))
-        )}
-      </section>
-
-      <SectionHead title="Today's football" href="/sports/football" count={footballToday.length} />
-      {footballToday.length === 0 ? (
-        <p className="mx-3 rounded-md bg-white px-3 py-6 text-[13px] text-muted">No football fixtures today.</p>
-      ) : (
-        <div className="mx-3">
-          <MatchList
-            matches={footballToday.slice(0, 12)}
-            marketType="1X2"
-            dateLabel={format(new Date(), "EEE dd MMM")}
-            groupLeagues
-          />
-        </div>
-      )}
-
-      <SectionHead title="Popular leagues" href="/sports" />
-      <div className="grid grid-cols-2 gap-1.5 px-3 sm:grid-cols-4">
-        {leagues.slice(0, 8).map((league) => (
-          <Link
-            key={league.slug}
-            href={`/sports/football/${league.slug}`}
-            className="card-hover flex items-center gap-2 rounded-md border border-line bg-white px-2.5 py-2 text-[12px] font-semibold text-ink"
-          >
-            <CountryMark country={league.country} />
-            <span className="min-w-0 truncate">{league.name}</span>
-          </Link>
-        ))}
-      </div>
-
-      <SectionHead title="Upcoming matches" href="/sports" count={upcoming.length} />
-      {upcoming.length === 0 ? (
-        <p className="mx-3 rounded-md bg-white px-3 py-6 text-[13px] text-muted">Nothing kicking off in the next 3 hours.</p>
-      ) : (
-        <div className="mx-3 overflow-hidden rounded-md border border-line bg-white">
-          {upcoming.map((match) => (
-            <MatchRow key={match.id} match={match} />
-          ))}
-        </div>
-      )}
-
-      <SectionHead title="Promotions" href="/promotions" />
-      <div className="no-scrollbar flex gap-2 overflow-x-auto px-3 pb-2">
-        {promotions.map((promo) => (
-          <Link
-            key={promo.id}
+            key={promo.title}
             href={promo.href}
             className={cn(
-              "card-hover relative min-w-[176px] overflow-hidden rounded-md p-3 text-white",
-              promo.theme === "welcome" && "bg-gradient-to-br from-[#0e8a44] to-[#0b3d2e]",
-              promo.theme === "boost" && "bg-gradient-to-br from-[#1f6b4a] to-[#10241c]",
-              promo.theme === "promo" && "bg-gradient-to-br from-[#0f766e] to-[#134e4a]",
+              "relative h-[90px] w-[104px] shrink-0 overflow-hidden rounded-lg bg-gradient-to-br",
+              promo.art,
             )}
           >
-            <span className="pointer-events-none absolute -right-4 -top-6 h-16 w-16 rounded-full bg-white/10" />
-            <p className="text-[10px] uppercase tracking-wide text-white/70">{promo.subtitle}</p>
-            <p className="mt-1 text-[13px] font-bold">{promo.title}</p>
-            <span className="mt-2 inline-flex rounded bg-white/15 px-2 py-0.5 text-[10px] font-semibold">View</span>
+            <span className="absolute -right-2 -top-3 text-[42px] opacity-40">{promo.motif}</span>
+            <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+            <p className="absolute bottom-1.5 left-1.5 right-1.5 text-[12px] font-bold leading-tight text-white">
+              {promo.title}
+            </p>
           </Link>
         ))}
       </div>
 
-      <SectionHead title="Other sports" href="/sports" />
-      <div className="grid grid-cols-3 gap-1.5 px-3 sm:grid-cols-4">
-        {MORE_SPORTS.slice(0, 12).map((item) => (
+      <div className="grid grid-cols-6 bg-white px-1 pb-2 pt-1">
+        {SHORTCUTS.map((item) => {
+          const Icon = item.Icon;
+          return (
+            <Link key={item.label} href={item.href} className="flex flex-col items-center gap-1 text-[10px] text-[#374151]">
+              <span className="grid h-8 w-8 place-items-center text-[#4b5563]">
+                <Icon className="h-[22px] w-[22px]" />
+              </span>
+              {item.label}
+            </Link>
+          );
+        })}
+      </div>
+
+      <div className="no-scrollbar flex gap-2 overflow-x-auto bg-[#f4f5f7] px-3 py-2">
+        {[
+          { href: "/sports/football", label: "TODAY'S FOOTBALL", border: "border-t-[#e31837]" },
+          { href: "/sports", label: "FOOTBALL IN NEXT 3 HOURS", border: "border-t-[#d1d5db]" },
+          { href: "/sports/football/premier-league", label: "ENGLAND PREMIER LEAGUE", border: "border-t-[#12a150]" },
+        ].map((card) => (
           <Link
-            key={item.label}
-            href={item.href}
-            className="rounded-md border border-line bg-white px-2 py-2.5 text-center text-[11px] font-semibold text-ink transition-colors duration-150 hover:border-brand hover:text-brand"
+            key={card.label}
+            href={card.href}
+            className={cn(
+              "h-[54px] w-[124px] shrink-0 rounded-md border border-[#eceff3] border-t-[3px] bg-white px-2 py-1.5 text-[11px] font-bold leading-tight text-ink shadow-[0_1px_3px_rgba(16,24,40,0.08)]",
+              card.border,
+            )}
           >
-            {item.label}
+            {card.label}
           </Link>
         ))}
       </div>
 
-      {other.length > 0 ? (
-        <div className="mx-3 mt-3 overflow-hidden rounded-md border border-line bg-white">
-          {other.map((match) => (
-            <MatchRow key={match.id} match={match} />
+      <div className="flex items-center gap-3 overflow-x-auto bg-white px-3 pt-2.5 text-[14px] font-semibold">
+        <span className="shrink-0 text-[15px] font-black text-ink">Featured</span>
+        <span className="h-4 w-px shrink-0 bg-[#d1d5db]" />
+        {CONTENT_TABS.map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            onClick={() => setContentTab(tab)}
+            className={cn(
+              "shrink-0 pb-2 transition-colors duration-150",
+              contentTab === tab ? "text-accent" : "text-[#6b7280]",
+            )}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {contentTab === "Matches" ? (
+        <>
+          <div className="no-scrollbar flex gap-3 overflow-x-auto bg-white px-3 py-2">
+            {leagues.map((league) => (
+              <Link
+                key={league.slug}
+                href={`/sports/football/${league.slug}`}
+                className="flex shrink-0 flex-col items-center"
+                title={league.name}
+              >
+                <CountryMark country={league.country} className="h-9 w-9 rounded-full text-[10px]" />
+              </Link>
+            ))}
+          </div>
+          {featuredMatch ? (
+            <FeaturedMatchCard match={featuredMatch} />
+          ) : footballToday.length ? (
+            <MatchList matches={footballToday.slice(0, 8)} marketType="1X2" groupLeagues />
+          ) : (
+            <p className="bg-white px-3 py-6 text-sm text-muted">No featured demo matches.</p>
+          )}
+        </>
+      ) : null}
+      {contentTab === "Games" ? (
+        <div className="no-scrollbar flex gap-2 overflow-x-auto bg-white px-3 py-3">
+          {CRASH_GAMES.map((game) => (
+            <Link
+              key={game.id}
+              href={game.href}
+              className={cn(
+                "relative h-[100px] w-[132px] shrink-0 overflow-hidden rounded-md bg-gradient-to-br p-2.5 text-white",
+                game.art,
+              )}
+            >
+              <p className="mt-8 text-[13px] font-bold">{game.name}</p>
+              <p className="text-[10px] text-white/70">{game.tag}</p>
+            </Link>
           ))}
         </div>
       ) : null}
+      {contentTab === "Codes" ? <RecommendedCodes matches={featured.length ? featured : footballToday} /> : null}
+      {contentTab === "Virtuals" ? (
+        <p className="bg-white px-3 py-6 text-sm text-muted">
+          Virtuals are a placeholder. Open{" "}
+          <Link href="/virtuals" className="font-semibold text-accent">
+            Virtuals
+          </Link>{" "}
+          when a licensed feed is connected.
+        </p>
+      ) : null}
 
-      <SectionHead title="Games" href="/games" />
-      <div className="no-scrollbar flex gap-2 overflow-x-auto px-3 pb-3">
-        {CRASH_GAMES.map((game) => (
-          <Link
-            key={game.id}
-            href={game.href}
-            className={cn("relative h-[100px] w-[132px] shrink-0 overflow-hidden rounded-md bg-gradient-to-br p-2.5 text-white", game.art)}
-          >
-            <p className="mt-8 text-[13px] font-bold">{game.name}</p>
-            <p className="text-[10px] text-white/70">{game.tag} · Demo</p>
-          </Link>
-        ))}
-      </div>
+      <LiveBoard matches={live} limit={8} />
     </div>
   );
 }

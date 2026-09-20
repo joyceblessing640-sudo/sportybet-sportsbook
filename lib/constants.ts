@@ -62,12 +62,9 @@ export const MARKET_TABS = [
 
 export const LIST_MARKET_TABS = [
   { id: "1X2", label: "1X2" },
-  { id: "OU", label: "O/U" },
-  { id: "DC", label: "DC" },
-  { id: "FHOU", label: "1st Half O/U" },
-  { id: "AH", label: "Handicap" },
-  { id: "FH", label: "Hc" },
-  { id: "BTTS", label: "1up 2up" },
+  { id: "OU", label: "Over/Under" },
+  { id: "DC", label: "Double Chance" },
+  { id: "FHOU", label: "1st Half O/L" },
 ] as const;
 
 export const LIVE_SPORT_TABS = [

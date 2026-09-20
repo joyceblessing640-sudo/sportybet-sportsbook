@@ -6,10 +6,12 @@ import { Header } from "@/components/layout/header";
 import { SportsNav } from "@/components/layout/sports-nav";
 import { Sidebar } from "@/components/layout/sidebar";
 import { BottomNav } from "@/components/layout/bottom-nav";
-import { BetSlipBar, BetSlipPanel } from "@/components/betting/bet-slip";
+import { BetSlipFab } from "@/components/betting/bet-slip-fab";
+import { BetSlipPanel } from "@/components/betting/bet-slip";
 import type { SlipItem } from "@/lib/slip";
 
 const BARE = ["/login", "/register", "/forgot-password", "/reset-password", "/account", "/admin"];
+const HIDE_TOP = ["/me", "/bets"];
 export const MOBILE_SLIP_ID = "mobile-betslip";
 
 export function openMobileSlip() {
@@ -25,6 +27,7 @@ export function AppShell({ children, slipItems }: { children: ReactNode; slipIte
   const prevPath = useRef(pathname);
   const [menuOpen, setMenuOpen] = useState(false);
   const bare = BARE.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  const hideTop = HIDE_TOP.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
   useEffect(() => {
     if (prevPath.current !== pathname) {
@@ -38,18 +41,22 @@ export function AppShell({ children, slipItems }: { children: ReactNode; slipIte
 
   return (
     <div className="min-h-dvh bg-background">
-      <div className="sticky top-0 z-40">
-        <Header onMenu={() => setMenuOpen(true)} />
-        <SportsNav />
-      </div>
+      {hideTop ? null : (
+        <div className="sticky top-0 z-40">
+          <Header />
+          <div className="hidden lg:block">
+            <SportsNav />
+          </div>
+        </div>
+      )}
       <div className="mx-auto flex max-w-[1440px]">
         <main className="min-w-0 flex-1 bottom-pad">{children}</main>
-        <div className="sticky top-[7.35rem] hidden h-[calc(100dvh-7.35rem)] w-[300px] shrink-0 self-start lg:block">
+        <div className="sticky top-[6.5rem] hidden h-[calc(100dvh-6.5rem)] w-[300px] shrink-0 self-start lg:block">
           <BetSlipPanel embedded items={slipItems} />
         </div>
       </div>
-      <BottomNav onOpenSlip={openMobileSlip} />
-      <BetSlipBar items={slipItems} onOpen={openMobileSlip} />
+      <BottomNav onOpenMenu={() => setMenuOpen(true)} />
+      <BetSlipFab key={slipItems.length} items={slipItems} onOpen={openMobileSlip} />
       <div id={MOBILE_SLIP_ID} popover="auto" data-testid="betslip-sheet" className="betslip-popover lg:hidden">
         <BetSlipPanel items={slipItems} onClose={closeMobileSlip} />
       </div>

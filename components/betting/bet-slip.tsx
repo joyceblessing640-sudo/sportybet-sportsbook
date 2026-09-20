@@ -136,7 +136,7 @@ export function BetSlipPanel({
         ) : null}
         {state?.error ? <p className="mt-2 text-xs text-danger">{state.error}</p> : null}
         {user ? (
-          <Button type="submit" className="mt-3 h-10 w-full" disabled={pending || items.length === 0 || invalidCombo}>
+          <Button type="submit" variant="green" className="mt-3 h-10 w-full" disabled={pending || items.length === 0 || invalidCombo}>
             {pending ? "Placing…" : "Place Bet"}
           </Button>
         ) : (
