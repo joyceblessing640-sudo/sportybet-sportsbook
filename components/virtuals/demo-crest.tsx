@@ -1,7 +1,7 @@
 import type { DemoTeam } from "@/lib/virtuals/demo-board";
 
 /** Small square slot; the crest itself keeps its native ratio via object-fit: contain. */
-export function DemoCrest({ team, size = 16 }: { team: DemoTeam; size?: number }) {
+export function DemoCrest({ team, size = 18 }: { team: DemoTeam; size?: number }) {
   return (
     <span
       className="if-crest"

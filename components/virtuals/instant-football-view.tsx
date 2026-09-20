@@ -247,7 +247,7 @@ function MatchRow({
       <div className="if-teams">
         <div className="if-pair">
           <div className="if-side">
-            <DemoCrest team={match.home} size={16} />
+            <DemoCrest team={match.home} size={18} />
             <span className="if-meta">
               <span className="if-abbr">{match.home.abbreviation}</span>
               <Stars value={match.home.stars} />
@@ -259,7 +259,7 @@ function MatchRow({
               <span className="if-abbr">{match.away.abbreviation}</span>
               <Stars value={match.away.stars} />
             </span>
-            <DemoCrest team={match.away} size={16} />
+            <DemoCrest team={match.away} size={18} />
           </div>
         </div>
         <p className="if-more">+71 &gt;</p>
