@@ -4,6 +4,7 @@ import {
   liveClock,
   mapFixtureStatus,
   mapOddsMarkets,
+  resolveLeaguesFromFixtures,
   resolveTargetLeagues,
   teamAbbreviation,
 } from "./map";
@@ -193,5 +194,46 @@ describe("resolveTargetLeagues", () => {
     expect(resolved.find((l) => l.slug === "mls")?.apiId).toBe(253);
     expect(resolved.find((l) => l.slug === "ghana-premier-league")?.apiId).toBe(268);
     expect(resolved.find((l) => l.slug === "bundesliga")?.apiId).toBe(78);
+  });
+});
+
+describe("resolveLeaguesFromFixtures", () => {
+  it("picks target league IDs out of a mixed fixture payload", () => {
+    const resolved = resolveLeaguesFromFixtures([
+      {
+        fixture: {
+          id: 1,
+          date: "2026-09-20T15:00:00+00:00",
+          timestamp: 0,
+          timezone: "Africa/Accra",
+          status: { long: "Not Started", short: "NS", elapsed: null },
+        },
+        league: { id: 39, name: "Premier League", country: "England", season: 2026 },
+        teams: {
+          home: { id: 1, name: "Arsenal" },
+          away: { id: 2, name: "Chelsea" },
+        },
+        goals: { home: null, away: null },
+        score: { halftime: { home: null, away: null }, fulltime: { home: null, away: null } },
+      },
+      {
+        fixture: {
+          id: 2,
+          date: "2026-09-20T15:00:00+00:00",
+          timestamp: 0,
+          timezone: "Africa/Accra",
+          status: { long: "Not Started", short: "NS", elapsed: null },
+        },
+        league: { id: 268, name: "Premier League", country: "Ghana", season: 2026 },
+        teams: {
+          home: { id: 3, name: "Hearts of Oak" },
+          away: { id: 4, name: "Asante Kotoko" },
+        },
+        goals: { home: null, away: null },
+        score: { halftime: { home: null, away: null }, fulltime: { home: null, away: null } },
+      },
+    ]);
+    expect(resolved.find((l) => l.slug === "premier-league")?.apiId).toBe(39);
+    expect(resolved.find((l) => l.slug === "ghana-premier-league")?.apiId).toBe(268);
   });
 });

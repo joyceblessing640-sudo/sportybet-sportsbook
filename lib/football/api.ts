@@ -110,6 +110,16 @@ export async function fetchFixturesByDate(date: string, timezone: string) {
   );
 }
 
+export async function fetchFixturesByDateSafe(date: string, timezone: string) {
+  try {
+    return await fetchFixturesByDate(date, timezone);
+  } catch (error) {
+    const message = error instanceof FootballApiError ? error.message : "";
+    if (/do not have access to this date/i.test(message)) return [];
+    throw error;
+  }
+}
+
 export async function fetchLiveFixtures(timezone: string) {
   return collect<ApiFixtureItem>("/fixtures", { live: "all", timezone }, `live:${timezone}`, TTL.live);
 }
@@ -124,6 +134,8 @@ export async function fetchOddsByDate(date: string, timezone: string) {
     );
   } catch (error) {
     if (error instanceof FootballApiError && (error.status === 403 || error.status === 404)) return [];
+    const message = error instanceof FootballApiError ? error.message : "";
+    if (/do not have access to this date/i.test(message)) return [];
     throw error;
   }
 }

@@ -38,7 +38,7 @@ export function useFootballSnapshot(initial: {
         const hasLive = (data.live as ClientMatch[] | undefined)?.some(
           (match) => match.status === "LIVE" || match.status === "HT",
         );
-        timer = window.setTimeout(tick, hasLive || scope === "live" ? 15_000 : 60_000);
+        timer = window.setTimeout(tick, hasLive || scope === "live" ? 60_000 : 90_000);
       } catch {
         if (cancelled) return;
         failStreak.current += 1;
@@ -48,7 +48,7 @@ export function useFootballSnapshot(initial: {
       }
     }
 
-    timer = window.setTimeout(tick, 12_000);
+    timer = window.setTimeout(tick, 20_000);
     return () => {
       cancelled = true;
       window.clearTimeout(timer);

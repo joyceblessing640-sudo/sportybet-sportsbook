@@ -22,10 +22,11 @@ export function cachePeek<T>(key: string): T | undefined {
 }
 
 export const TTL = {
-  live: 12_000,
-  fixtures: 8 * 60_000,
-  odds: 12 * 60_000,
+  // Free plan is 100 requests/day. Live scores refresh about once a minute.
+  live: 60_000,
+  fixtures: 15 * 60_000,
+  odds: 30 * 60_000,
   leagues: 12 * 60 * 60_000,
-  events: 20_000,
-  error: 20_000,
+  events: 60_000,
+  error: 30_000,
 };

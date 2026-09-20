@@ -3,7 +3,7 @@ import { cacheGet, cachePeek, cacheSet, TTL } from "./cache";
 import {
   FootballApiError,
   fetchFixtureEvents,
-  fetchFixturesByDate,
+  fetchFixturesByDateSafe,
   fetchLeaguesCurrent,
   fetchLiveFixtures,
   fetchOddsByDate,
@@ -19,6 +19,7 @@ import {
   mapOddsMarkets,
   periodLabel,
   resolveTargetLeagues,
+  resolveLeaguesFromFixtures,
   teamAbbreviation,
 } from "./map";
 import { ghanaDate } from "./time";
@@ -253,26 +254,53 @@ async function upsertFixture(item: ApiFixtureItem, leagues: ResolvedLeague[], od
 
 async function loadOddsMap(dates: string[]) {
   const map = new Map<number, ApiOddsItem>();
-  for (const date of dates) {
-    try {
-      const rows = await fetchOddsByDate(date, FOOTBALL_TZ);
-      for (const row of rows) map.set(row.fixture.id, row);
-    } catch {
-      // Odds are optional; hide markets instead of inventing prices.
-    }
+  // One date only — odds-by-date is expensive on the free 100-request plan.
+  const date = dates[0];
+  if (!date) return map;
+  try {
+    const rows = await fetchOddsByDate(date, FOOTBALL_TZ);
+    for (const row of rows) map.set(row.fixture.id, row);
+  } catch {
+    // Odds are optional; hide markets instead of inventing prices.
   }
   return map;
 }
 
+function mergeLeagues(base: ResolvedLeague[], extra: ResolvedLeague[]) {
+  const bySlug = new Map<string, ResolvedLeague>();
+  for (const row of [...base, ...extra]) bySlug.set(row.slug, row);
+  return [...bySlug.values()];
+}
+
+async function persistLeagues(leagues: ResolvedLeague[]) {
+  cacheSet("football:leagues", leagues, TTL.leagues);
+  await writeSetting(LEAGUE_SETTING, leagues);
+  return leagues;
+}
+
+async function leaguesForFixtures(items: ApiFixtureItem[]) {
+  const cached = cacheGet<ResolvedLeague[]>("football:leagues");
+  const fromDb = cached ?? (await readSetting<ResolvedLeague[]>(LEAGUE_SETTING)) ?? [];
+  const fromFixtures = resolveLeaguesFromFixtures(items);
+  let leagues = mergeLeagues(fromDb, fromFixtures);
+  if (!leagues.length) {
+    leagues = await resolveLeagues();
+  } else {
+    await persistLeagues(leagues);
+  }
+  return leagues;
+}
+
 async function syncPayload(mode: "home" | "live") {
-  const leagues = await resolveLeagues();
   const dates = mode === "live" ? [ghanaDate(0)] : [ghanaDate(0), ghanaDate(1), ghanaDate(2)];
   const [live, ...byDate] = await Promise.all([
     fetchLiveFixtures(FOOTBALL_TZ),
-    ...dates.map((date) => fetchFixturesByDate(date, FOOTBALL_TZ)),
+    ...dates.map((date) => fetchFixturesByDateSafe(date, FOOTBALL_TZ)),
   ]);
+  const all = [...live, ...byDate.flat()];
+  const leagues = await leaguesForFixtures(all);
   const fixtures = new Map<number, ApiFixtureItem>();
-  for (const item of [...live, ...byDate.flat()]) {
+  for (const item of all) {
     if (fixtureBelongsTo(item, leagues)) fixtures.set(item.fixture.id, item);
   }
   const odds = await loadOddsMap(dates);

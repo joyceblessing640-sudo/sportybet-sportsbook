@@ -237,3 +237,20 @@ export function resolveTargetLeagues(
 export function fixtureBelongsTo(item: ApiFixtureItem, leagues: ResolvedLeague[]) {
   return leagues.some((league) => league.apiId === item.league.id);
 }
+
+export function resolveLeaguesFromFixtures(items: ApiFixtureItem[]): ResolvedLeague[] {
+  const seen = new Map<
+    number,
+    { id: number; name: string; country: string; seasons: { year: number; current: boolean }[] }
+  >();
+  for (const item of items) {
+    if (seen.has(item.league.id)) continue;
+    seen.set(item.league.id, {
+      id: item.league.id,
+      name: item.league.name,
+      country: item.league.country,
+      seasons: [{ year: item.league.season, current: true }],
+    });
+  }
+  return resolveTargetLeagues([...seen.values()]);
+}

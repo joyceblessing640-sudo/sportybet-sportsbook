@@ -53,7 +53,7 @@ export function MatchDetails({
       timer = window.setTimeout(tick, dataLiveInterval(match.status));
     }
     function dataLiveInterval(status: string) {
-      return status === "LIVE" || status === "HT" ? 15_000 : 60_000;
+      return status === "LIVE" || status === "HT" ? 60_000 : 90_000;
     }
     timer = window.setTimeout(tick, dataLiveInterval(match.status));
     return () => {
