@@ -1,10 +1,7 @@
-import { MatchCardSkeleton, LeagueChipSkeleton } from "@/components/betting/skeletons";
-
-export default function Loading() {
+export default function LiveLoading() {
   return (
-    <div className="min-h-[calc(100dvh-8.5rem)] bg-live p-3">
-      <LeagueChipSkeleton />
-      <MatchCardSkeleton count={6} />
+    <div className="min-h-[calc(100dvh-8rem)] bg-live px-3 pt-3 text-white">
+      <p className="text-[13px] text-white/50">Loading live markets…</p>
     </div>
   );
 }

@@ -56,7 +56,7 @@ export function AppShell({ children, slipItems }: { children: ReactNode; slipIte
         </div>
       </div>
       <BottomNav onOpenMenu={() => setMenuOpen(true)} />
-      <BetSlipFab key={slipItems.length} items={slipItems} onOpen={openMobileSlip} />
+      {hideTop ? null : <BetSlipFab key={slipItems.length} items={slipItems} onOpen={openMobileSlip} />}
       <div id={MOBILE_SLIP_ID} popover="auto" data-testid="betslip-sheet" className="betslip-popover lg:hidden">
         <BetSlipPanel items={slipItems} onClose={closeMobileSlip} />
       </div>

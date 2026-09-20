@@ -126,7 +126,12 @@ export function MatchCard({
   const market = marketByType(match, marketType) ?? match.markets[0];
   const ou = match.markets.find((m) => m.type === "OU");
   const live = match.status === "LIVE" || match.status === "HT";
-  const kick = live ? match.clock : format(new Date(match.startTime), "HH:mm");
+  const clock = live ? match.clock : format(new Date(match.startTime), "HH:mm");
+  const period =
+    live && match.periodLabel && match.periodLabel !== clock && !String(clock ?? "").includes(match.periodLabel)
+      ? match.periodLabel
+      : null;
+  const kick = period ? `${clock} ${period}` : clock;
   const light = !onDark;
   const cols = Math.min(market?.outcomes.length ?? 3, 3);
   const oddsWidth = cols === 2 ? "w-[6.5rem]" : "w-[9.75rem] sm:w-[11rem]";
@@ -141,7 +146,6 @@ export function MatchCard({
       <div className="mb-1 flex items-center gap-1.5 text-[11px]">
         <span className={cn("tabular-nums font-semibold", live ? "text-accent" : light ? "text-muted" : "text-white/70")}>
           {kick}
-          {live && match.periodLabel ? ` ${match.periodLabel}` : ""}
         </span>
         {hideLeague ? null : (
           <span className={cn("min-w-0 truncate", light ? "text-muted" : "text-white/55")}>
