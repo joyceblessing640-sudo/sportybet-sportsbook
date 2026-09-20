@@ -3,10 +3,12 @@ import { cn } from "@/lib/utils";
 export function IconAllSports({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
-      <rect x="3" y="3" width="8" height="8" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
-      <rect x="13" y="3" width="8" height="8" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
-      <rect x="3" y="13" width="8" height="8" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
-      <rect x="13" y="13" width="8" height="8" rx="1.2" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="8.2" cy="14.2" r="5.1" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M8.2 9.1c1.3 1.3 2.1 3.1 2.1 5.1s-.8 3.8-2.1 5.1M3.1 14.2h10.2M4.4 11.1c1.3.6 2.6.9 3.8.9s2.5-.3 3.8-.9M4.4 17.3c1.3-.6 2.6-.9 3.8-.9s2.5.3 3.8.9" stroke="currentColor" strokeWidth="1.15" />
+      <circle cx="15.6" cy="9.4" r="4.4" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M15.6 5v8.8M11.2 9.4h8.8M12.6 6.6c.9 1.7 1.9 2.8 3 2.8s2.1-1.1 3-2.8M12.6 12.2c.9-1.7 1.9-2.8 3-2.8s2.1 1.1 3 2.8" stroke="currentColor" strokeWidth="1.1" />
+      <circle cx="10.6" cy="6.2" r="3.05" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M8.2 4.7c1.4.7 3.4.7 4.8 0M8.2 7.7c1.4-.7 3.4-.7 4.8 0" stroke="currentColor" strokeWidth="1.1" />
     </svg>
   );
 }
@@ -14,17 +16,22 @@ export function IconAllSports({ className }: { className?: string }) {
 export function IconLiveTv({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
-      <rect x="2.5" y="6" width="19" height="13" rx="2" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M8 6 12 2.8 16 6" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      <rect x="3" y="5.5" width="18" height="13.5" rx="2.2" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M10 9.4v5.4l5.2-2.7L10 9.4Z" fill="currentColor" />
       <path d="M8 21h8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
 
 export function IconCrash({ className }: { className?: string }) {
+  return <IconAviator className={className} />;
+}
+
+export function IconAviator({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={cn("text-[#c81e3a]", className)} fill="currentColor" aria-hidden>
-      <path d="M21 4.2 13.8 11l2.6 6.2-1.8.8-2.2-5.1-2.9 2.8v3.3h-1.6v-3.3l-3.4-3.4H2.8V11h3.3l4.6-4.5L21 4.2Z" />
+    <svg viewBox="0 0 24 24" className={cn("text-[#d0122d]", className)} fill="currentColor" aria-hidden>
+      <path d="M3.2 13.4 20.6 4.6c.7-.4 1.5.4 1.1 1.1l-8.6 17.3c-.4.9-1.7.8-2-.2l-1.8-6.4-6.3-1.7c-1-.3-1.1-1.6-.2-2.1Z" />
+      <path d="M10.6 15.1 14.2 9.4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
 }
@@ -32,10 +39,10 @@ export function IconCrash({ className }: { className?: string }) {
 export function IconLoadCode({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
-      <circle cx="6.5" cy="12" r="2.6" stroke="currentColor" strokeWidth="1.8" />
-      <circle cx="17.5" cy="6.5" r="2.6" stroke="currentColor" strokeWidth="1.8" />
-      <circle cx="17.5" cy="17.5" r="2.6" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M9 12h3.2M14.8 7.6l-2.2 3.2M14.8 16.4l-2.2-3.2" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="12" cy="7.2" r="2.35" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="6.4" cy="16.6" r="2.35" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="17.6" cy="16.6" r="2.35" stroke="currentColor" strokeWidth="1.8" />
+      <path d="m10.2 8.8-2.4 5.3M13.8 8.8l2.4 5.3M8.7 16.6h6.6" stroke="currentColor" strokeWidth="1.8" />
     </svg>
   );
 }
@@ -43,8 +50,8 @@ export function IconLoadCode({ className }: { className?: string }) {
 export function IconVirtuals({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
-      <path d="M4 6.5 12 20 20 6.5" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
-      <path d="M8.2 6.5h7.6" stroke="currentColor" strokeWidth="2.2" />
+      <path d="M3.8 6.2 12 20.2 20.2 6.2" stroke="currentColor" strokeWidth="2.05" strokeLinejoin="round" />
+      <path d="M7.6 6.2 12 14.4 16.4 6.2" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -52,10 +59,10 @@ export function IconVirtuals({ className }: { className?: string }) {
 export function IconMore({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="8.2" stroke="currentColor" strokeWidth="1.8" />
-      <circle cx="8.2" cy="13.2" r="1.05" fill="currentColor" />
-      <circle cx="15.8" cy="13.2" r="1.05" fill="currentColor" />
-      <path d="M8.6 16.1c1 1.2 2.1 1.8 3.4 1.8s2.4-.6 3.4-1.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="8.3" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="7.8" cy="12" r="1.25" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.25" fill="currentColor" />
+      <circle cx="16.2" cy="12" r="1.25" fill="currentColor" />
     </svg>
   );
 }

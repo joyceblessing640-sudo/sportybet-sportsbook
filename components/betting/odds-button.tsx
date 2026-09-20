@@ -12,12 +12,14 @@ export function OddsButton({
   outcome,
   compact,
   hideLabel,
+  spread,
 }: {
   match: ClientMatch;
   marketName: string;
   outcome: ClientOutcome;
   compact?: boolean;
   hideLabel?: boolean;
+  spread?: boolean;
 }) {
   const selected = useSlipItems().some((item) => item.outcomeId === outcome.id);
   return (
@@ -28,12 +30,22 @@ export function OddsButton({
         data-active={selected}
         aria-label={`Add ${match.home.shortName} vs ${match.away.shortName} ${marketName} ${outcome.label}`}
         className={cn(
-          "odds-btn flex h-full w-full min-w-0 flex-col items-center justify-center px-1",
-          compact ? "h-8 text-[13px]" : "h-10 text-xs",
+          "odds-btn flex h-full w-full min-w-0 items-center justify-center px-1",
+          spread
+            ? "h-[38px] flex-row justify-between px-2.5 text-[15px]"
+            : compact
+              ? "h-8 flex-col text-[13px]"
+              : "h-10 flex-col text-xs",
         )}
       >
         {hideLabel ? null : (
-          <span className={cn("text-[10px] font-semibold leading-none", selected ? "text-white/90" : "text-[#5b6b63]")}>
+          <span
+            className={cn(
+              "font-semibold leading-none",
+              spread ? "text-[12px]" : "text-[10px]",
+              selected ? "text-white/90" : "text-[#5b6b63]",
+            )}
+          >
             {outcome.label}
           </span>
         )}

@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { FeaturedMatchCard, MatchList } from "@/components/betting/match-card";
-import { CountryMark } from "@/components/brand/country-mark";
 import { RecommendedCodes } from "@/components/bets/recommended-codes";
+import { HomeFeaturedMatch } from "@/components/home/featured-match-card";
+import { HomeSportsBoard } from "@/components/home/home-sports";
 import {
   IconAllSports,
-  IconCrash,
+  IconAviator,
   IconLiveTv,
   IconLoadCode,
   IconMore,
@@ -19,20 +19,38 @@ import type { ClientMatch } from "@/lib/serialize";
 import { cn } from "@/lib/utils";
 
 const PROMOS = [
-  { href: "/games/lucky-numbers", title: "Lucky Numbers", art: "from-[#1e3a5f] via-[#7f1d1d] to-[#111827]", motif: "⚽" },
-  { href: "/promotions", title: "Night Cup", art: "from-[#111827] via-[#7c2d12] to-[#1e1b4b]", motif: "🏆" },
-  { href: "/games/jet-rush", title: "Jet Rush", art: "from-[#0f766e] via-[#155e75] to-[#111827]", motif: "✈" },
-  { href: "/games", title: "Studio Games", art: "from-[#9d174d] via-[#7f1d1d] to-[#111827]", motif: "🎰" },
-  { href: "/bets", title: "Quick Slip", art: "from-[#14532d] via-[#166534] to-[#111827]", motif: "●" },
+  { href: "/sports/football/premier-league", title: "MCI vs SUN", src: "/home/mci-sun.jpg" },
+  { href: "/sports/football/premier-league", title: "FUL vs MUN", src: "/home/ful-mun.jpg" },
+  { href: "/games/lucky-numbers", title: "Lucky Numbers", src: "/home/lucky-numbers.jpg" },
+  { href: "/sports/football/la-liga", title: "ATM vs RMA", src: "/home/atm-rma.jpg" },
+  { href: "/games", title: "TaDa Halloween", src: "/home/tada-halloween.jpg" },
+  { href: "/sports/basketball", title: "NBA Night", src: "/home/nba-night.jpg" },
 ];
 
 const SHORTCUTS = [
   { href: "/sports", label: "All Sports", Icon: IconAllSports },
   { href: "/live", label: "Live", Icon: IconLiveTv },
-  { href: "/games/sky-rise", label: "Crash", Icon: IconCrash },
+  { href: "/games/sky-rise", label: "Aviator", Icon: IconAviator },
   { href: "/load-code", label: "Load Code", Icon: IconLoadCode },
   { href: "/virtuals", label: "Virtuals", Icon: IconVirtuals },
   { href: "/sports", label: "More", Icon: IconMore },
+];
+
+const CATEGORY_CARDS = [
+  { href: "/sports/football", label: "TODAY'S FOOTBALL", border: "border-t-[#e31837]" },
+  { href: "/sports", label: "FOOTBALL IN NEXT 3 HOURS", border: "border-t-[#6b2d8c]" },
+  { href: "/sports/football/premier-league", label: "ENGLAND PREMIER LEAGUE", border: "border-t-[#12a150]" },
+  { href: "/sports/basketball", label: "BASKETBALL", border: "border-t-[#111111]" },
+];
+
+const LEAGUE_PILLS = [
+  { slug: "la-liga", name: "LaLiga", href: "/sports/football/la-liga", icon: "/home/laliga-mark.png", labeled: true },
+  { slug: "premier-league", name: "Premier League", href: "/sports/football/premier-league", icon: "/home/league-pl.png" },
+  { slug: "ligue-1", name: "Ligue 1", href: "/sports/football/ligue-1", icon: "/home/league-l1.png" },
+  { slug: "football", name: "Football", href: "/sports/football", icon: "/home/league-portugal.png" },
+  { slug: "ligue-1-alt", name: "Ligue 1", href: "/sports/football/ligue-1", icon: "/home/league-rooster.png" },
+  { slug: "serie-a", name: "Serie A", href: "/sports/football/serie-a", icon: "/home/league-a.png" },
+  { slug: "football-alt", name: "Football", href: "/sports/football", icon: "/home/league-player.png" },
 ];
 
 const CONTENT_TABS = ["Matches", "Games", "Codes", "Virtuals"] as const;
@@ -53,10 +71,30 @@ export function HomeView({
   leagues: { name: string; slug: string; country: string }[];
 }) {
   void promotions;
-  void upcoming;
+  void leagues;
   const [contentTab, setContentTab] = useState<(typeof CONTENT_TABS)[number]>("Matches");
   const footballToday = useMemo(() => today.filter((m) => m.sport.id === "football"), [today]);
-  const featuredMatch = featured[0] ?? live[0] ?? footballToday[0];
+
+  const featuredCards = useMemo(() => {
+    const pool = [...featured, ...footballToday];
+    const derby = pool.find((m) => m.home.abbreviation === "ATM" && m.away.abbreviation === "RMA");
+    const scheduled = featured.filter((m) => m.status === "SCHEDULED");
+    const first = derby ?? scheduled[0] ?? featured[0] ?? footballToday[0];
+    if (!first) return [];
+    const rest = scheduled.filter((m) => m.id !== first.id);
+    return [first, ...rest].slice(0, 4);
+  }, [featured, footballToday]);
+
+  const sportsMatches = useMemo(() => {
+    const seen = new Set<string>();
+    const list: ClientMatch[] = [];
+    for (const match of [...featured, ...today, ...upcoming]) {
+      if (seen.has(match.id)) continue;
+      seen.add(match.id);
+      list.push(match);
+    }
+    return list;
+  }, [featured, today, upcoming]);
 
   return (
     <div className="bg-[#f4f5f7]">
@@ -65,26 +103,29 @@ export function HomeView({
           <Link
             key={promo.title}
             href={promo.href}
-            className={cn(
-              "relative h-[90px] w-[104px] shrink-0 overflow-hidden rounded-lg bg-gradient-to-br",
-              promo.art,
-            )}
+            className="relative h-[66px] w-[66px] shrink-0 overflow-hidden rounded-[8px] min-[390px]:h-[68px] min-[390px]:w-[68px] min-[430px]:h-[72px] min-[430px]:w-[72px]"
           >
-            <span className="absolute -right-2 -top-3 text-[42px] opacity-40">{promo.motif}</span>
-            <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-            <p className="absolute bottom-1.5 left-1.5 right-1.5 text-[12px] font-bold leading-tight text-white">
-              {promo.title}
-            </p>
+            <img
+              src={promo.src}
+              alt={promo.title}
+              width={137}
+              height={139}
+              className="h-full w-full object-cover object-center"
+            />
           </Link>
         ))}
       </div>
 
-      <div className="grid grid-cols-6 bg-white px-1 pb-2 pt-1">
+      <div className="grid grid-cols-6 bg-white px-1 pb-2 pt-0.5">
         {SHORTCUTS.map((item) => {
           const Icon = item.Icon;
           return (
-            <Link key={item.label} href={item.href} className="flex flex-col items-center gap-1 text-[10px] text-[#374151]">
-              <span className="grid h-8 w-8 place-items-center text-[#4b5563]">
+            <Link
+              key={item.label}
+              href={item.href}
+              className="flex flex-col items-center gap-[3px] text-[10px] leading-tight text-[#4b5563]"
+            >
+              <span className="grid h-8 w-8 place-items-center text-[#374151]">
                 <Icon className="h-[22px] w-[22px]" />
               </span>
               {item.label}
@@ -94,16 +135,12 @@ export function HomeView({
       </div>
 
       <div className="no-scrollbar flex gap-2 overflow-x-auto bg-[#f4f5f7] px-3 py-2">
-        {[
-          { href: "/sports/football", label: "TODAY'S FOOTBALL", border: "border-t-[#e31837]" },
-          { href: "/sports", label: "FOOTBALL IN NEXT 3 HOURS", border: "border-t-[#d1d5db]" },
-          { href: "/sports/football/premier-league", label: "ENGLAND PREMIER LEAGUE", border: "border-t-[#12a150]" },
-        ].map((card) => (
+        {CATEGORY_CARDS.map((card) => (
           <Link
             key={card.label}
             href={card.href}
             className={cn(
-              "h-[54px] w-[124px] shrink-0 rounded-md border border-[#eceff3] border-t-[3px] bg-white px-2 py-1.5 text-[11px] font-bold leading-tight text-ink shadow-[0_1px_3px_rgba(16,24,40,0.08)]",
+              "h-[54px] w-[124px] shrink-0 rounded-md border border-[#eceff3] border-t-[3px] bg-white px-2 py-1.5 text-[11px] font-bold leading-tight text-[#2b3038] shadow-[0_1px_3px_rgba(16,24,40,0.08)]",
               card.border,
             )}
           >
@@ -113,7 +150,7 @@ export function HomeView({
       </div>
 
       <div className="flex items-center gap-3 overflow-x-auto bg-white px-3 pt-2.5 text-[14px] font-semibold">
-        <span className="shrink-0 text-[15px] font-black text-ink">Featured</span>
+        <span className="shrink-0 text-[16px] font-black text-ink">Featured</span>
         <span className="h-4 w-px shrink-0 bg-[#d1d5db]" />
         {CONTENT_TABS.map((tab) => (
           <button
@@ -132,22 +169,39 @@ export function HomeView({
 
       {contentTab === "Matches" ? (
         <>
-          <div className="no-scrollbar flex gap-3 overflow-x-auto bg-white px-3 py-2">
-            {leagues.map((league) => (
-              <Link
-                key={league.slug}
-                href={`/sports/football/${league.slug}`}
-                className="flex shrink-0 flex-col items-center"
-                title={league.name}
-              >
-                <CountryMark country={league.country} className="h-9 w-9 rounded-full text-[10px]" />
-              </Link>
-            ))}
+          <div className="no-scrollbar flex items-center gap-2.5 overflow-x-auto bg-white px-3 py-2">
+            {LEAGUE_PILLS.map((league, index) => {
+              const selected = index === 0;
+              return (
+                <Link
+                  key={league.slug}
+                  href={league.href}
+                  title={league.name}
+                  className={cn(
+                    "flex shrink-0 items-center justify-center overflow-hidden border bg-white",
+                    selected
+                      ? "h-10 gap-1.5 rounded-full border-[#d5dae3] px-2.5"
+                      : "h-10 w-10 rounded-full border-[#e5e7eb]",
+                  )}
+                >
+                  <img
+                    src={league.icon}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className={cn("object-contain", selected ? "h-4 w-4" : "h-7 w-7")}
+                  />
+                  {selected ? <span className="text-[13px] font-semibold text-ink">{league.name}</span> : null}
+                </Link>
+              );
+            })}
           </div>
-          {featuredMatch ? (
-            <FeaturedMatchCard match={featuredMatch} />
-          ) : footballToday.length ? (
-            <MatchList matches={footballToday.slice(0, 8)} marketType="1X2" groupLeagues />
+          {featuredCards.length ? (
+            <div className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto bg-white">
+              {featuredCards.map((match) => (
+                <HomeFeaturedMatch key={match.id} match={match} />
+              ))}
+            </div>
           ) : (
             <p className="bg-white px-3 py-6 text-sm text-muted">No featured demo matches.</p>
           )}
@@ -155,6 +209,9 @@ export function HomeView({
       ) : null}
       {contentTab === "Games" ? (
         <div className="no-scrollbar flex gap-2 overflow-x-auto bg-white px-3 py-3">
+          <Link href="/games/lucky-numbers" className="relative h-[100px] w-[132px] shrink-0 overflow-hidden rounded-md">
+            <img src="/home/lucky-numbers.jpg" alt="Lucky Numbers" className="h-full w-full object-cover" />
+          </Link>
           {CRASH_GAMES.map((game) => (
             <Link
               key={game.id}
@@ -181,7 +238,8 @@ export function HomeView({
         </p>
       ) : null}
 
-      <LiveBoard matches={live} limit={8} />
+      <LiveBoard matches={live} limit={8} homeLayout />
+      <HomeSportsBoard matches={sportsMatches} />
     </div>
   );
 }

@@ -300,6 +300,19 @@ async function main() {
     prices: [number, number, number];
   }[] = [
     {
+      league: "la-liga",
+      home: "Atletico Madrid",
+      away: "Real Madrid",
+      start: (() => {
+        const d = new Date();
+        d.setHours(14, 15, 0, 0);
+        return d;
+      })(),
+      status: "SCHEDULED",
+      featured: true,
+      prices: [3.5, 3.86, 2.1],
+    },
+    {
       league: "premier-league",
       home: "Manchester United",
       away: "Manchester City",

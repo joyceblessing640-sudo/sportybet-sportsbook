@@ -116,12 +116,14 @@ export function MatchCard({
   showOu = false,
   onDark = false,
   hideLeague = false,
+  showBadges = false,
 }: {
   match: ClientMatch;
   marketType?: string;
   showOu?: boolean;
   onDark?: boolean;
   hideLeague?: boolean;
+  showBadges?: boolean;
 }) {
   const market = marketByType(match, marketType) ?? match.markets[0];
   const ou = match.markets.find((m) => m.type === "OU");
@@ -143,6 +145,22 @@ export function MatchCard({
         onDark ? "on-dark border-white/10 bg-transparent" : "border-line bg-white",
       )}
     >
+      {showBadges && (match.isHot || match.isBestOdds) ? (
+        <div className="mb-1 flex items-center gap-0">
+          {match.isHot ? (
+            <span className="inline-flex items-center gap-0.5 bg-[#e31c23] px-1.5 py-[1px] text-[9px] font-black tracking-wide text-white">
+              HOT
+              <span aria-hidden>🔥</span>
+            </span>
+          ) : null}
+          {match.isBestOdds ? (
+            <span className="inline-flex items-center gap-0.5 bg-[#12a150] px-1.5 py-[1px] text-[9px] font-black tracking-wide text-white">
+              BEST ODDS
+              <span aria-hidden>🟡</span>
+            </span>
+          ) : null}
+        </div>
+      ) : null}
       <div className="mb-1 flex items-center gap-1.5 text-[11px]">
         <span className={cn("tabular-nums font-semibold", live ? "text-accent" : light ? "text-muted" : "text-white/70")}>
           {kick}
@@ -218,15 +236,26 @@ export function MatchRow({
   compactOdds = false,
   onDark = false,
   hideLeague = false,
+  showBadges = false,
 }: {
   match: ClientMatch;
   marketType?: string;
   compactOdds?: boolean;
   onDark?: boolean;
   hideLeague?: boolean;
+  showBadges?: boolean;
 }) {
   void compactOdds;
-  return <MatchCard match={match} marketType={marketType} onDark={onDark} showOu={!onDark && marketType === "1X2"} hideLeague={hideLeague} />;
+  return (
+    <MatchCard
+      match={match}
+      marketType={marketType}
+      onDark={onDark}
+      showOu={!onDark && marketType === "1X2"}
+      hideLeague={hideLeague}
+      showBadges={showBadges}
+    />
+  );
 }
 
 export function MatchList({
@@ -235,12 +264,14 @@ export function MatchList({
   dark,
   dateLabel,
   groupLeagues = false,
+  showBadges = false,
 }: {
   matches: ClientMatch[];
   marketType: string;
   dark?: boolean;
   dateLabel?: string;
   groupLeagues?: boolean;
+  showBadges?: boolean;
 }) {
   const sample = matches[0];
   const market = sample ? marketByType(sample, marketType) ?? sample.markets[0] : null;
@@ -260,12 +291,12 @@ export function MatchList({
             <div key={group.slug + group.name}>
               <DateOddsHeader label={group.name} headers={headers} dark={dark} country={group.country} />
               {group.matches.map((match) => (
-                <MatchRow key={match.id} match={match} marketType={marketType} compactOdds onDark={dark} hideLeague />
+                <MatchRow key={match.id} match={match} marketType={marketType} compactOdds onDark={dark} hideLeague showBadges={showBadges} />
               ))}
             </div>
           ))
         : matches.map((match) => (
-            <MatchRow key={match.id} match={match} marketType={marketType} compactOdds onDark={dark} />
+            <MatchRow key={match.id} match={match} marketType={marketType} compactOdds onDark={dark} showBadges={showBadges} />
           ))}
     </div>
   );
