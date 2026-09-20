@@ -70,7 +70,7 @@
   padding-right: 8px;
   text-align: right;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.01em;
 }
 
@@ -316,7 +316,7 @@
   min-width: 0;
   flex: 1;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.2;
 }
@@ -398,8 +398,8 @@
 
 .if-abbr {
   font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.02em;
+  font-weight: 500;
+  letter-spacing: 0.005em;
   line-height: 1.15;
   color: var(--if-ink);
   white-space: nowrap;
@@ -644,33 +644,5 @@
 
   .if-odds button {
     font-size: 14.5px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .if-top h1 {
-    font-size: 16px;
-  }
-
-  .if-leagues {
-    font-size: 13px;
-  }
-
-  .if-markets {
-    font-size: 12px;
-  }
-
-  .if-abbr {
-    font-size: 13px;
-  }
-
-  .if-odds button {
-    font-size: 15px;
-    font-weight: 600;
-  }
-
-  .if-dock button {
-    font-size: 14px;
-    font-weight: 600;
   }
 }
