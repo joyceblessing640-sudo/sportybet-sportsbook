@@ -66,7 +66,8 @@ export function InstantFootballView() {
   }
 
   return (
-    <div className="relative mx-auto min-h-dvh max-w-[430px] bg-white pb-[52px]">
+    <div className="relative mx-auto max-w-[430px] bg-white">
+      <div className="if-board pb-[calc(50px+env(safe-area-inset-bottom))]" data-testid="if-board">
       <header className="sticky top-0 z-30 flex h-11 items-center bg-[#e31837] px-1 text-white">
         <Link href="/virtuals" aria-label="Back to Virtuals" className="grid h-10 w-10 place-items-center">
           <ChevronLeft className="h-6 w-6" />
@@ -79,7 +80,7 @@ export function InstantFootballView() {
         </div>
       </header>
 
-      <div className="no-scrollbar flex overflow-x-auto bg-[#2f333b] text-[13px] font-semibold text-white">
+      <div className="if-h-scroll no-scrollbar flex bg-[#2f333b] text-[13px] font-semibold text-white" data-testid="if-league-tabs">
         {DEMO_BOARDS.map((item) => (
           <button
             key={item.id}
@@ -123,7 +124,7 @@ export function InstantFootballView() {
         <button type="button" aria-label="Share" className="grid h-8 w-8 place-items-center text-[#12a150]" onClick={() => void shareBoard()}>
           <Share2 className="h-4 w-4" />
         </button>
-        <div className="ml-auto flex min-w-0 flex-1 items-end justify-end gap-1 text-[11px] font-semibold text-[#6b7280]">
+        <div className="if-h-scroll no-scrollbar ml-auto flex min-w-0 flex-1 items-end justify-end gap-1 text-[11px] font-semibold text-[#6b7280]" data-testid="if-market-tabs">
           {DEMO_MARKET_TABS.map((tab) => (
             <button
               key={tab.id}
@@ -171,6 +172,7 @@ export function InstantFootballView() {
             onSelect={selectOdd}
           />
         ))}
+        </div>
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-40 mx-auto grid h-[50px] max-w-[430px] grid-cols-2 pb-[env(safe-area-inset-bottom)] text-[15px] font-bold text-white">

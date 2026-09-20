@@ -233,6 +233,35 @@ label {
   background: rgb(0 0 0 / 0.4);
 }
 
+/* Instant Football: one page scroller + horizontal tabs. Do not use on homepage. */
+.if-board {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow-x: clip;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.if-h-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.if-h-scroll::-webkit-scrollbar {
+  display: none;
+}
+.if-h-scroll button,
+.if-h-scroll a {
+  touch-action: pan-x;
+}
+.if-board .odds-btn {
+  touch-action: pan-y;
+}
+
 @media (min-width: 1024px) {
   .bottom-pad {
     padding-bottom: 1.25rem;
