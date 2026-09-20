@@ -150,38 +150,29 @@ export function HomeView({
 
       {contentTab === "Matches" ? (
         <>
-          <div className="no-scrollbar flex items-center gap-2 overflow-x-auto bg-white px-2.5 pb-2.5 pt-1.5 min-[412px]:gap-2.5 min-[412px]:px-3">
-            {LEAGUE_PILLS.map((league, index) => {
-              const selected = index === 0;
-              return (
-                <Link
-                  key={league.slug}
-                  href={league.href}
-                  title={league.name}
-                  className={cn(
-                    "relative flex shrink-0 items-center justify-center border-[1.5px] border-[#d4d8de] bg-white",
-                    selected ? "h-7 gap-1 rounded-full px-2.5 min-[412px]:h-8 min-[412px]:px-3" : "h-7 w-[44px] rounded-full min-[412px]:h-8 min-[412px]:w-[50px]",
-                  )}
-                >
-                  <img
-                    src={league.icon}
-                    alt=""
-                    width={selected ? 14 : 18}
-                    height={selected ? 14 : 18}
-                    className={cn("object-contain object-center", selected ? "h-[14px] w-[14px] min-[412px]:h-4 min-[412px]:w-4" : "h-[18px] w-[18px] min-[412px]:h-5 min-[412px]:w-5")}
+          <div className="no-scrollbar overflow-x-auto bg-white px-2.5 pb-2.5 pt-1.5 min-[412px]:px-3">
+            <div className="relative h-[52px] w-[min(100%,478px)] min-[412px]:h-[56px] min-[412px]:w-[min(100%,514px)]">
+              <img
+                src="/home/league-filter-provided.png"
+                alt=""
+                width={1010}
+                height={110}
+                className="pointer-events-none absolute inset-0 h-full w-full object-contain object-left"
+                draggable={false}
+              />
+              <div className="absolute inset-0 flex">
+                {LEAGUE_PILLS.map((league, index) => (
+                  <Link
+                    key={league.slug}
+                    href={league.href}
+                    title={league.name}
+                    aria-label={league.name}
+                    className="h-full shrink-0 bg-transparent"
+                    style={{ width: `${[24, 13.5, 12.7, 12.9, 12.7, 12.9, 11.3][index]}%` }}
                   />
-                  {selected ? (
-                    <>
-                      <span className="text-[11px] font-medium leading-none tracking-[0.01em] text-ink min-[412px]:text-[12px]">{league.name}</span>
-                      <span
-                        aria-hidden
-                        className="pointer-events-none absolute left-1/2 top-[calc(100%-5px)] z-[1] h-2.5 w-2.5 -translate-x-1/2 rotate-45 border-b-[1.5px] border-r-[1.5px] border-[#d4d8de] bg-white"
-                      />
-                    </>
-                  ) : null}
-                </Link>
-              );
-            })}
+                ))}
+              </div>
+            </div>
           </div>
           {featuredCards.length ? (
             <div className="no-scrollbar flex snap-x snap-mandatory gap-1.5 overflow-x-auto bg-white px-2.5 pb-2 min-[412px]:gap-2 min-[412px]:px-3 min-[412px]:pb-2.5">
