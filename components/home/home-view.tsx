@@ -174,7 +174,7 @@ export function HomeView({
 
       {contentTab === "Matches" ? (
         <>
-          <div className="no-scrollbar flex items-center gap-2.5 overflow-x-auto bg-white px-3 py-2">
+          <div className="no-scrollbar flex items-center gap-3 overflow-x-auto bg-white px-3 pb-3.5 pt-2">
             {LEAGUE_PILLS.map((league, index) => {
               const selected = index === 0;
               return (
@@ -183,20 +183,26 @@ export function HomeView({
                   href={league.href}
                   title={league.name}
                   className={cn(
-                    "flex shrink-0 items-center justify-center overflow-hidden border bg-white",
-                    selected
-                      ? "h-10 gap-1.5 rounded-full border-[#d5dae3] px-2.5"
-                      : "h-10 w-10 rounded-full border-[#e5e7eb]",
+                    "relative flex shrink-0 items-center justify-center border-[1.5px] border-[#d4d8de] bg-white",
+                    selected ? "h-9 gap-1.5 rounded-full px-3" : "h-9 w-[56px] rounded-full",
                   )}
                 >
                   <img
                     src={league.icon}
                     alt=""
-                    width={40}
-                    height={40}
-                    className={cn("object-contain contrast-125 brightness-[0.72]", selected ? "h-4 w-4 brightness-100 contrast-100" : "h-7 w-7")}
+                    width={selected ? 18 : 24}
+                    height={selected ? 18 : 24}
+                    className={cn("object-contain object-center", selected ? "h-[18px] w-[18px]" : "h-6 w-6")}
                   />
-                  {selected ? <span className="text-[13px] font-semibold text-ink">{league.name}</span> : null}
+                  {selected ? (
+                    <>
+                      <span className="text-[13px] font-semibold leading-none text-ink">{league.name}</span>
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute left-1/2 top-[calc(100%-6px)] z-[1] h-3 w-3 -translate-x-1/2 rotate-45 border-b-[1.5px] border-r-[1.5px] border-[#d4d8de] bg-white"
+                      />
+                    </>
+                  ) : null}
                 </Link>
               );
             })}
