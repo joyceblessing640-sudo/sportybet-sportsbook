@@ -99,38 +99,43 @@ export function VirtualsView() {
       </div>
 
       <div className="grid grid-cols-2 gap-2 px-[10px] pb-3 min-[375px]:px-[11px] min-[390px]:gap-2 min-[390px]:px-3 min-[430px]:gap-2.5">
-        {GAMES.map((game) => (
-          <Link
-            key={game.id}
-            href={game.href}
-            aria-label={`Play ${game.title}`}
-            className="flex flex-col overflow-hidden rounded-[12px] bg-[#2c3038]"
-          >
-            {game.tag ? (
-              <p className="flex items-center gap-1 px-2.5 pt-[7px] pb-[5px] text-[10px] font-semibold uppercase tracking-[0.04em] text-white/45">
-                <span className="text-[6px] leading-none">▶</span> {game.tag}
-              </p>
-            ) : (
-              <span className="h-[8px]" />
-            )}
-            <div
-              className={cn(
-                "relative overflow-hidden",
-                game.tag ? "mx-[3px] mb-[3px] rounded-[10px]" : "mx-[3px] mb-[3px] rounded-[10px]",
+        {GAMES.map((game) => {
+          const instant = game.id === "instant-football";
+          const className = "flex flex-col overflow-hidden rounded-[12px] bg-[#2c3038]";
+          const inner = (
+            <>
+              {game.tag ? (
+                <p className="flex items-center gap-1 px-2.5 pt-[7px] pb-[5px] text-[10px] font-semibold uppercase tracking-[0.04em] text-white/45">
+                  <span className="text-[6px] leading-none">▶</span> {game.tag}
+                </p>
+              ) : (
+                <span className="h-[8px]" />
               )}
-              style={{ aspectRatio: "423 / 177" }}
-            >
-              <Image
-                src={game.art}
-                alt=""
-                fill
-                unoptimized
-                className="object-contain object-center"
-                sizes="(max-width: 360px) 46vw, (max-width: 430px) 47vw, 210px"
-              />
-            </div>
-          </Link>
-        ))}
+              <div className="relative mx-[3px] mb-[3px] overflow-hidden rounded-[10px]" style={{ aspectRatio: "423 / 177" }}>
+                <Image
+                  src={game.art}
+                  alt=""
+                  fill
+                  unoptimized
+                  className="object-contain object-center"
+                  sizes="(max-width: 360px) 46vw, (max-width: 430px) 47vw, 210px"
+                />
+              </div>
+            </>
+          );
+          if (instant) {
+            return (
+              <a key={game.id} href="/virtuals/instant-football" aria-label="Play Instant Football" className={className}>
+                {inner}
+              </a>
+            );
+          }
+          return (
+            <Link key={game.id} href={game.href} aria-label={`Play ${game.title}`} className={className}>
+              {inner}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
