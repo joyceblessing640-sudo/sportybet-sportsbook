@@ -12,6 +12,7 @@ export default async function HomePage() {
       live={data.live.map(serializeMatch)}
       today={data.today.map(serializeMatch)}
       upcoming={data.upcoming.map(serializeMatch)}
+      leagues={data.leagues.map((l) => ({ name: l.name, slug: l.slug, country: l.country }))}
       promotions={data.promotions.map((p) => ({
         id: p.id,
         title: p.title,

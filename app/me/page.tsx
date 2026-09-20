@@ -21,7 +21,7 @@ export default function MePage() {
             </span>
             <div>
               <p className="text-base font-bold">{user ? user.username : "Login to View"}</p>
-              <p className="text-xs text-white/60">{user ? `${user.loyaltyTier} tier` : "Join SPORTBET"}</p>
+              <p className="text-xs text-white/60">{user ? `${user.loyaltyTier} tier` : "Join SportyBets"}</p>
             </div>
             <ChevronRight className="h-4 w-4 text-white/50" />
           </Link>
@@ -46,7 +46,7 @@ export default function MePage() {
           className="mt-4 flex items-center justify-between overflow-hidden rounded-xl bg-gradient-to-r from-[#7f1d1d] to-[#111827] p-3"
         >
           <div>
-            <p className="text-sm font-black">SPORTBET Loyalty</p>
+            <p className="text-sm font-black">SportyBets Loyalty</p>
             <p className="text-xs text-white/70">{user ? "View your demo tier progress" : "Log in to join"}</p>
           </div>
           <span className="text-xs font-semibold text-[#86efac]">Open</span>

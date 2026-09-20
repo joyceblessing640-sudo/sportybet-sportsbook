@@ -1,23 +1,32 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function PromotionsPage() {
   const promotions = await prisma.promotion.findMany({ where: { active: true }, orderBy: { sortOrder: "asc" } });
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-black">Promotions</h1>
-      <p className="mt-1 text-sm text-muted">
-        Offers below are demo copy. They do not guarantee winnings and have not been issued by a licensed operator.
+    <div className="p-3">
+      <h1 className="text-[16px] font-bold">Promotions</h1>
+      <p className="mt-1 text-[12px] text-muted">
+        Demo offers only. They do not guarantee winnings and are not issued by a licensed operator.
       </p>
-      <div className="mt-4 space-y-3">
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
         {promotions.map((promo) => (
-          <article key={promo.id} className="rounded-2xl bg-white p-4 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-wide text-brand">{promo.subtitle}</p>
-            <h2 className="mt-1 text-lg font-black">{promo.title}</h2>
-            <p className="mt-2 text-sm text-[#4b5563]">{promo.body}</p>
-            <Link href={promo.href} className="mt-3 inline-flex text-sm font-bold text-brand">
+          <article
+            key={promo.id}
+            className={cn(
+              "card-hover rounded-md p-3 text-white",
+              promo.theme === "welcome" && "bg-gradient-to-br from-[#0e8a44] to-[#0b3d2e]",
+              promo.theme === "boost" && "bg-gradient-to-br from-[#1f6b4a] to-[#10241c]",
+              promo.theme === "promo" && "bg-gradient-to-br from-[#0f766e] to-[#134e4a]",
+            )}
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-white/70">{promo.subtitle}</p>
+            <h2 className="mt-1 text-[15px] font-bold">{promo.title}</h2>
+            <p className="mt-1.5 line-clamp-3 text-[12px] text-white/80">{promo.body}</p>
+            <Link href={promo.href} className="mt-3 inline-flex rounded bg-white px-3 py-1.5 text-[12px] font-bold text-brand">
               {promo.ctaLabel}
             </Link>
           </article>

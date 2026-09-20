@@ -29,15 +29,15 @@ export function OddsButton({
         aria-label={`Add ${match.home.shortName} vs ${match.away.shortName} ${marketName} ${outcome.label}`}
         className={cn(
           "odds-btn flex h-full w-full min-w-0 flex-col items-center justify-center px-1",
-          compact ? "h-9 text-[13px]" : "h-11 text-xs",
+          compact ? "h-8 text-[13px]" : "h-10 text-xs",
         )}
       >
         {hideLabel ? null : (
-          <span className={cn("font-semibold leading-none", selected ? "text-white/90" : "text-[#5b6b63]")}>
+          <span className={cn("text-[10px] font-semibold leading-none", selected ? "text-white/90" : "text-[#5b6b63]")}>
             {outcome.label}
           </span>
         )}
-        <span className="font-bold leading-tight">{formatOdds(outcome.odds)}</span>
+        <span className="font-bold tabular-nums leading-tight">{formatOdds(outcome.odds)}</span>
       </button>
     </form>
   );

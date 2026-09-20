@@ -70,7 +70,7 @@ function AccountStep({
           eighteen (18) or older
         </span>
       </label>
-      {error ? <p className="text-sm text-brand">{error}</p> : null}
+      {error ? <p className="text-sm text-danger">{error}</p> : null}
       <button
         type="submit"
         disabled={pending || !ready}
@@ -93,7 +93,7 @@ export function RegisterWizard() {
   return (
     <AuthShell>
       <h1 className="mt-6 text-center text-[22px] font-black leading-tight text-ink">
-        Join SPORTBET
+        Join SportyBets
         <br />
         with your mobile number
       </h1>
@@ -128,7 +128,7 @@ export function RegisterWizard() {
             placeholder="OTP"
             className="h-12 w-full rounded-md border border-[#d7dbe2] px-3 text-center text-lg tracking-[0.4em] outline-none focus:border-[#12a150]"
           />
-          {otpState?.error ? <p className="text-sm text-brand">{otpState.error}</p> : null}
+          {otpState?.error ? <p className="text-sm text-danger">{otpState.error}</p> : null}
           <button type="submit" disabled={otpPending} className="h-12 w-full rounded-md bg-[#12a150] text-sm font-bold text-white">
             {otpPending ? "Checking…" : "Verify"}
           </button>
@@ -158,7 +158,7 @@ export function RegisterWizard() {
             placeholder="Password"
             className="h-12 w-full rounded-md border border-[#d7dbe2] px-3 text-sm outline-none focus:border-[#12a150]"
           />
-          {doneState?.error ? <p className="text-sm text-brand">{doneState.error}</p> : null}
+          {doneState?.error ? <p className="text-sm text-danger">{doneState.error}</p> : null}
           <button type="submit" disabled={donePending} className="h-12 w-full rounded-md bg-[#12a150] text-sm font-bold text-white">
             {donePending ? "Creating…" : "Create Account"}
           </button>

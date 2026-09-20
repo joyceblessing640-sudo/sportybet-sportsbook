@@ -18,7 +18,7 @@ export default function DepositPage() {
 
   return (
     <div>
-      <header className="flex items-center gap-3 bg-brand px-3 py-3 text-white">
+      <header className="flex items-center gap-3 bg-header px-3 py-2.5 text-white">
         <Link href="/me" aria-label="Back">
           <ArrowLeft className="h-5 w-5" />
         </Link>
@@ -88,7 +88,7 @@ export default function DepositPage() {
             Deposits stay <strong>Pending</strong> until payment is confirmed by operations. This demo never marks a deposit successful from the browser.
           </p>
         </div>
-        {state?.error ? <p className="mt-3 text-sm text-brand">{state.error}</p> : null}
+        {state?.error ? <p className="mt-3 text-sm text-danger">{state.error}</p> : null}
         <Button type="submit" className="mt-4 w-full" disabled={pending}>
           {pending ? "Submitting…" : "Deposit"}
         </Button>

@@ -63,7 +63,7 @@ export function SportsView({
 
   return (
     <div>
-      <div className="bg-brand px-3 pb-3 pt-2">
+      <div className="bg-header px-3 pb-2 pt-2">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9aa3b2]" />
           <Input
@@ -192,7 +192,9 @@ export function SportsView({
             <div className="m-3 rounded-xl bg-white p-8 text-center text-sm text-muted">No demo matches match this filter.</div>
           ) : (
             grouped.map(([day, list]) => (
-              <MatchList key={day} matches={list} marketType={market} dateLabel={day} />
+              <div key={day} className="mb-2 px-3">
+                <MatchList matches={list} marketType={market} dateLabel={day} />
+              </div>
             ))
           )}
         </>

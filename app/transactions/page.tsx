@@ -26,7 +26,7 @@ export default async function TransactionsPage() {
             <article key={tx.id} className="border-b border-[#f1f3f7] px-4 py-3">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-semibold">{tx.type.replace(/_/g, " ")}</span>
-                <span className={tx.amountPesewas < 0 ? "font-bold text-brand" : "font-bold text-odds"}>
+                <span className={tx.amountPesewas < 0 ? "font-bold text-danger" : "font-bold text-odds"}>
                   {tx.amountPesewas < 0 ? "-" : "+"}
                   {formatGhs(Math.abs(tx.amountPesewas))}
                 </span>

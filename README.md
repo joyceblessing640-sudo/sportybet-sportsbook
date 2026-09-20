@@ -1,6 +1,6 @@
-# SPORTBET
+# SportyBets
 
-SPORTBET is a demo sportsbook web app with a red-and-white production-style interface. Layout and navigation follow modern betting apps. Branding, logo, and copy are original — this product is not affiliated with any third-party operator.
+SportyBets is a demo sportsbook web app with a compact green-and-white sportsbook interface. Layout and navigation follow modern betting apps. Branding, logo, and copy are original — this product is not affiliated with any third-party operator.
 
 **18+ only. Play responsibly. Betting can be addictive.** Matches, odds, balances, and payments in this repository are **demo data** unless you connect a real sports feed and payment provider.
 

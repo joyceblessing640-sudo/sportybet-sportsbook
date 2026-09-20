@@ -38,7 +38,7 @@ export function MatchDetails({ match, favorited }: { match: ClientMatch; favorit
 
   return (
     <div className="pb-6">
-      <header className="flex items-center gap-3 bg-brand px-3 py-3 text-white">
+      <header className="flex items-center gap-3 bg-header px-3 py-2.5 text-white">
         <Link href="/sports" aria-label="Back">
           <ArrowLeft className="h-5 w-5" />
         </Link>

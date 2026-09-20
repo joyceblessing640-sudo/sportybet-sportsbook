@@ -1,15 +1,43 @@
 export const SPORTS_NAV = [
   { href: "/", label: "Home", icon: "home" },
   { href: "/sports/football", label: "Football", icon: "football" },
+  { href: "/live", label: "Live Betting", icon: "live" },
   { href: "/sports/basketball", label: "Basketball", icon: "basketball" },
   { href: "/sports/tennis", label: "Tennis", icon: "tennis" },
+  { href: "/sports/esports", label: "eFootball", icon: "esports" },
+  { href: "/virtuals", label: "Virtuals", icon: "virtuals" },
   { href: "/sports/ice-hockey", label: "Ice Hockey", icon: "hockey" },
   { href: "/sports/baseball", label: "Baseball", icon: "baseball" },
   { href: "/sports/volleyball", label: "Volleyball", icon: "volleyball" },
-  { href: "/sports/esports", label: "Esports", icon: "esports" },
-  { href: "/live", label: "Live Betting", icon: "live" },
-  { href: "/virtuals", label: "Virtuals", icon: "virtuals" },
   { href: "/promotions", label: "Promotions", icon: "promos" },
+] as const;
+
+export const PRIMARY_SPORTS = [
+  { href: "/", label: "Home", slug: "home" },
+  { href: "/sports/football", label: "Football", slug: "football" },
+  { href: "/live", label: "Live", slug: "live" },
+  { href: "/sports/basketball", label: "Basketball", slug: "basketball" },
+  { href: "/sports/tennis", label: "Tennis", slug: "tennis" },
+  { href: "/sports/esports", label: "eFootball", slug: "esports" },
+  { href: "/virtuals", label: "Virtuals", slug: "virtuals" },
+] as const;
+
+export const MORE_SPORTS = [
+  { href: "/sports/table-tennis", label: "Table Tennis", slug: "table-tennis" },
+  { href: "/sports/volleyball", label: "Volleyball", slug: "volleyball" },
+  { href: "/sports/baseball", label: "Baseball", slug: "baseball" },
+  { href: "/sports/handball", label: "Handball", slug: "handball" },
+  { href: "/sports/ice-hockey", label: "Ice Hockey", slug: "ice-hockey" },
+  { href: "/sports/cricket", label: "Cricket", slug: "cricket" },
+  { href: "/sports/darts", label: "Darts", slug: "darts" },
+  { href: "/sports/mma", label: "MMA", slug: "mma" },
+  { href: "/sports/boxing", label: "Boxing", slug: "boxing" },
+  { href: "/sports/futsal", label: "Futsal", slug: "futsal" },
+  { href: "/sports/rugby", label: "Rugby", slug: "rugby" },
+  { href: "/sports/snooker", label: "Snooker", slug: "snooker" },
+  { href: "/sports/esports", label: "Counter-Strike", slug: "esports" },
+  { href: "/sports/dota-2", label: "Dota 2", slug: "dota-2" },
+  { href: "/sports/league-of-legends", label: "League of Legends", slug: "league-of-legends" },
 ] as const;
 
 export const TOP_NAV = [
@@ -52,3 +80,7 @@ export const LIVE_SPORT_TABS = [
 ] as const;
 
 export const PAYMENT_METHODS = ["AT", "MTN", "Telecel", "VISA", "Mastercard", "Bank"] as const;
+
+export function catalogSport(slug: string) {
+  return MORE_SPORTS.find((item) => item.slug === slug) ?? PRIMARY_SPORTS.find((item) => item.slug === slug);
+}

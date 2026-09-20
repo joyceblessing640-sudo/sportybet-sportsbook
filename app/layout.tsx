@@ -11,16 +11,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SPORTBET — Bet Smart. Win Big.",
+  title: "SportyBets — Bet Smart. Win Big.",
   description:
-    "SPORTBET is a demo sportsbook for football, basketball, tennis and more. 18+ only. Play responsibly.",
+    "SportyBets is a demo sportsbook for football, basketball, tennis and more. 18+ only. Play responsibly.",
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [user, slipItems] = await Promise.all([getAuthPayload(), readSlipItems()]);
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full bg-[#f4f5f7] font-sans text-ink">
+      <body className="min-h-full bg-background font-sans text-ink">
         <ClientRoot initialUser={user} slipItems={slipItems}>
           {children}
         </ClientRoot>

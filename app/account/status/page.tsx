@@ -19,7 +19,7 @@ export default function AccountStatusPage() {
       </p>
       {user ? (
         <form action={offAction} className="mt-8">
-          {offState?.error ? <p className="mb-3 text-sm text-brand">{offState.error}</p> : null}
+          {offState?.error ? <p className="mb-3 text-sm text-danger">{offState.error}</p> : null}
           {offState?.ok ? <p className="mb-3 text-sm text-[#12a150]">Account deactivated. You have been signed out.</p> : null}
           <button type="submit" disabled={offPending} className="h-12 w-full rounded-md bg-brand text-sm font-bold text-white">
             {offPending ? "Working…" : "Deactivate this account"}
@@ -35,7 +35,7 @@ export default function AccountStatusPage() {
             placeholder="Password"
             className="h-12 w-full rounded-md border border-[#d7dbe2] px-3 text-sm outline-none focus:border-[#12a150]"
           />
-          {onState?.error ? <p className="text-sm text-brand">{onState.error}</p> : null}
+          {onState?.error ? <p className="text-sm text-danger">{onState.error}</p> : null}
           <button type="submit" disabled={onPending} className="h-12 w-full rounded-md bg-[#12a150] text-sm font-bold text-white">
             {onPending ? "Working…" : "Reactivate and log in"}
           </button>

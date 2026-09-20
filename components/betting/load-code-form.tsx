@@ -21,7 +21,7 @@ export function LoadCodeForm({ matches }: { matches: ClientMatch[] }) {
           {pending ? "Loading…" : "Load"}
         </button>
       </form>
-      {state?.error ? <p className="mt-2 text-sm text-brand">{state.error}</p> : null}
+      {state?.error ? <p className="mt-2 text-sm text-danger">{state.error}</p> : null}
       <RecommendedCodes matches={matches} />
     </div>
   );

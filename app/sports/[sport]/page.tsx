@@ -1,16 +1,22 @@
 import { notFound } from "next/navigation";
 import { SportsView } from "@/components/sports/sports-view";
+import { EmptySport } from "@/components/sports/empty-sport";
 import { getLeagues, getSports } from "@/lib/data";
 import { prisma } from "@/lib/db";
 import { liveMinute } from "@/lib/audit";
 import { serializeMatch } from "@/lib/serialize";
+import { catalogSport } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
 export default async function SportPage({ params }: { params: Promise<{ sport: string }> }) {
   const { sport } = await params;
   const found = await prisma.sport.findUnique({ where: { slug: sport } });
-  if (!found) notFound();
+  if (!found) {
+    const catalog = catalogSport(sport);
+    if (!catalog || catalog.slug === "home" || catalog.slug === "live" || catalog.slug === "virtuals") notFound();
+    return <EmptySport name={catalog.label} />;
+  }
   const [sports, leagues, raw] = await Promise.all([
     getSports(),
     getLeagues(),

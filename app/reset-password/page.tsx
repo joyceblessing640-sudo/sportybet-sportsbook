@@ -33,7 +33,7 @@ function ResetForm() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col bg-brand">
+    <div className="flex min-h-dvh flex-col bg-header">
       <div className="px-4 py-4">
         <Logo />
       </div>

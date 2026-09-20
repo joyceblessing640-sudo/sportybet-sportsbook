@@ -47,7 +47,7 @@ export function LoginForm() {
             className="h-12 w-full rounded-md border border-[#d7dbe2] px-3 text-sm outline-none placeholder:text-[#9aa3b2] focus:border-[#12a150]"
           />
         </div>
-        {state?.error ? <p className="mt-3 text-sm text-brand">{state.error}</p> : null}
+        {state?.error ? <p className="mt-3 text-sm text-danger">{state.error}</p> : null}
         <button
           type="submit"
           disabled={pending || !ready}

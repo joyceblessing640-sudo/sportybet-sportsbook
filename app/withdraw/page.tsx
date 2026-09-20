@@ -19,7 +19,7 @@ export default function WithdrawPage() {
 
   return (
     <div>
-      <header className="flex items-center gap-3 bg-brand px-3 py-3 text-white">
+      <header className="flex items-center gap-3 bg-header px-3 py-2.5 text-white">
         <Link href="/me" aria-label="Back">
           <ArrowLeft className="h-5 w-5" />
         </Link>
@@ -87,7 +87,7 @@ export default function WithdrawPage() {
         <p className="mt-3 text-xs text-muted">
           Minimum withdrawal is {formatGhs(MIN_WITHDRAW_PESEWAS)}. Requests stay pending until operations confirms them. Withdrawals are not instant.
         </p>
-        {state?.error ? <p className="mt-3 text-sm text-brand">{state.error}</p> : null}
+        {state?.error ? <p className="mt-3 text-sm text-danger">{state.error}</p> : null}
         <Button type="submit" className="mt-4 w-full" disabled={pending}>
           {pending ? "Submitting…" : "Withdraw"}
         </Button>

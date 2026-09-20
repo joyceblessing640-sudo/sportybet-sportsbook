@@ -34,10 +34,10 @@ export function BetSlipPanel({
     (tab === "SYSTEM" && items.length < 3);
 
   return (
-    <section className={cn("flex h-full flex-col bg-white", embedded && "border-l border-[#eceff3]")}>
-      <header className="flex items-center justify-between border-b border-[#eceff3] px-3 py-2">
+    <section className={cn("flex h-full flex-col bg-white", embedded && "border-l border-line")}>
+      <header className="flex items-center justify-between border-b border-line px-3 py-2">
         <div>
-          <p className="text-sm font-bold text-ink">Bet Slip</p>
+          <p className="text-[13px] font-bold text-ink">Betslip</p>
           <p className="text-[11px] text-muted">
             {items.length} selection{items.length === 1 ? "" : "s"}
           </p>
@@ -45,27 +45,27 @@ export function BetSlipPanel({
         <div className="flex items-center gap-1">
           {items.length > 0 ? (
             <form action={clearSlipAction}>
-              <button type="submit" className="p-2 text-[#8b93a3]" aria-label="Clear slip">
+              <button type="submit" className="p-2 text-danger" aria-label="Clear all">
                 <Trash2 className="h-4 w-4" />
               </button>
             </form>
           ) : null}
           {onClose ? (
-            <button type="button" onClick={onClose} className="p-2 text-[#8b93a3]" aria-label="Close bet slip">
+            <button type="button" onClick={onClose} className="p-2 text-muted" aria-label="Close bet slip">
               <X className="h-4 w-4" />
             </button>
           ) : null}
         </div>
       </header>
-      <div className="grid grid-cols-3 border-b border-[#eceff3] text-sm font-semibold">
+      <div className="grid grid-cols-3 border-b border-line text-[12px] font-semibold">
         {(["SINGLE", "MULTI", "SYSTEM"] as const).map((item) => (
           <button
             key={item}
             type="button"
             onClick={() => setTab(item)}
             className={cn(
-              "py-2 capitalize",
-              tab === item ? "border-b-2 border-brand text-brand" : "text-[#8b93a3]",
+              "py-2 capitalize transition-colors duration-150",
+              tab === item ? "border-b-2 border-brand text-brand" : "text-muted",
             )}
           >
             {item.toLowerCase()}
@@ -74,27 +74,27 @@ export function BetSlipPanel({
       </div>
       <div className="flex-1 overflow-y-auto">
         {items.length === 0 ? (
-          <div className="px-6 py-12 text-center">
-            <p className="text-sm font-semibold text-ink">Your slip is empty</p>
-            <p className="mt-1 text-xs text-muted">Tap any odd to add a selection. Prices shown are demo odds.</p>
+          <div className="px-5 py-10 text-center">
+            <p className="text-[13px] font-semibold text-ink">Your slip is empty</p>
+            <p className="mt-1 text-[12px] text-muted">Tap an odd to add a selection. Demo prices only.</p>
           </div>
         ) : (
           items.map((item) => (
-            <article key={item.outcomeId} className="border-b border-[#f1f3f7] px-3 py-3">
+            <article key={item.outcomeId} className="border-b border-[#f1f3f7] px-3 py-2.5">
               <div className="flex items-start justify-between gap-2">
-                <div>
-                  <p className="text-[11px] text-muted">{item.league}</p>
-                  <p className="text-sm font-semibold text-ink">{item.matchLabel}</p>
-                  <p className="text-xs text-muted">
+                <div className="min-w-0">
+                  <p className="text-[10px] text-muted">{item.league}</p>
+                  <p className="truncate text-[13px] font-semibold text-ink">{item.matchLabel}</p>
+                  <p className="text-[11px] text-muted">
                     {item.marketName} · {item.outcomeLabel}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-odds">{formatOdds(item.odds)}</span>
+                  <span className="text-[13px] font-bold text-odds">{formatOdds(item.odds)}</span>
                   <form action={removeSlipSelection}>
                     <input type="hidden" name="outcomeId" value={item.outcomeId} />
-                    <button type="submit" aria-label="Remove selection">
-                      <X className="h-4 w-4 text-[#b0b6c2]" />
+                    <button type="submit" aria-label="Remove selection" className="text-danger">
+                      <X className="h-4 w-4" />
                     </button>
                   </form>
                 </div>
@@ -103,9 +103,9 @@ export function BetSlipPanel({
           ))
         )}
       </div>
-      <form action={action} className="border-t border-[#eceff3] p-3">
+      <form action={action} className="border-t border-line p-3">
         <input type="hidden" name="type" value={tab} />
-        <div className="mb-2 flex items-center justify-between text-sm">
+        <div className="mb-2 flex items-center justify-between text-[13px]">
           <span className="text-muted">Total odds</span>
           <span className="font-bold">{items.length ? formatOdds(summary.totalOdds) : "0.00"}</span>
         </div>
@@ -114,27 +114,27 @@ export function BetSlipPanel({
             System {summary.systemK}/{items.length} · {summary.combinationCount} combinations
           </p>
         ) : null}
-        <label className="mb-2 block text-xs font-medium text-muted">Stake (GHS)</label>
-        <Input name="stake" value={stake} onChange={(e) => setStake(e.target.value)} inputMode="decimal" placeholder="10.00" />
-        <div className="mt-2 flex items-center justify-between text-sm">
+        <label className="mb-1.5 block text-[11px] font-medium text-muted">Stake (GHS)</label>
+        <Input name="stake" value={stake} onChange={(e) => setStake(e.target.value)} inputMode="decimal" placeholder="10.00" className="h-9" />
+        <div className="mt-2 flex items-center justify-between text-[13px]">
           <span className="text-muted">Potential win</span>
           <span className="font-bold text-brand">{formatGhs(summary.potentialWin)}</span>
         </div>
         {invalidCombo && items.length > 0 ? (
-          <p className="mt-2 text-[11px] text-brand">
+          <p className="mt-2 text-[11px] text-danger">
             {tab === "SINGLE" ? "Single bets need one selection." : null}
             {tab === "MULTI" ? "Add at least two selections for a multi." : null}
             {tab === "SYSTEM" ? "System bets need at least three selections." : null}
           </p>
         ) : null}
-        {state?.error ? <p className="mt-2 text-xs text-brand">{state.error}</p> : null}
+        {state?.error ? <p className="mt-2 text-xs text-danger">{state.error}</p> : null}
         {user ? (
-          <Button type="submit" className="mt-3 w-full" disabled={pending || items.length === 0 || invalidCombo}>
+          <Button type="submit" className="mt-3 h-10 w-full" disabled={pending || items.length === 0 || invalidCombo}>
             {pending ? "Placing…" : "Place Bet"}
           </Button>
         ) : (
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <Button variant="outline" className="border-brand text-brand hover:bg-red-50" asChild>
+            <Button variant="outline" className="border-brand text-brand hover:bg-brand-soft" asChild>
               <Link href="/login?next=/slip">Login</Link>
             </Button>
             <Button asChild>
@@ -142,27 +142,42 @@ export function BetSlipPanel({
             </Button>
           </div>
         )}
-        <p className="mt-2 text-center text-[10px] text-muted">
-          18+ Play responsibly. Odds are calculated on the server from stored prices.
-        </p>
+        <div className="mt-2 flex items-center justify-between text-[11px]">
+          <Link href="/load-code" className="font-semibold text-brand">
+            Booking code
+          </Link>
+          {items.length > 0 ? (
+            <form action={clearSlipAction}>
+              <button type="submit" className="font-semibold text-danger">
+                Clear all
+              </button>
+            </form>
+          ) : null}
+        </div>
+        <p className="mt-2 text-center text-[10px] text-muted">18+ Play responsibly. Odds calculated on the server.</p>
       </form>
     </section>
   );
 }
 
-export function BetSlipFab({ items }: { items: SlipItem[] }) {
-  const total = items.reduce((acc, item) => acc * (item.odds / 100), 1);
+export function BetSlipBar({ items, onOpen }: { items: SlipItem[]; onOpen: () => void }) {
+  const stake = useBetSlip((s) => s.stake);
+  const tab = useBetSlip((s) => s.tab);
+  const stakePesewas = parseGhsToPesewas(stake) ?? 0;
+  const summary = useMemo(() => slipSummary(items, tab, stakePesewas), [items, tab, stakePesewas]);
+  if (items.length === 0) return null;
+
   return (
-    <Link
-      href="/slip"
-      className="fixed right-3 z-40 grid h-14 w-14 place-items-center rounded-full bg-[#12a150] text-white shadow-lg xl:hidden"
-      style={{ bottom: "calc(4.75rem + env(safe-area-inset-bottom))" }}
-      aria-label="Open bet slip"
+    <button
+      type="button"
+      onClick={onOpen}
+      className="fixed inset-x-3 z-40 flex items-center justify-between rounded-md bg-brand px-3 py-2 text-white shadow-lg lg:hidden"
+      style={{ bottom: "calc(3.4rem + env(safe-area-inset-bottom))" }}
     >
-      <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-white px-1 text-[11px] font-bold text-brand">
-        {items.length}
+      <span className="text-[12px] font-semibold">
+        {items.length} Bet{items.length === 1 ? "" : "s"} · Potential Win {formatGhs(summary.potentialWin)}
       </span>
-      <span className="text-sm font-black">{items.length ? total.toFixed(2) : "0.00"}</span>
-    </Link>
+      <span className="rounded bg-white/20 px-2 py-1 text-[11px] font-bold">VIEW BETSLIP</span>
+    </button>
   );
 }

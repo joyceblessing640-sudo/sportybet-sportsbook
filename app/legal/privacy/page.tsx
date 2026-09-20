@@ -3,7 +3,7 @@ export default function PrivacyPage() {
     <article className="space-y-3 p-4 text-sm leading-relaxed text-[#374151]">
       <h1 className="text-xl font-black text-ink">Privacy Policy</h1>
       <p>
-        SPORTBET is a demo sportsbook. Account details you enter (mobile number, username, email) are stored locally in this
+        SportyBets is a demo sportsbook. Account details you enter (mobile number, username, email) are stored locally in this
         environment to sign you in. We do not sell personal data. Do not use a real password you use elsewhere.
       </p>
       <p>Session cookies keep you logged in. The bet slip is stored in a cookie on this device.</p>

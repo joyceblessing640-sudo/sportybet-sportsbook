@@ -12,7 +12,7 @@ import {
   Sparkles,
   Trophy,
 } from "lucide-react";
-import { SPORTS_NAV } from "@/lib/constants";
+import { MORE_SPORTS, SPORTS_NAV } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 const ICONS: Record<string, ComponentType<{ className?: string }>> = {
@@ -32,8 +32,8 @@ const ICONS: Record<string, ComponentType<{ className?: string }>> = {
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   return (
-    <aside className="h-full w-[220px] shrink-0 overflow-y-auto border-r border-[#eceff3] bg-white">
-      <nav className="py-2">
+    <aside className="h-full w-[220px] shrink-0 overflow-y-auto bg-white">
+      <nav className="py-1">
         {SPORTS_NAV.map((item) => {
           const Icon = ICONS[item.icon] ?? Trophy;
           const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
@@ -43,8 +43,8 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
               href={item.href}
               onClick={onNavigate}
               className={cn(
-                "flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-[#2d3340] hover:bg-[#f7f8fa]",
-                active && "bg-[#fff2f2] font-semibold text-brand",
+                "flex items-center gap-3 px-4 py-2 text-[13px] font-medium text-[#2d3340] transition-colors duration-150 hover:bg-brand-soft",
+                active && "bg-brand-soft font-semibold text-brand",
               )}
             >
               <Icon className={cn("h-4 w-4", active ? "text-brand" : "text-[#8b93a3]")} />
@@ -52,6 +52,17 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             </Link>
           );
         })}
+        <p className="px-4 pb-1 pt-3 text-[10px] font-bold uppercase tracking-wide text-muted">More sports</p>
+        {MORE_SPORTS.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            onClick={onNavigate}
+            className="block px-4 py-1.5 text-[13px] text-[#4b5563] hover:bg-brand-soft hover:text-brand"
+          >
+            {item.label}
+          </Link>
+        ))}
       </nav>
     </aside>
   );

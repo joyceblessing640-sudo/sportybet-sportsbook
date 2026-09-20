@@ -27,7 +27,7 @@ export function LeagueView({
 
   return (
     <div className="pb-6">
-      <div className="flex items-center gap-3 bg-brand px-3 py-3 text-white">
+      <div className="flex items-center gap-3 bg-header px-3 py-2.5 text-white">
         <Link href="/sports" aria-label="Back">
           <ArrowLeft className="h-5 w-5" />
         </Link>

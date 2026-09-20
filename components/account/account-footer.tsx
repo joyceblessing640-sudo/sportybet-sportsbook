@@ -46,12 +46,12 @@ export function AccountFooter({ gifts = 0, wheel = 0 }: { gifts?: number; wheel?
           <span className="flex items-center gap-1 font-semibold">
             <FileText className="h-3.5 w-3.5" /> 18+
           </span>
-          <span>© {new Date().getFullYear()} SPORTBET. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} SportyBets. All rights reserved.</span>
         </div>
       </div>
       <section className="bg-ink px-4 py-8 text-center text-white">
         <p className="text-lg font-black italic tracking-wide">
-          <span className="text-brand">SPORT</span>BET
+          <span className="text-brand">Sporty</span>Bets
         </p>
         <p className="mt-2 text-sm text-white/70">Independent demo sportsbook. Not affiliated with any third-party betting brand.</p>
         <div className="mt-5 flex items-center justify-center gap-3 text-[11px] font-black text-white">
@@ -72,7 +72,7 @@ export function AccountFooter({ gifts = 0, wheel = 0 }: { gifts?: number; wheel?
           ))}
         </div>
         <p className="mt-5 text-[11px] leading-relaxed text-white/45">
-          Age 18 and above only. Play Responsibly. Betting is addictive and can be psychologically harmful. SPORTBET is a
+          Age 18 and above only. Play Responsibly. Betting is addictive and can be psychologically harmful. SportyBets is a
           software demonstration and is not licensed by any gaming commission.
         </p>
       </section>
