@@ -30,7 +30,14 @@ export function BottomNav({ onOpenMenu }: { onOpenMenu: () => void }) {
                 {item.icon === "home" ? <IconHomeS className="h-[26px] w-[26px] text-white" /> : null}
                 {item.icon === "az" ? <IconAzMenu className="h-[24px] w-[24px] text-[#d6d6d6]" /> : null}
                 {item.icon === "games" ? <IconGames gid={gid} className="h-[28px] w-[28px]" /> : null}
-                {item.icon === "bets" ? <IconOpenBets className="h-[26px] w-[26px] text-[#c8c8c8]" /> : null}
+                {item.icon === "bets" ? (
+                  <>
+                    <IconOpenBets className="h-[26px] w-[26px] text-[#c8c8c8]" />
+                    <span className="absolute -right-[5px] -top-[4px] grid h-[14px] min-w-[14px] place-items-center rounded-full bg-[#e31837] text-[8px] font-bold leading-none text-white">
+                      3
+                    </span>
+                  </>
+                ) : null}
                 {item.icon === "me" ? (
                   <>
                     <IconMe className="h-[24px] w-[24px] text-[#c2c2c2]" />
