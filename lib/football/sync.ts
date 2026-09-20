@@ -358,7 +358,21 @@ export async function ensureFootballSynced(mode: "home" | "live" = "home"): Prom
       return meta;
     } catch (error) {
       const message = error instanceof FootballApiError ? error.message : "Unable to load live matches";
-      const stale = cachePeek<FootballFeedMeta>("football:meta");
+      const stale =
+        cachePeek<FootballFeedMeta>("football:meta") ?? (await readSetting<FootballFeedMeta>("football_meta"));
+      const haveFeed = await prisma.match.count({
+        where: { sportId: "football", isDemo: false, NOT: { externalId: null } },
+      });
+      const rateLimited = error instanceof FootballApiError && error.status === 429;
+      if (haveFeed && (rateLimited || stale?.ok)) {
+        const meta: FootballFeedMeta = {
+          ok: true,
+          error: null,
+          syncedAt: stale?.syncedAt ?? new Date().toISOString(),
+        };
+        cacheSet(`football:sync:${mode}`, meta, rateLimited ? TTL.fixtures : TTL.error);
+        return meta;
+      }
       const meta: FootballFeedMeta = {
         ok: Boolean(stale?.ok),
         error: "Unable to load live matches",
