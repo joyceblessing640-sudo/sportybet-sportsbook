@@ -1,0 +1,183 @@
+/* Mobile tab bar — match the SportyBet app reference. */
+
+.bn {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 40;
+  background: #000;
+  color: #fff;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.bn-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  height: 56px;
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+.bn-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  padding-top: 7px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.bn-icon {
+  position: relative;
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  flex-shrink: 0;
+  overflow: visible;
+  line-height: 0;
+}
+
+.bn-icon svg {
+  display: block;
+  overflow: visible;
+}
+
+.bn-s {
+  width: 22px;
+  height: 26px;
+}
+
+.bn-menu {
+  width: 22px;
+  height: 16px;
+}
+
+.bn-games {
+  width: 26px;
+  height: 18px;
+}
+
+.bn-bets {
+  width: 22px;
+  height: 22px;
+}
+
+.bn-me {
+  width: 20px;
+  height: 22px;
+}
+
+.bn-label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  color: #c5c5c5;
+  white-space: nowrap;
+}
+
+.bn-item[data-active="true"] .bn-label {
+  color: #fff;
+}
+
+.bn-item[data-active="true"] .bn-s {
+  color: #fff;
+}
+
+.bn-item:not([data-active="true"]) .bn-s,
+.bn-item .bn-menu,
+.bn-item .bn-bets,
+.bn-item .bn-me {
+  color: #c8c8c8;
+}
+
+.bn-indicator {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: #ff3b57;
+  transform: translateX(-50%);
+}
+
+.bn-badge {
+  position: absolute;
+  top: -5px;
+  right: -9px;
+  z-index: 1;
+  box-sizing: border-box;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 99px;
+  background: #e31837;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 16px;
+  text-align: center;
+}
+
+.bn-dot {
+  position: absolute;
+  top: -2px;
+  right: -5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+  background: #e31837;
+}
+
+@media (max-width: 359px) {
+  .bn-row {
+    height: 52px;
+  }
+
+  .bn-item {
+    gap: 3px;
+    padding-top: 6px;
+  }
+
+  .bn-label {
+    font-size: 9px;
+  }
+
+  .bn-s {
+    width: 20px;
+    height: 24px;
+  }
+
+  .bn-games {
+    width: 24px;
+    height: 16px;
+  }
+}
+
+@media (min-width: 412px) {
+  .bn-row {
+    height: 58px;
+  }
+
+  .bn-item {
+    gap: 5px;
+    padding-top: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bn {
+    display: none;
+  }
+}

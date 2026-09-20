@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useId } from "react";
 import { usePathname } from "next/navigation";
+import "./bottom-nav.css";
 
 const ITEMS = [
   { href: "/", label: "Home", icon: "home" },
@@ -14,11 +14,10 @@ const ITEMS = [
 
 export function BottomNav({ onOpenMenu }: { onOpenMenu: () => void }) {
   const pathname = usePathname();
-  const gid = useId();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 bg-black pb-[env(safe-area-inset-bottom)] text-white lg:hidden">
-      <div className="grid h-12 grid-cols-5 min-[412px]:h-[50px]">
+    <nav className="bn" aria-label="Primary">
+      <div className="bn-row">
         {ITEMS.map((item) => {
           const active =
             item.href === "/"
@@ -26,37 +25,37 @@ export function BottomNav({ onOpenMenu }: { onOpenMenu: () => void }) {
               : item.href !== "az" && (pathname === item.href || pathname.startsWith(`${item.href}/`));
           const inner = (
             <>
-              <span className="relative grid h-6 w-6 place-items-center">
-                {item.icon === "home" ? <IconHomeS className="h-[20px] w-[20px] text-white" /> : null}
-                {item.icon === "az" ? <IconAzMenu className="h-[18px] w-[18px] text-[#d6d6d6]" /> : null}
-                {item.icon === "games" ? <IconGames gid={gid} className="h-[22px] w-[22px]" /> : null}
+              <span className="bn-icon">
+                {item.icon === "home" ? <IconHomeS className="bn-s" /> : null}
+                {item.icon === "az" ? <IconAzMenu className="bn-menu" /> : null}
+                {item.icon === "games" ? <IconGames className="bn-games" /> : null}
                 {item.icon === "bets" ? (
                   <>
-                    <IconOpenBets className="h-[20px] w-[20px] text-[#c8c8c8]" />
-                    <span className="absolute -right-[4px] -top-[3px] grid h-[12px] min-w-[12px] place-items-center rounded-full bg-[#e31837] text-[7px] font-bold leading-none text-white">
-                      3
-                    </span>
+                    <IconOpenBets className="bn-bets" />
+                    <span className="bn-badge">3</span>
                   </>
                 ) : null}
                 {item.icon === "me" ? (
                   <>
-                    <IconMe className="h-[18px] w-[18px] text-[#c2c2c2]" />
-                    <span className="absolute right-0 top-0 h-1.5 w-1.5 rounded-full bg-[#e31837]" />
+                    <IconMe className="bn-me" />
+                    <span className="bn-dot" />
                   </>
                 ) : null}
               </span>
-              {item.icon === "home" ? (
-                <span className="sr-only">Home</span>
-              ) : (
-                <span className="mt-px text-[9px] font-normal leading-none text-[#b5b5b5] min-[412px]:text-[10px]">{item.label}</span>
-              )}
-              {active ? <span className="absolute bottom-0 left-[2px] h-[3px] w-[42px] bg-[#e31837] min-[412px]:w-[48px]" /> : null}
+              <span className="bn-label">{item.label}</span>
+              {active ? <span className="bn-indicator" /> : null}
             </>
           );
-          const className = "relative flex flex-col items-center pt-1.5";
           if (item.href === "az") {
             return (
-              <button key={item.label} type="button" onClick={onOpenMenu} className={className} aria-label="AZ Menu">
+              <button
+                key={item.label}
+                type="button"
+                onClick={onOpenMenu}
+                className="bn-item"
+                aria-label="AZ Menu"
+                data-active="false"
+              >
                 {inner}
               </button>
             );
@@ -65,9 +64,10 @@ export function BottomNav({ onOpenMenu }: { onOpenMenu: () => void }) {
             <Link
               key={item.href}
               href={item.href}
-              className={className}
+              className="bn-item"
               aria-label={item.label}
               aria-current={active ? "page" : undefined}
+              data-active={active ? "true" : "false"}
             >
               {inner}
             </Link>
@@ -78,41 +78,47 @@ export function BottomNav({ onOpenMenu }: { onOpenMenu: () => void }) {
   );
 }
 
+/** SportyBet S mark: thick rounded S with circular terminals. */
 function IconHomeS({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
-      <path d="M17.15 6.55c-.92-1.62-2.62-2.52-5.05-2.52-3.82 0-6.22 2.12-6.22 4.95 0 2.52 1.72 3.92 5.12 4.72l1.68.44c1.92.5 2.62 1.12 2.62 2.12 0 1.32-1.32 2.22-3.32 2.22-2.02 0-3.52-.82-4.22-2.42l-2.72.96c1.02 2.92 3.82 4.42 7.02 4.42 4.22 0 6.62-2.32 6.62-5.32 0-2.62-1.72-4.12-5.32-5.02l-1.68-.44c-1.82-.46-2.52-1.02-2.52-2.02 0-1.16 1.06-2.02 2.82-2.02 1.62 0 2.82.72 3.42 2.02l2.72-.82Z" />
+    <svg viewBox="0 0 32 36" className={className} fill="none" aria-hidden>
+      <path
+        d="M25.35 7.15C22.2 3.55 16.55 2.45 11.9 5.35 6.85 8.5 6.2 15.35 11.15 19.05c4.55 3.4 10.55 3.55 13.15 7.55 2.15 3.3.05 8.05-6.05 9.15-4.25.75-8.85-.85-10.85-4.55"
+        stroke="currentColor"
+        strokeWidth="10.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
 function IconAzMenu({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
-      <path d="M5 7.4h14" stroke="currentColor" strokeWidth="2.35" strokeLinecap="round" />
-      <path d="M5 12h14" stroke="currentColor" strokeWidth="2.35" strokeLinecap="round" />
-      <path d="M5 16.6h14" stroke="currentColor" strokeWidth="2.35" strokeLinecap="round" />
+    <svg viewBox="0 0 24 16" className={className} fill="currentColor" aria-hidden>
+      <rect x="1" y="0.4" width="22" height="3.2" rx="1.15" />
+      <rect x="1" y="6.4" width="22" height="3.2" rx="1.15" />
+      <rect x="1" y="12.4" width="22" height="3.2" rx="1.15" />
     </svg>
   );
 }
 
-function IconGames({ className, gid }: { className?: string; gid: string }) {
-  const fill = `${gid}-gp`;
+function IconGames({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 32 32" className={className} aria-hidden>
-      <defs>
-        <linearGradient id={fill} x1="16" y1="8" x2="16" y2="25" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#A074FF" />
-          <stop offset="1" stopColor="#6C3EE8" />
-        </linearGradient>
-      </defs>
+    <svg viewBox="0 0 36 24" className={className} aria-hidden>
       <path
-        fill={`url(#${fill})`}
-        d="M9.6 10.2h12.8c2.55 0 4.55 1.55 5.35 3.95.7 2.1.35 4.55-1.05 6.15-1.05 1.2-2.55 1.9-4.15 1.9H9.45c-1.6 0-3.1-.7-4.15-1.9-1.4-1.6-1.75-4.05-1.05-6.15.8-2.4 2.8-3.95 5.35-3.95Z"
+        fill="#efe7ff"
+        d="M8.4 2.35h19.2c5.05 0 8.05 3.55 8.05 8.15 0 3.85-2.35 7.25-6.45 8.2-1.45.35-3.15.25-4.45-1.05-1.05-1.05-2.35-2.35-4.15-2.35s-3.1 1.3-4.15 2.35c-1.3 1.3-3 1.4-4.45 1.05C8.1 17.75 0.35 14.55 0.35 10.5c0-4.6 3-8.15 8.05-8.15Z"
       />
-      <path fill="#3F1F9E" d="M10.35 14.05h2.55v1.7H10.35v2.55H8.65v-2.55H6.1v-1.7h2.55v-2.55h1.7v2.55Z" />
-      <circle cx="21.15" cy="14.35" r="1.7" fill="#5EE7FF" />
-      <circle cx="23.85" cy="17.85" r="1.7" fill="#FFD24A" />
+      <path
+        fill="#a56bff"
+        d="M8.7 4.05h18.6c3.7 0 6.15 2.7 6.15 6.2 0 3.05-1.85 5.7-5.05 6.45-1.1.25-2.3.15-3.25-.8-.95-.95-2.2-2.15-3.85-2.15s-2.9 1.2-3.85 2.15c-.95.95-2.15 1.05-3.25.8-3.2-.75-5.05-3.4-5.05-6.45 0-3.5 2.45-6.2 6.15-6.2Z"
+      />
+      <path fill="#f4eeff" d="M8.35 8.15h2.35V5.85h2.55v2.3h2.35v2.5h-2.35v2.3H10.7v-2.3H8.35z" />
+      <circle cx="23.15" cy="8.55" r="1.55" fill="#f4eeff" />
+      <circle cx="26.05" cy="11.35" r="1.55" fill="#f4eeff" />
+      <circle cx="23.15" cy="14.15" r="1.55" fill="#f4eeff" />
+      <circle cx="20.25" cy="11.35" r="1.55" fill="#f4eeff" />
     </svg>
   );
 }
@@ -120,17 +126,27 @@ function IconGames({ className, gid }: { className?: string; gid: string }) {
 function IconOpenBets({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
-      <path d="M12 3.6a8.4 8.4 0 0 1 8.4 8.4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-      <path fill="currentColor" d="M18.7 10.05 21.95 13.4l1.05-4.05Z" />
-      <path d="M12 20.4A8.4 8.4 0 0 1 3.6 12" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-      <path fill="currentColor" d="M5.3 13.95 2.05 10.6 1 14.65Z" />
-      <path d="M12 7.6v8.8" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" />
       <path
-        d="M9.7 9.35c.5-.95 1.35-1.4 2.35-1.4 1.45 0 2.4.75 2.4 1.85 0 1-.85 1.55-2.5 1.95-1.7.4-2.55 1.15-2.55 2.25 0 1.2 1 2.05 2.6 2.05 1.1 0 1.95-.4 2.45-1.25"
+        d="M16.7 5.15A8.05 8.05 0 0 1 20.1 12.1"
         stroke="currentColor"
-        strokeWidth="1.65"
+        strokeWidth="1.85"
         strokeLinecap="round"
       />
+      <path fill="currentColor" d="M19.05 4.2 16.2 7.55l4.35.15Z" />
+      <path
+        d="M7.3 18.85A8.05 8.05 0 0 1 3.9 11.9"
+        stroke="currentColor"
+        strokeWidth="1.85"
+        strokeLinecap="round"
+      />
+      <path fill="currentColor" d="M4.95 19.8 7.8 16.45l-4.35-.15Z" />
+      <path
+        d="M9.55 9.15c.55-1.05 1.5-1.55 2.6-1.55 1.55 0 2.55.8 2.55 1.95 0 1.05-.85 1.6-2.55 2.05-1.85.5-2.8 1.25-2.8 2.45 0 1.35 1.15 2.25 2.9 2.25 1.2 0 2.15-.45 2.7-1.35"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+      <path d="M12.15 7.05v10.1" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
     </svg>
   );
 }
@@ -138,8 +154,8 @@ function IconOpenBets({ className }: { className?: string }) {
 function IconMe({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
-      <circle cx="12" cy="7.9" r="3.7" />
-      <path d="M4.85 19.85c.25-4.05 3.25-6.45 7.15-6.45s6.9 2.4 7.15 6.45c.03.42-.32.75-.75.75H5.6c-.43 0-.78-.33-.75-.75Z" />
+      <circle cx="12" cy="7.05" r="4.35" />
+      <path d="M4.7 20.35c.2-4.35 3.35-6.55 7.3-6.55s7.1 2.2 7.3 6.55c.02.4-.32.7-.74.7H5.44c-.42 0-.76-.3-.74-.7Z" />
     </svg>
   );
 }
