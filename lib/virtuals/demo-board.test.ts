@@ -23,6 +23,7 @@ describe("Instant Football demo board", () => {
     expect(getDemoMatch("if-champions-liv-psg")?.odds).toEqual([215, 442, 278]);
     expect(getDemoMatch("if-euros-eng-fra")?.odds).toEqual([214, 319, 373]);
     expect(getDemoMatch("if-cwc-rma-che")?.odds).toEqual([185, 405, 382]);
+    expect(DEMO_MATCHES.every((match) => match.home.logo.includes("/virtuals/crests/") && match.away.logo.includes("/virtuals/crests/"))).toBe(true);
   });
 
   it("builds 1UP and 2UP markets from the 1X2 board", () => {

@@ -11,6 +11,7 @@ export type DemoTeam = {
   stars: 1 | 2 | 3;
   mark: "club" | "flag";
   flag?: string;
+  logo: string;
 };
 
 export type DemoMatch = {
@@ -37,13 +38,17 @@ export const DEMO_MARKET_TABS: { id: VirtualMarketId; label: string }[] = [
   { id: "1X2-2UP", label: "1X2 - 2UP" },
 ];
 
+function crest(boardId: DemoBoardId, abbr: string) {
+  return `/virtuals/crests/${boardId}-${abbr.toLowerCase()}.png`;
+}
+
 function club(
   abbr: string,
   name: string,
   color: string,
   stars: 1 | 2 | 3,
   color2?: string,
-): DemoTeam {
+): Omit<DemoTeam, "logo"> {
   return {
     id: abbr.toLowerCase(),
     name,
@@ -55,7 +60,7 @@ function club(
   };
 }
 
-function flag(abbr: string, name: string, flagId: string, stars: 1 | 2 | 3, color = "#1d4ed8"): DemoTeam {
+function flag(abbr: string, name: string, flagId: string, stars: 1 | 2 | 3, color = "#1d4ed8"): Omit<DemoTeam, "logo"> {
   return {
     id: abbr.toLowerCase(),
     name,
@@ -69,8 +74,8 @@ function flag(abbr: string, name: string, flagId: string, stars: 1 | 2 | 3, colo
 
 function row(
   boardId: DemoBoardId,
-  home: DemoTeam,
-  away: DemoTeam,
+  home: Omit<DemoTeam, "logo">,
+  away: Omit<DemoTeam, "logo">,
   o1: number,
   ox: number,
   o2: number,
@@ -78,8 +83,8 @@ function row(
   return {
     id: `if-${boardId}-${home.abbreviation}-${away.abbreviation}`.toLowerCase(),
     boardId,
-    home,
-    away,
+    home: { ...home, logo: crest(boardId, home.abbreviation) },
+    away: { ...away, logo: crest(boardId, away.abbreviation) },
     odds: [Math.round(o1 * 100), Math.round(ox * 100), Math.round(o2 * 100)],
   };
 }

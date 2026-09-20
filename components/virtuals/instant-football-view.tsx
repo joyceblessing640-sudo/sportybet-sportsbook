@@ -213,18 +213,18 @@ function DemoMatchRow({
     <article className="flex items-center gap-1 px-2 py-[7px]">
       <div className="min-w-0 flex-1">
         <div className="flex items-center">
-          <DemoCrest team={match.home} />
+          <DemoCrest team={match.home} size={24} />
           <span className="ml-1 truncate text-[13px] font-bold text-[#1a1d24]">{match.home.abbreviation}</span>
           <span className="px-1 text-[10px] font-semibold text-[#9aa3af]">VS</span>
           <span className="truncate text-[13px] font-bold text-[#1a1d24]">{match.away.abbreviation}</span>
-          <DemoCrest team={match.away} />
+          <DemoCrest team={match.away} size={24} />
         </div>
         <div className="mt-0.5 flex items-start">
-          <span className="w-[22px]" />
+          <span className="w-[24px]" />
           <StarRating value={match.home.stars} />
           <span className="flex-1" />
           <StarRating value={match.away.stars} />
-          <span className="w-[22px]" />
+          <span className="w-[24px]" />
         </div>
         <p className="text-[10px] font-semibold leading-none text-[#8b93a0]">+71 &gt;</p>
       </div>
