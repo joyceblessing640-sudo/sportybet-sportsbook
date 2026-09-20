@@ -1,6 +1,5 @@
 "use client";
 
-import { Ticket } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SlipItem } from "@/lib/slip";
 
@@ -18,7 +17,14 @@ export function BetSlipFab({ items, onOpen }: { items: SlipItem[]; onOpen: () =>
       )}
       style={{ bottom: "calc(3.65rem + env(safe-area-inset-bottom))" }}
     >
-      <Ticket className="h-5 w-5" />
+      <img
+        src="/slip/ticket-fab-provided.png"
+        alt=""
+        width={172}
+        height={184}
+        className="pointer-events-none h-full w-full object-contain"
+        draggable={false}
+      />
       <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-white px-0.5 text-[10px] font-bold text-accent">
         {items.length}
       </span>
