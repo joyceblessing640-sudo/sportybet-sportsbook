@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
+  outputFileTracingIncludes: {
+    "/*": ["./data/baseline.sqlite"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [360, 375, 390, 412, 430, 720, 1080, 1280, 1440, 1920],
