@@ -52,7 +52,7 @@ html {
 html,
 body {
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -233,30 +233,13 @@ label {
   background: rgb(0 0 0 / 0.4);
 }
 
-/* Instant Football: one document scroller. Do not put overflow-y on both html and body. */
-html:has(.if-page),
-html:has(.if-board),
-html.if-page {
-  height: auto;
-  min-height: 100%;
-  overflow-x: clip;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
+/* Instant Football: document/page is the only vertical scroller. */
+.if-board {
+  overflow: visible;
   touch-action: pan-y;
 }
-body:has(.if-page),
-body:has(.if-board),
-body.if-page {
-  height: auto;
-  min-height: 100dvh;
-  overflow: visible;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
-}
-.if-board {
-  min-height: 100dvh;
-  overflow: visible;
+.if-section {
+  scroll-margin-top: 7.25rem;
 }
 .if-h-scroll {
   overflow-x: auto;
@@ -275,6 +258,10 @@ body.if-page {
   touch-action: pan-x;
 }
 .if-board .odds-btn {
+  min-height: 36px;
+  font-size: 13px;
+  background: #e7f5ee;
+  color: #0f7a3d;
   touch-action: pan-y;
 }
 

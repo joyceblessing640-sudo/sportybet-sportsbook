@@ -26,8 +26,8 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [user, slipItems] = await Promise.all([getAuthPayload(), readSlipItems()]);
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full bg-background font-sans text-ink">
+    <html lang="en" className={`${inter.variable} antialiased`}>
+      <body className="bg-background font-sans text-ink">
         <ClientRoot initialUser={user} slipItems={slipItems}>
           {children}
         </ClientRoot>
