@@ -202,7 +202,7 @@ export function HomeView({
             })}
           </div>
           {featuredCards.length ? (
-            <div className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto bg-white">
+            <div className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto bg-white px-3 pb-3">
               {featuredCards.map((match) => (
                 <HomeFeaturedMatch key={match.id} match={match} />
               ))}
