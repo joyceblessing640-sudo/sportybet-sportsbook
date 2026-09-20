@@ -30,6 +30,7 @@ export function SportsView({
   const [market, setMarket] = useState("1X2");
   const [topTab, setTopTab] = useState<"highlights" | "today" | "countries">("today");
   const [sportTab, setSportTab] = useState(initialSport ?? "football");
+  const [limit, setLimit] = useState(24);
 
   const filteredLeagues = leagues.filter((l) => l.sportId === sportId);
   const visible = useMemo(() => {
@@ -52,12 +53,12 @@ export function SportsView({
 
   const grouped = useMemo(() => {
     const map = new Map<string, ClientMatch[]>();
-    for (const match of visible) {
+    for (const match of visible.slice(0, limit)) {
       const day = format(new Date(match.startTime), "dd/MM eeee");
       map.set(day, [...(map.get(day) ?? []), match]);
     }
     return [...map.entries()];
-  }, [visible]);
+  }, [visible, limit]);
 
   const liveCount = matches.filter((m) => m.status === "LIVE" || m.status === "HT").length;
 
@@ -193,10 +194,21 @@ export function SportsView({
           ) : (
             grouped.map(([day, list]) => (
               <div key={day} className="mb-2 px-3">
-                <MatchList matches={list} marketType={market} dateLabel={day} />
+                <MatchList matches={list} marketType={market} dateLabel={day} groupLeagues />
               </div>
             ))
           )}
+          {visible.length > limit ? (
+            <div className="px-3 pb-3">
+              <button
+                type="button"
+                onClick={() => setLimit((n) => n + 24)}
+                className="h-9 w-full rounded-md border border-line bg-white text-[12px] font-semibold text-brand"
+              >
+                Load more matches
+              </button>
+            </div>
+          ) : null}
         </>
       )}
       <p className="px-4 py-3 text-xs text-muted">Live events in this demo: {liveCount}. Search also accepts Game ID.</p>

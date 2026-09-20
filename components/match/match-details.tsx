@@ -55,25 +55,25 @@ export function MatchDetails({ match, favorited }: { match: ClientMatch; favorit
           <Bell className="h-5 w-5" />
         </Link>
       </header>
-      <section className="bg-white px-4 py-6">
+      <section className="bg-white px-4 py-4">
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-          <div className="flex flex-col items-center gap-2 text-center">
-            <TeamBadge team={match.home} size="lg" />
-            <p className="text-sm font-bold">{match.home.name}</p>
+          <div className="flex flex-col items-center gap-1.5 text-center">
+            <TeamBadge team={match.home} size="md" />
+            <p className="text-[13px] font-bold">{match.home.name}</p>
           </div>
           <div className="text-center">
             {live ? (
-              <p className="text-3xl font-black tabular-nums text-brand">
+              <p className="text-[22px] font-bold tabular-nums text-brand">
                 {match.homeScore} - {match.awayScore}
               </p>
             ) : (
-              <p className="text-xl font-black text-[#9aa3b2]">VS</p>
+              <p className="text-[16px] font-bold text-[#9aa3b2]">VS</p>
             )}
-            <p className="mt-1 text-xs font-semibold uppercase text-muted">{match.status}</p>
+            <p className="mt-1 text-[11px] font-semibold uppercase text-muted">{match.status}</p>
             {match.isDemo ? <p className="mt-1 text-[10px] font-bold text-[#8a6d00]">DEMO MATCH</p> : null}
           </div>
           <div className="flex flex-col items-center gap-2 text-center">
-            <TeamBadge team={match.away} size="lg" />
+            <TeamBadge team={match.away} size="md" />
             <p className="text-sm font-bold">{match.away.name}</p>
           </div>
         </div>
@@ -94,7 +94,7 @@ export function MatchDetails({ match, favorited }: { match: ClientMatch; favorit
         ))}
       </div>
       {market ? (
-        <div className="m-3 rounded-xl bg-white p-3">
+        <div className="m-3 rounded-md bg-white p-3">
           <p className="mb-2 text-sm font-bold">
             {market.name}
             {market.line ? ` (${market.line})` : ""}

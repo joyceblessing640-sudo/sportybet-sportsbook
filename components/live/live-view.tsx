@@ -18,7 +18,7 @@ export function LiveView({ matches }: { matches: ClientMatch[] }) {
   }, [matches, sport]);
 
   return (
-    <div className="bg-live text-white">
+    <div className="min-h-[calc(100dvh-8.5rem)] bg-live text-white">
       <div className="flex items-center gap-1 px-3 py-2">
         <span className="live-dot" />
         <h1 className="text-[13px] font-bold">Live betting</h1>

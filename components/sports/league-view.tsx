@@ -60,7 +60,7 @@ export function LeagueView({
           grouped.map(([day, list]) => (
             <section key={day}>
               <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#6b7280]">{day}</h2>
-              <div className="overflow-hidden rounded-xl bg-white">
+              <div className="overflow-hidden rounded-md border border-line bg-white">
             {list.map((match) => (
               <MatchRow key={match.id} match={match} marketType={market} compactOdds />
             ))}

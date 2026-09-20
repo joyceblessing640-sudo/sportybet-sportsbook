@@ -1,16 +1,28 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bell, Menu, Search, UserRound } from "lucide-react";
+import { Bell, ChevronDown, Menu, Search, UserRound } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/providers";
+import { logoutAction } from "@/app/actions/auth";
 import { formatGhs } from "@/lib/money";
 
 export function Header({ onMenu }: { onMenu: () => void }) {
   const { user } = useAuth();
   const router = useRouter();
+  const [menu, setMenu] = useState(false);
+  const wrap = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onDoc(e: MouseEvent) {
+      if (!wrap.current?.contains(e.target as Node)) setMenu(false);
+    }
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, []);
 
   return (
     <header className="bg-header text-white">
@@ -48,16 +60,47 @@ export function Header({ onMenu }: { onMenu: () => void }) {
                 <Bell className="h-4 w-4" />
                 {user.unread > 0 ? <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-[#8dffb8]" /> : null}
               </Link>
-              <Link href="/deposit" className="hidden text-right leading-tight sm:block">
-                <p className="text-[9px] uppercase tracking-wide text-white/55">Balance</p>
-                <p className="text-[13px] font-bold tabular-nums">{formatGhs(user.wallet?.balancePesewas ?? 0)}</p>
+              <Link href="/deposit" className="text-right leading-tight">
+                <p className="hidden text-[9px] uppercase tracking-wide text-white/55 sm:block">Balance</p>
+                <p className="text-[12px] font-bold tabular-nums sm:text-[13px]">{formatGhs(user.wallet?.balancePesewas ?? 0)}</p>
               </Link>
               <Button variant="green" size="sm" className="h-7 px-2.5 text-[11px]" asChild>
                 <Link href="/deposit">Deposit</Link>
               </Button>
-              <Link href="/me" className="grid h-8 w-8 place-items-center rounded-full bg-white/12" aria-label="Account">
-                <UserRound className="h-4 w-4" />
-              </Link>
+              <div ref={wrap} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setMenu((v) => !v)}
+                  className="flex h-8 items-center gap-0.5 rounded-full bg-white/12 pl-0.5 pr-1"
+                  aria-label="Account menu"
+                >
+                  <span className="grid h-7 w-7 place-items-center">
+                    <UserRound className="h-4 w-4" />
+                  </span>
+                  <ChevronDown className="hidden h-3.5 w-3.5 sm:block" />
+                </button>
+                {menu ? (
+                  <div className="absolute right-0 top-full z-50 mt-1 w-44 overflow-hidden rounded-md border border-line bg-white py-1 text-ink shadow-lg">
+                    <Link href="/me" onClick={() => setMenu(false)} className="block px-3 py-2 text-[13px] hover:bg-brand-soft">
+                      Account
+                    </Link>
+                    <Link href="/bets" onClick={() => setMenu(false)} className="block px-3 py-2 text-[13px] hover:bg-brand-soft">
+                      My Bets
+                    </Link>
+                    <Link href="/deposit" onClick={() => setMenu(false)} className="block px-3 py-2 text-[13px] hover:bg-brand-soft">
+                      Deposit
+                    </Link>
+                    <Link href="/withdraw" onClick={() => setMenu(false)} className="block px-3 py-2 text-[13px] hover:bg-brand-soft">
+                      Withdraw
+                    </Link>
+                    <form action={logoutAction}>
+                      <button type="submit" className="block w-full px-3 py-2 text-left text-[13px] text-danger hover:bg-red-50">
+                        Logout
+                      </button>
+                    </form>
+                  </div>
+                ) : null}
+              </div>
             </>
           ) : (
             <>

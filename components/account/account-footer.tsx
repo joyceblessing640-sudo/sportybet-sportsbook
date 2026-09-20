@@ -28,18 +28,18 @@ export function AccountFooter({ gifts = 0, wheel = 0 }: { gifts?: number; wheel?
       <div className="bg-white">
         <Link href="/support" className="flex items-center gap-3 border-b border-[#f1f3f7] px-4 py-3.5">
           <Headphones className="h-5 w-5 text-[#6b7280]" />
-          <span className="flex-1 text-sm font-medium">Customer Service</span>
+          <span className="flex-1 text-[13px] font-medium">Customer Service</span>
           <span className="text-xs text-[#9aa3b2]">24/7 Online</span>
           <span className="text-[#c5cad3]">›</span>
         </Link>
         <Link href="/how-to-play" className="flex items-center gap-3 border-b border-[#f1f3f7] px-4 py-3.5">
           <Info className="h-5 w-5 text-[#6b7280]" />
-          <span className="flex-1 text-sm font-medium">How to play</span>
+          <span className="flex-1 text-[13px] font-medium">How to play</span>
           <span className="text-[#c5cad3]">›</span>
         </Link>
         <Link href="/update" className="flex items-center gap-3 border-b border-[#f1f3f7] px-4 py-3.5">
           <RefreshCw className="h-5 w-5 text-[#6b7280]" />
-          <span className="flex-1 text-sm font-medium">Update App</span>
+          <span className="flex-1 text-[13px] font-medium">Update App</span>
           <span className="text-[#c5cad3]">›</span>
         </Link>
         <div className="flex items-center justify-between px-4 py-3 text-xs text-muted">
@@ -49,12 +49,12 @@ export function AccountFooter({ gifts = 0, wheel = 0 }: { gifts?: number; wheel?
           <span>© {new Date().getFullYear()} SportyBets. All rights reserved.</span>
         </div>
       </div>
-      <section className="bg-ink px-4 py-8 text-center text-white">
-        <p className="text-lg font-black italic tracking-wide">
-          <span className="text-brand">Sporty</span>Bets
+      <section className="bg-header px-4 py-6 text-center text-white">
+        <p className="text-[15px] font-bold tracking-wide">
+          <span className="text-[#8dffb8]">Sporty</span>Bets
         </p>
-        <p className="mt-2 text-sm text-white/70">Independent demo sportsbook. Not affiliated with any third-party betting brand.</p>
-        <div className="mt-5 flex items-center justify-center gap-3 text-[11px] font-black text-white">
+        <p className="mt-2 text-[12px] text-white/70">Independent demo sportsbook. Not affiliated with any third-party betting brand.</p>
+        <div className="mt-4 flex items-center justify-center gap-3 text-[11px] font-black text-white">
           {["f", "X", "ig", "tg", "yt"].map((id) => (
             <span key={id} className="grid h-8 w-8 place-items-center rounded-full bg-white/10 uppercase">
               {id === "tg" ? <Send className="h-4 w-4" /> : id}

@@ -11,7 +11,7 @@ export function matchDisplayId(id: string) {
 /** Extra-market count for the +N affordance on a match row. */
 export function extraMarketsCount(id: string, outcomeCount: number) {
   const code = Number(matchDisplayId(id));
-  return 180 + (code % 1600) + outcomeCount * 12;
+  return 18 + (code % 72) + Math.min(outcomeCount, 6);
 }
 
 export function isHotMatch(status: string, isFeatured: boolean) {

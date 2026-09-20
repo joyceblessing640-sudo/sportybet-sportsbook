@@ -1,33 +1,10 @@
 "use client";
 
-import type { ComponentType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  CircleDot,
-  Gamepad2,
-  Home,
-  Megaphone,
-  Radio,
-  Sparkles,
-  Trophy,
-} from "lucide-react";
 import { MORE_SPORTS, SPORTS_NAV } from "@/lib/constants";
+import { SportIcon } from "@/components/brand/sport-icon";
 import { cn } from "@/lib/utils";
-
-const ICONS: Record<string, ComponentType<{ className?: string }>> = {
-  home: Home,
-  football: Trophy,
-  basketball: CircleDot,
-  tennis: CircleDot,
-  hockey: CircleDot,
-  baseball: CircleDot,
-  volleyball: CircleDot,
-  esports: Gamepad2,
-  live: Radio,
-  virtuals: Sparkles,
-  promos: Megaphone,
-};
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
@@ -35,7 +12,6 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     <aside className="h-full w-[220px] shrink-0 overflow-y-auto bg-white">
       <nav className="py-1">
         {SPORTS_NAV.map((item) => {
-          const Icon = ICONS[item.icon] ?? Trophy;
           const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           return (
             <Link
@@ -47,7 +23,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                 active && "bg-brand-soft font-semibold text-brand",
               )}
             >
-              <Icon className={cn("h-4 w-4", active ? "text-brand" : "text-[#8b93a3]")} />
+              <SportIcon name={item.icon === "promos" ? "virtuals" : item.icon} className={cn("h-4 w-4", active ? "text-brand" : "text-[#8b93a3]")} />
               {item.label}
             </Link>
           );

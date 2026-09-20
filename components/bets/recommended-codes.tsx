@@ -21,7 +21,7 @@ export function RecommendedCodes({ matches }: { matches: ClientMatch[] }) {
             .filter(Boolean)
             .join(",");
           return (
-            <article key={code.code} className="overflow-hidden rounded-xl bg-white shadow-sm">
+            <article key={code.code} className="overflow-hidden rounded-md border border-line bg-white">
               <div className="flex items-center justify-between bg-[#e7f7ee] px-3 py-2 text-sm">
                 <span className="font-black">{code.code}</span>
                 <span className="text-xs">

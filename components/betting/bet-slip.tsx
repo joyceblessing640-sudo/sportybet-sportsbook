@@ -2,7 +2,7 @@
 
 import { useActionState, useMemo } from "react";
 import Link from "next/link";
-import { Trash2, X } from "lucide-react";
+import { Share2, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/providers";
@@ -80,7 +80,7 @@ export function BetSlipPanel({
           </div>
         ) : (
           items.map((item) => (
-            <article key={item.outcomeId} className="border-b border-[#f1f3f7] px-3 py-2.5">
+            <article key={item.outcomeId} className="sheet-up border-b border-[#f1f3f7] px-3 py-2.5">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-[10px] text-muted">{item.league}</p>
@@ -146,13 +146,29 @@ export function BetSlipPanel({
           <Link href="/load-code" className="font-semibold text-brand">
             Booking code
           </Link>
-          {items.length > 0 ? (
-            <form action={clearSlipAction}>
-              <button type="submit" className="font-semibold text-danger">
-                Clear all
+          <div className="flex items-center gap-3">
+            {items.length > 0 ? (
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 font-semibold text-brand"
+                onClick={() => {
+                  const text = items
+                    .map((item) => `${item.matchLabel} · ${item.marketName} · ${item.outcomeLabel} @ ${formatOdds(item.odds)}`)
+                    .join("\n");
+                  void navigator.clipboard?.writeText(`SportyBets slip\n${text}\nStake ${stake} GHS`);
+                }}
+              >
+                <Share2 className="h-3 w-3" /> Share
               </button>
-            </form>
-          ) : null}
+            ) : null}
+            {items.length > 0 ? (
+              <form action={clearSlipAction}>
+                <button type="submit" className="font-semibold text-danger">
+                  Clear all
+                </button>
+              </form>
+            ) : null}
+          </div>
         </div>
         <p className="mt-2 text-center text-[10px] text-muted">18+ Play responsibly. Odds calculated on the server.</p>
       </form>

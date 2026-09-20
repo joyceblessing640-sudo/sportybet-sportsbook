@@ -9,8 +9,8 @@ export function LoadCodeForm({ matches }: { matches: ClientMatch[] }) {
   const [state, action, pending] = useActionState(loadBookingCodeAction, null);
   return (
     <div className="p-4">
-      <h1 className="text-xl font-black">Load Code</h1>
-      <p className="mt-1 text-sm text-muted">Paste a booking code to fill the bet slip. Demo codes are listed below.</p>
+      <h1 className="text-[16px] font-bold">Load Code</h1>
+      <p className="mt-1 text-[12px] text-muted">Paste a booking code to fill the bet slip. Demo codes are listed below.</p>
       <form action={action} className="mt-4 flex gap-2">
         <input
           name="code"

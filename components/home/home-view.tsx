@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { FeaturedMatchCard, MatchList, MatchRow } from "@/components/betting/match-card";
+import { CountryMark } from "@/components/brand/country-mark";
 import { CRASH_GAMES } from "@/lib/games";
 import { MORE_SPORTS } from "@/lib/constants";
 import type { ClientMatch } from "@/lib/serialize";
@@ -51,8 +52,9 @@ export function HomeView({
           <Link
             key={league.slug}
             href={`/sports/football/${league.slug}`}
-            className="shrink-0 rounded-full border border-line px-2.5 py-1 text-[11px] font-semibold text-ink transition-colors duration-150 hover:border-brand hover:text-brand"
+            className="flex shrink-0 items-center gap-1.5 rounded-full border border-line px-2.5 py-1 text-[11px] font-semibold text-ink transition-colors duration-150 hover:border-brand hover:text-brand"
           >
+            <CountryMark country={league.country} />
             {league.name}
           </Link>
         ))}
@@ -63,11 +65,7 @@ export function HomeView({
         {featured.length === 0 ? (
           <p className="rounded-md bg-white px-3 py-6 text-[13px] text-muted">No featured demo matches.</p>
         ) : (
-          featured.map((match) => (
-            <div key={match.id} className="min-w-[300px] max-w-[340px] overflow-hidden rounded-md border border-line">
-              <FeaturedMatchCard match={match} />
-            </div>
-          ))
+          featured.map((match) => <FeaturedMatchCard key={match.id} match={match} />)
         )}
       </div>
 
@@ -106,9 +104,28 @@ export function HomeView({
         <p className="mx-3 rounded-md bg-white px-3 py-6 text-[13px] text-muted">No football fixtures today.</p>
       ) : (
         <div className="mx-3">
-          <MatchList matches={footballToday.slice(0, 12)} marketType="1X2" dateLabel={format(new Date(), "EEE dd MMM")} />
+          <MatchList
+            matches={footballToday.slice(0, 12)}
+            marketType="1X2"
+            dateLabel={format(new Date(), "EEE dd MMM")}
+            groupLeagues
+          />
         </div>
       )}
+
+      <SectionHead title="Popular leagues" href="/sports" />
+      <div className="grid grid-cols-2 gap-1.5 px-3 sm:grid-cols-4">
+        {leagues.slice(0, 8).map((league) => (
+          <Link
+            key={league.slug}
+            href={`/sports/football/${league.slug}`}
+            className="card-hover flex items-center gap-2 rounded-md border border-line bg-white px-2.5 py-2 text-[12px] font-semibold text-ink"
+          >
+            <CountryMark country={league.country} />
+            <span className="min-w-0 truncate">{league.name}</span>
+          </Link>
+        ))}
+      </div>
 
       <SectionHead title="Upcoming matches" href="/sports" count={upcoming.length} />
       {upcoming.length === 0 ? (
@@ -128,12 +145,13 @@ export function HomeView({
             key={promo.id}
             href={promo.href}
             className={cn(
-              "card-hover min-w-[168px] rounded-md p-3 text-white",
+              "card-hover relative min-w-[176px] overflow-hidden rounded-md p-3 text-white",
               promo.theme === "welcome" && "bg-gradient-to-br from-[#0e8a44] to-[#0b3d2e]",
               promo.theme === "boost" && "bg-gradient-to-br from-[#1f6b4a] to-[#10241c]",
               promo.theme === "promo" && "bg-gradient-to-br from-[#0f766e] to-[#134e4a]",
             )}
           >
+            <span className="pointer-events-none absolute -right-4 -top-6 h-16 w-16 rounded-full bg-white/10" />
             <p className="text-[10px] uppercase tracking-wide text-white/70">{promo.subtitle}</p>
             <p className="mt-1 text-[13px] font-bold">{promo.title}</p>
             <span className="mt-2 inline-flex rounded bg-white/15 px-2 py-0.5 text-[10px] font-semibold">View</span>
@@ -155,7 +173,7 @@ export function HomeView({
       </div>
 
       {other.length > 0 ? (
-        <div className="mt-3 mx-3 overflow-hidden rounded-md border border-line bg-white">
+        <div className="mx-3 mt-3 overflow-hidden rounded-md border border-line bg-white">
           {other.map((match) => (
             <MatchRow key={match.id} match={match} />
           ))}
@@ -168,9 +186,9 @@ export function HomeView({
           <Link
             key={game.id}
             href={game.href}
-            className={cn("relative h-[108px] w-[140px] shrink-0 overflow-hidden rounded-md bg-gradient-to-br p-2.5 text-white", game.art)}
+            className={cn("relative h-[100px] w-[132px] shrink-0 overflow-hidden rounded-md bg-gradient-to-br p-2.5 text-white", game.art)}
           >
-            <p className="mt-10 text-[13px] font-bold">{game.name}</p>
+            <p className="mt-8 text-[13px] font-bold">{game.name}</p>
             <p className="text-[10px] text-white/70">{game.tag} · Demo</p>
           </Link>
         ))}

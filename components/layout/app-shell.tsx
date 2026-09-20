@@ -29,7 +29,7 @@ export function AppShell({ children, slipItems }: { children: ReactNode; slipIte
       </div>
       <div className="mx-auto flex max-w-[1440px]">
         <main className="min-w-0 flex-1 bottom-pad">{children}</main>
-        <div className="sticky top-[6.5rem] hidden h-[calc(100dvh-6.5rem)] w-[300px] shrink-0 self-start lg:block">
+        <div className="sticky top-[7.35rem] hidden h-[calc(100dvh-7.35rem)] w-[300px] shrink-0 self-start lg:block">
           <BetSlipPanel embedded items={slipItems} />
         </div>
       </div>

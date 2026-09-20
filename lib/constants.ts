@@ -13,13 +13,13 @@ export const SPORTS_NAV = [
 ] as const;
 
 export const PRIMARY_SPORTS = [
-  { href: "/", label: "Home", slug: "home" },
-  { href: "/sports/football", label: "Football", slug: "football" },
-  { href: "/live", label: "Live", slug: "live" },
-  { href: "/sports/basketball", label: "Basketball", slug: "basketball" },
-  { href: "/sports/tennis", label: "Tennis", slug: "tennis" },
-  { href: "/sports/esports", label: "eFootball", slug: "esports" },
-  { href: "/virtuals", label: "Virtuals", slug: "virtuals" },
+  { href: "/", label: "Home", slug: "home", icon: "home" },
+  { href: "/sports/football", label: "Football", slug: "football", icon: "football" },
+  { href: "/live", label: "Live", slug: "live", icon: "live" },
+  { href: "/sports/basketball", label: "Basketball", slug: "basketball", icon: "basketball" },
+  { href: "/sports/tennis", label: "Tennis", slug: "tennis", icon: "tennis" },
+  { href: "/sports/esports", label: "eFootball", slug: "esports", icon: "esports" },
+  { href: "/virtuals", label: "Virtuals", slug: "virtuals", icon: "virtuals" },
 ] as const;
 
 export const MORE_SPORTS = [

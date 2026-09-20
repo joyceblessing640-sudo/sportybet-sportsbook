@@ -37,7 +37,7 @@ export default async function BetsPage({
 
   return (
     <div>
-      <header className="flex items-center justify-between bg-ink px-3 py-3 text-white">
+      <header className="flex items-center justify-between bg-header px-3 py-2.5 text-white">
         <Link href="/how-to-play" className="text-xs">
           How to Cashout?
         </Link>
@@ -78,7 +78,7 @@ export default async function BetsPage({
       ) : (
         <div className="space-y-3 p-3">
           {data.items.map((bet) => (
-            <article key={bet.id} className="rounded-xl bg-white p-3 shadow-sm">
+            <article key={bet.id} className="rounded-md border border-line bg-white p-3">
               <div className="flex items-center justify-between text-xs text-muted">
                 <span>{bet.publicId}</span>
                 <span>{bet.createdAt.toLocaleString()}</span>
