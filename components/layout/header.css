@@ -6,7 +6,7 @@
 .sb-top-inner {
   display: flex;
   align-items: center;
-  height: 54px;
+  height: 56px;
   max-width: 1440px;
   margin: 0 auto;
   padding: 0 12px 0 16px;
@@ -17,7 +17,7 @@
   align-items: baseline;
   color: #fff;
   text-decoration: none;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.055em;
@@ -45,7 +45,7 @@
   display: flex;
   align-items: center;
   margin-left: auto;
-  gap: 10px;
+  gap: 12px;
 }
 
 .sb-search {
@@ -63,10 +63,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 36px;
+  height: 38px;
   padding: 3px 12px 3px 3px;
-  border: 1.5px solid #fff;
-  border-radius: 8px;
+  border: 2px solid #fff;
+  border-radius: 6px;
   color: #fff;
   text-decoration: none;
   font-size: 14px;
@@ -110,22 +110,17 @@
 
 @media (min-width: 412px) {
   .sb-top-inner {
-    height: 56px;
     padding: 0 16px 0 18px;
-  }
-
-  .sb-wordmark {
-    font-size: 23px;
   }
 }
 
 @media (min-width: 1024px) {
   .sb-top-inner {
-    height: 58px;
+    height: 60px;
     padding: 0 20px;
   }
 
   .sb-wordmark {
-    font-size: 24px;
+    font-size: 26px;
   }
 }
