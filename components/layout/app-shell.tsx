@@ -11,7 +11,7 @@ import { BetSlipPanel } from "@/components/betting/bet-slip";
 import type { SlipItem } from "@/lib/slip";
 
 const BARE = ["/login", "/register", "/forgot-password", "/reset-password", "/account", "/admin"];
-const HIDE_TOP = ["/me", "/bets"];
+const HIDE_TOP = ["/me", "/bets", "/virtuals"];
 export const MOBILE_SLIP_ID = "mobile-betslip";
 
 export function openMobileSlip() {
