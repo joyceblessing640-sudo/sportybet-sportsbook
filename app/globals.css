@@ -44,9 +44,9 @@
 }
 
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  touch-action: manipulation;
 }
 
 html,
@@ -76,8 +76,35 @@ body {
 }
 
 button,
-a {
+a,
+[role="button"],
+summary,
+label {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.promo-carousel {
+  overflow: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.promo-carousel,
+.promo-carousel * {
+  touch-action: pan-y;
+}
+
+.promo-carousel a,
+.promo-carousel button {
+  -webkit-touch-callout: none;
+}
+
+.promo-carousel-track {
+  will-change: transform;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -93,7 +120,8 @@ a {
   border: none;
   font-weight: 700;
   border-radius: 4px;
-  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+  touch-action: manipulation;
+  transition: background-color 80ms ease, color 80ms ease;
 }
 .odds-btn:hover {
   background: #d7f0e1;

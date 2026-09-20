@@ -14,19 +14,11 @@ import {
   IconMore,
   IconVirtuals,
 } from "@/components/home/shortcut-icons";
+import { PromoCarousel } from "@/components/home/promo-carousel";
 import { LiveBoard } from "@/components/live/live-board";
 import { CRASH_GAMES } from "@/lib/games";
 import type { ClientMatch } from "@/lib/serialize";
 import { cn } from "@/lib/utils";
-
-const PROMOS = [
-  { href: "/sports/football/premier-league", title: "MCI vs SUN", src: "/home/mci-sun.jpg" },
-  { href: "/sports/football/premier-league", title: "FUL vs MUN", src: "/home/ful-mun.jpg" },
-  { href: "/games/lucky-numbers", title: "Lucky Numbers", src: "/home/lucky-numbers.jpg" },
-  { href: "/sports/football/la-liga", title: "ATM vs RMA", src: "/home/atm-rma.jpg" },
-  { href: "/games", title: "TaDa Halloween", src: "/home/tada-halloween.jpg" },
-  { href: "/sports/basketball", title: "NBA Night", src: "/home/nba-night.jpg" },
-];
 
 const SHORTCUTS = [
   { href: "/sports", label: "All Sports", Icon: IconAllSports },
@@ -103,23 +95,7 @@ export function HomeView({
 
   return (
     <div className="bg-[#f4f5f7]">
-      <div className="no-scrollbar flex gap-1.5 overflow-x-auto bg-white px-2.5 py-1.5 min-[412px]:gap-2 min-[412px]:px-3 min-[412px]:py-2">
-        {PROMOS.map((promo) => (
-          <Link
-            key={promo.title}
-            href={promo.href}
-            className="relative h-[48px] w-[48px] shrink-0 overflow-hidden rounded-[6px] min-[375px]:h-[50px] min-[375px]:w-[50px] min-[412px]:h-[54px] min-[412px]:w-[54px] min-[430px]:h-[56px] min-[430px]:w-[56px]"
-          >
-            <img
-              src={promo.src}
-              alt={promo.title}
-              width={137}
-              height={139}
-              className="h-full w-full object-cover object-center"
-            />
-          </Link>
-        ))}
-      </div>
+      <PromoCarousel />
 
       <div className="grid grid-cols-6 bg-white px-0.5 pb-1.5 pt-0.5 min-[412px]:pb-2">
         {SHORTCUTS.map((item) => {
