@@ -35,10 +35,10 @@ export function BetSlipPanel({
 
   return (
     <section className={cn("flex h-full flex-col bg-white", embedded && "border-l border-line")}>
-      <header className="flex items-center justify-between border-b border-line px-3 py-2">
+      <header className="flex items-center justify-between border-b border-line px-2.5 py-1.5">
         <div>
-          <p className="text-[13px] font-bold text-ink">Betslip</p>
-          <p className="text-[11px] text-muted">
+          <p className="text-[12px] font-bold text-ink">Betslip</p>
+          <p className="text-[10px] text-muted">
             {items.length} selection{items.length === 1 ? "" : "s"}
           </p>
         </div>
@@ -64,14 +64,14 @@ export function BetSlipPanel({
           ) : null}
         </div>
       </header>
-      <div className="grid grid-cols-3 border-b border-line text-[12px] font-semibold">
+      <div className="grid grid-cols-3 border-b border-line text-[11px] font-semibold">
         {(["SINGLE", "MULTI", "SYSTEM"] as const).map((item) => (
           <button
             key={item}
             type="button"
             onClick={() => setTab(item)}
             className={cn(
-              "py-2 capitalize transition-colors duration-150",
+              "py-1.5 capitalize transition-colors duration-150",
               tab === item ? "border-b-2 border-brand text-brand" : "text-muted",
             )}
           >
@@ -87,11 +87,11 @@ export function BetSlipPanel({
           </div>
         ) : (
           items.map((item) => (
-            <article key={item.outcomeId} className="sheet-up border-b border-[#f1f3f7] px-3 py-2.5">
+            <article key={item.outcomeId} className="sheet-up border-b border-[#f1f3f7] px-2.5 py-2">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-[10px] text-muted">{item.league}</p>
-                  <p className="truncate text-[13px] font-semibold text-ink">{item.matchLabel}</p>
+                  <p className="truncate text-[12px] font-semibold text-ink">{item.matchLabel}</p>
                   <p className="text-[11px] text-muted">
                     {item.marketName} · {item.outcomeLabel}
                   </p>
@@ -110,9 +110,9 @@ export function BetSlipPanel({
           ))
         )}
       </div>
-      <form action={action} className="border-t border-line p-3">
+      <form action={action} className="border-t border-line p-2.5">
         <input type="hidden" name="type" value={tab} />
-        <div className="mb-2 flex items-center justify-between text-[13px]">
+        <div className="mb-1.5 flex items-center justify-between text-[12px]">
           <span className="text-muted">Total odds</span>
           <span className="font-bold">{items.length ? formatOdds(summary.totalOdds) : "0.00"}</span>
         </div>
@@ -122,8 +122,8 @@ export function BetSlipPanel({
           </p>
         ) : null}
         <label className="mb-1.5 block text-[11px] font-medium text-muted">Stake (GHS)</label>
-        <Input name="stake" value={stake} onChange={(e) => setStake(e.target.value)} inputMode="decimal" placeholder="10.00" className="h-9" />
-        <div className="mt-2 flex items-center justify-between text-[13px]">
+        <Input name="stake" value={stake} onChange={(e) => setStake(e.target.value)} inputMode="decimal" placeholder="10.00" className="h-8" />
+        <div className="mt-1.5 flex items-center justify-between text-[12px]">
           <span className="text-muted">Potential win</span>
           <span className="font-bold text-brand">{formatGhs(summary.potentialWin)}</span>
         </div>
@@ -136,7 +136,7 @@ export function BetSlipPanel({
         ) : null}
         {state?.error ? <p className="mt-2 text-xs text-danger">{state.error}</p> : null}
         {user ? (
-          <Button type="submit" variant="green" className="mt-3 h-10 w-full" disabled={pending || items.length === 0 || invalidCombo}>
+          <Button type="submit" variant="green" className="mt-2.5 h-9 w-full" disabled={pending || items.length === 0 || invalidCombo}>
             {pending ? "Placing…" : "Place Bet"}
           </Button>
         ) : (
@@ -198,7 +198,7 @@ export function BetSlipBar({ items, onOpen }: { items: SlipItem[]; onOpen: () =>
       popoverTargetAction="show"
       onClick={() => onOpen()}
       className="fixed inset-x-3 z-[45] flex items-center justify-between rounded-md bg-brand px-3 py-2 text-white shadow-lg lg:hidden"
-      style={{ bottom: "calc(3.4rem + env(safe-area-inset-bottom))" }}
+        style={{ bottom: "calc(3.65rem + env(safe-area-inset-bottom))" }}
     >
       <span className="text-[12px] font-semibold">
         {items.length} Bet{items.length === 1 ? "" : "s"} · Potential Win {formatGhs(summary.potentialWin)}

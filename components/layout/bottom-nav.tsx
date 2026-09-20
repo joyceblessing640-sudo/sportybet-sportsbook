@@ -18,7 +18,7 @@ export function BottomNav({ onOpenMenu }: { onOpenMenu: () => void }) {
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 bg-black pb-[env(safe-area-inset-bottom)] text-white lg:hidden">
-      <div className="grid h-14 grid-cols-5">
+      <div className="grid h-12 grid-cols-5 min-[412px]:h-[50px]">
         {ITEMS.map((item) => {
           const active =
             item.href === "/"
@@ -26,34 +26,34 @@ export function BottomNav({ onOpenMenu }: { onOpenMenu: () => void }) {
               : item.href !== "az" && (pathname === item.href || pathname.startsWith(`${item.href}/`));
           const inner = (
             <>
-              <span className="relative grid h-7 w-7 place-items-center">
-                {item.icon === "home" ? <IconHomeS className="h-[26px] w-[26px] text-white" /> : null}
-                {item.icon === "az" ? <IconAzMenu className="h-[24px] w-[24px] text-[#d6d6d6]" /> : null}
-                {item.icon === "games" ? <IconGames gid={gid} className="h-[28px] w-[28px]" /> : null}
+              <span className="relative grid h-6 w-6 place-items-center">
+                {item.icon === "home" ? <IconHomeS className="h-[20px] w-[20px] text-white" /> : null}
+                {item.icon === "az" ? <IconAzMenu className="h-[18px] w-[18px] text-[#d6d6d6]" /> : null}
+                {item.icon === "games" ? <IconGames gid={gid} className="h-[22px] w-[22px]" /> : null}
                 {item.icon === "bets" ? (
                   <>
-                    <IconOpenBets className="h-[26px] w-[26px] text-[#c8c8c8]" />
-                    <span className="absolute -right-[5px] -top-[4px] grid h-[14px] min-w-[14px] place-items-center rounded-full bg-[#e31837] text-[8px] font-bold leading-none text-white">
+                    <IconOpenBets className="h-[20px] w-[20px] text-[#c8c8c8]" />
+                    <span className="absolute -right-[4px] -top-[3px] grid h-[12px] min-w-[12px] place-items-center rounded-full bg-[#e31837] text-[7px] font-bold leading-none text-white">
                       3
                     </span>
                   </>
                 ) : null}
                 {item.icon === "me" ? (
                   <>
-                    <IconMe className="h-[24px] w-[24px] text-[#c2c2c2]" />
-                    <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-[#e31837]" />
+                    <IconMe className="h-[18px] w-[18px] text-[#c2c2c2]" />
+                    <span className="absolute right-0 top-0 h-1.5 w-1.5 rounded-full bg-[#e31837]" />
                   </>
                 ) : null}
               </span>
               {item.icon === "home" ? (
                 <span className="sr-only">Home</span>
               ) : (
-                <span className="mt-[2px] text-[11px] font-normal leading-none text-[#b5b5b5]">{item.label}</span>
+                <span className="mt-px text-[9px] font-normal leading-none text-[#b5b5b5] min-[412px]:text-[10px]">{item.label}</span>
               )}
-              {active ? <span className="absolute bottom-0 left-[4px] h-[4px] w-[52px] bg-[#e31837]" /> : null}
+              {active ? <span className="absolute bottom-0 left-[2px] h-[3px] w-[42px] bg-[#e31837] min-[412px]:w-[48px]" /> : null}
             </>
           );
-          const className = "relative flex flex-col items-center pt-2";
+          const className = "relative flex flex-col items-center pt-1.5";
           if (item.href === "az") {
             return (
               <button key={item.label} type="button" onClick={onOpenMenu} className={className} aria-label="AZ Menu">

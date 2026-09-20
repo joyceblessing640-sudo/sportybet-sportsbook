@@ -32,17 +32,17 @@ export function OddsButton({
         className={cn(
           "odds-btn flex h-full w-full min-w-0 items-center justify-center px-1",
           spread
-            ? "h-[38px] flex-row justify-between px-3 text-[15px]"
+            ? "h-[30px] flex-row justify-between px-2 text-[13px] min-[412px]:h-8 min-[412px]:px-2.5 min-[412px]:text-[14px]"
             : compact
-              ? "h-[26px] text-[13px]"
-              : "h-10 flex-col text-xs",
+              ? "h-[22px] text-[12px] min-[412px]:h-6"
+              : "h-8 flex-col text-[11px] min-[412px]:h-9",
         )}
       >
         {hideLabel ? null : (
           <span
             className={cn(
               "font-semibold leading-none",
-              spread ? "text-[12px]" : "text-[10px]",
+              spread ? "text-[11px]" : "text-[9px]",
               selected ? "text-white/90" : "text-[#5b6b63]",
             )}
           >

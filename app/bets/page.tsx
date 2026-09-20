@@ -39,7 +39,7 @@ export default async function BetsPage({
 
   return (
     <div className="min-h-dvh bg-[#f4f5f7]">
-      <header className="flex items-center justify-between bg-[#2a2d36] px-3 py-2.5 text-white">
+      <header className="flex items-center justify-between bg-[#2a2d36] px-2.5 py-2 text-white">
         <Link href="/how-to-play" className="inline-flex items-center gap-1 text-[12px]">
           <CircleHelp className="h-3.5 w-3.5" /> How to Cashout?
         </Link>
@@ -53,30 +53,30 @@ export default async function BetsPage({
           <span className="text-[12px] text-white/70">{session.username}</span>
         )}
       </header>
-      <div className="grid grid-cols-2 bg-[#e8eaee] text-[14px] font-semibold">
+      <div className="grid grid-cols-2 bg-[#e8eaee] text-[13px] font-semibold">
         <Link
           href="/bets"
-          className={cn("py-3 text-center", current === "OPEN" ? "bg-white text-ink" : "bg-transparent text-muted")}
+          className={cn("py-2 text-center", current === "OPEN" ? "bg-white text-ink" : "bg-transparent text-muted")}
         >
           Open Bets
         </Link>
         <Link
           href="/bets?tab=history"
-          className={cn("py-3 text-center", current === "SETTLED" ? "bg-white text-ink" : "bg-transparent text-muted")}
+          className={cn("py-2 text-center", current === "SETTLED" ? "bg-white text-ink" : "bg-transparent text-muted")}
         >
           Bet History
         </Link>
       </div>
       {!session ? (
-        <div className="bg-white px-6 py-10 text-center">
-          <p className="text-[14px] leading-relaxed text-muted">
+        <div className="bg-white px-5 py-8 text-center">
+          <p className="text-[13px] leading-relaxed text-muted">
             Please Log In to see your Open
             <br />
             Bets and Cashout Bets
           </p>
           <Link
             href="/login?next=/bets"
-            className="mt-5 inline-flex h-10 items-center rounded-md border border-accent px-10 text-[14px] font-bold text-accent"
+            className="mt-4 inline-flex h-9 items-center rounded-md border border-accent px-8 text-[13px] font-bold text-accent"
           >
             Login
           </Link>

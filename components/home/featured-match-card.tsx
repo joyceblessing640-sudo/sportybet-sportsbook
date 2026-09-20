@@ -37,28 +37,28 @@ export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
 
   return (
     <article className="w-[88%] min-w-[88%] shrink-0 snap-center overflow-hidden border border-[#e6e8ec] bg-white">
-      <div className="flex items-center gap-1.5 pr-2">
+      <div className="flex items-center gap-1 pr-1.5">
         {match.isHot ? (
-          <span className="inline-flex shrink-0 items-center gap-0.5 bg-[#e31c23] px-1.5 py-[3px] text-[10px] font-black tracking-wide text-white">
+          <span className="inline-flex shrink-0 items-center gap-0.5 bg-[#e31c23] px-1 py-px text-[8px] font-black tracking-wide text-white min-[412px]:text-[9px]">
             HOT
             <span aria-hidden>🔥</span>
           </span>
         ) : null}
         {showBest ? (
-          <span className="inline-flex shrink-0 items-center gap-0.5 bg-[#12a150] px-1.5 py-[3px] text-[10px] font-black tracking-wide text-white">
+          <span className="inline-flex shrink-0 items-center gap-0.5 bg-[#12a150] px-1 py-px text-[8px] font-black tracking-wide text-white min-[412px]:text-[9px]">
             BEST ODDS
             <span aria-hidden>🔥</span>
           </span>
         ) : null}
-        <span className="min-w-0 truncate text-[12px] font-semibold text-accent underline decoration-accent decoration-1 underline-offset-2">
+        <span className="min-w-0 truncate text-[11px] font-semibold text-accent underline decoration-accent decoration-1 underline-offset-2">
           {match.sport.name} - {leagueName}
         </span>
         <Link href={`/match/${match.id}`} aria-label="Match statistics" className="ml-auto shrink-0">
-          <BarChart2 className="h-3.5 w-3.5 text-[#c5cad3]" />
+          <BarChart2 className="h-3 w-3 text-[#c5cad3]" />
         </Link>
       </div>
 
-      <div className="px-3 pb-2.5 pt-2">
+      <div className="px-2 pb-2 pt-1.5 min-[412px]:px-2.5">
         <Link href={`/match/${match.id}`} className="grid grid-cols-3 items-center">
           <div className="flex justify-center">
             <TeamLogo team={match.home} size="xl" />
@@ -66,13 +66,13 @@ export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
           <div className="text-center">
             {kick.live ? (
               <>
-                <p className="text-[20px] font-bold tabular-nums leading-none text-ink">{kick.score}</p>
-                <p className="mt-1 text-[12px] font-semibold text-accent">{kick.clock}</p>
+                <p className="text-[16px] font-bold tabular-nums leading-none text-ink min-[412px]:text-[18px]">{kick.score}</p>
+                <p className="mt-0.5 text-[11px] font-semibold text-accent">{kick.clock}</p>
               </>
             ) : (
-              <p className="flex items-center justify-center gap-2 text-[15px] font-bold leading-none text-ink">
+              <p className="flex items-center justify-center gap-1.5 text-[12px] font-bold leading-none text-ink min-[375px]:text-[13px]">
                 <span>{kick.time}</span>
-                <span className="inline-block h-3.5 w-px shrink-0 bg-[#c5cad3]" aria-hidden />
+                <span className="inline-block h-3 w-px shrink-0 bg-[#c5cad3]" aria-hidden />
                 <span>{kick.day}</span>
               </p>
             )}
@@ -82,14 +82,14 @@ export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
           </div>
         </Link>
 
-        <div className="mt-2 grid grid-cols-3 items-center">
-          <p className="truncate px-0.5 text-center text-[12px] font-medium leading-tight text-[#8a9199]">{match.home.name}</p>
-          {market ? <p className="text-center text-[13px] font-bold leading-none text-[#12a150]">1X2</p> : <span />}
-          <p className="truncate px-0.5 text-center text-[12px] font-medium leading-tight text-[#8a9199]">{match.away.name}</p>
+        <div className="mt-1.5 grid grid-cols-3 items-center">
+          <p className="truncate px-0.5 text-center text-[11px] font-medium leading-tight text-[#8a9199]">{match.home.name}</p>
+          {market ? <p className="text-center text-[11px] font-bold leading-none text-[#12a150] min-[412px]:text-[12px]">1X2</p> : <span />}
+          <p className="truncate px-0.5 text-center text-[11px] font-medium leading-tight text-[#8a9199]">{match.away.name}</p>
         </div>
 
         {market ? (
-          <div className="mt-2 grid grid-cols-3 gap-1.5">
+          <div className="mt-1.5 grid grid-cols-3 gap-1">
             {market.outcomes.slice(0, 3).map((outcome) => (
               <OddsButton key={outcome.id} match={match} marketName={market.name} outcome={outcome} spread />
             ))}

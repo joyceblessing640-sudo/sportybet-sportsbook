@@ -23,7 +23,7 @@ export function RecommendedCodes({ matches }: { matches: ClientMatch[] }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center gap-1.5 px-3 py-2.5 text-left text-[14px] font-bold"
+        className="flex w-full items-center gap-1.5 px-2.5 py-2 text-left text-[13px] font-bold"
       >
         <span className="text-accent">★</span> Recommended Football Codes
         <ChevronDown className={cn("ml-auto h-4 w-4 text-muted transition-transform duration-200", !open && "-rotate-90")} />
@@ -43,7 +43,7 @@ export function RecommendedCodes({ matches }: { matches: ClientMatch[] }) {
             );
             return (
               <article key={code.code} className="border-t border-[#f1f3f7]">
-                <div className="flex items-center bg-[#e7f5ee] px-3 py-2 text-[13px]">
+                <div className="flex items-center bg-[#e7f5ee] px-2.5 py-1.5 text-[12px]">
                   <span className="font-black tracking-wide">{code.code}</span>
                   <span className="ml-auto text-[12px] text-[#4b5563]">
                     Folds: <strong className="text-ink">{code.picks.length}</strong>
@@ -57,8 +57,8 @@ export function RecommendedCodes({ matches }: { matches: ClientMatch[] }) {
                     const market = match.markets.find((m) => m.type === "1X2") ?? match.markets[0];
                     const o = market?.outcomes[0];
                     return (
-                      <li key={match.id} className="flex items-start gap-2 border-b border-[#f3f4f6] py-2 last:border-0">
-                        <IconFootball className="mt-0.5 h-4 w-4 shrink-0 text-[#9aa3b2]" />
+                      <li key={match.id} className="flex items-start gap-1.5 border-b border-[#f3f4f6] py-1.5 last:border-0">
+                        <IconFootball className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#9aa3b2]" />
                         <span className="min-w-0 flex-1">
                           <span className="block text-[12px] font-semibold text-ink">
                             {o?.label ?? "Home"} @{o ? formatOdds(o.odds) : "—"} | {market?.name ?? "1X2"}
@@ -74,7 +74,7 @@ export function RecommendedCodes({ matches }: { matches: ClientMatch[] }) {
                     );
                   })}
                 </ul>
-                <div className="flex items-center justify-between px-3 py-2">
+                <div className="flex items-center justify-between px-2.5 py-1.5">
                   <button
                     type="button"
                     className="inline-flex items-center gap-1 text-[13px] font-semibold text-accent"
@@ -86,7 +86,7 @@ export function RecommendedCodes({ matches }: { matches: ClientMatch[] }) {
                   </button>
                   <form action={loadCodeAction}>
                     <input type="hidden" name="outcomeIds" value={outcomeIds} />
-                    <button type="submit" className="rounded-md bg-accent px-3 py-1.5 text-[13px] font-bold text-white">
+                    <button type="submit" className="rounded-md bg-accent px-2.5 py-1 text-[12px] font-bold text-white">
                       Add to Betslip
                     </button>
                   </form>

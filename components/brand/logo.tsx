@@ -15,14 +15,14 @@ export function Logo({
   return (
     <Link href={href} className={cn("flex shrink-0 items-center", className)} aria-label="SportyBets home">
       {split ? (
-        <span className="text-[22px] font-black italic leading-none tracking-[-0.04em]">
+        <span className="text-[18px] font-black italic leading-none tracking-[-0.04em] min-[412px]:text-[19px] lg:text-[22px]">
           <span className="text-header">Sporty</span>
           <span className="text-white">Bets</span>
         </span>
       ) : (
         <span
           className={cn(
-            "text-[21px] font-black italic leading-none tracking-[-0.04em]",
+            "text-[17px] font-black italic leading-none tracking-[-0.04em] min-[412px]:text-[18px] lg:text-[21px]",
             dark ? "text-header" : "text-white",
           )}
         >

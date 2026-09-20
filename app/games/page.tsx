@@ -4,7 +4,7 @@ import { CASINO_GAMES, CRASH_GAMES } from "@/lib/games";
 export default function GamesPage() {
   return (
     <div className="p-3">
-      <h1 className="text-[16px] font-bold">Games</h1>
+      <h1 className="text-[14px] font-bold">Games</h1>
       <p className="mt-1 text-[12px] text-muted">
         Demo artwork only. Titles are original placeholders and are not real-money games.
       </p>
@@ -14,10 +14,10 @@ export default function GamesPage() {
           <Link
             key={game.id}
             href={game.href}
-            className={`relative h-[108px] w-[140px] shrink-0 overflow-hidden rounded-md bg-gradient-to-br p-2.5 text-white ${game.art}`}
+            className={`relative h-[88px] w-[118px] shrink-0 overflow-hidden rounded-md bg-gradient-to-br p-2 text-white ${game.art}`}
           >
             <span className="absolute right-2 top-2 rounded bg-black/35 px-1.5 py-0.5 text-[10px]">{game.players}</span>
-            <p className="mt-10 text-[13px] font-bold">{game.name}</p>
+            <p className="mt-8 text-[12px] font-bold">{game.name}</p>
             <p className="text-[10px] text-white/70">Open demo</p>
           </Link>
         ))}

@@ -103,12 +103,12 @@ export function HomeView({
 
   return (
     <div className="bg-[#f4f5f7]">
-      <div className="no-scrollbar flex gap-2 overflow-x-auto bg-white px-3 py-2">
+      <div className="no-scrollbar flex gap-1.5 overflow-x-auto bg-white px-2.5 py-1.5 min-[412px]:gap-2 min-[412px]:px-3 min-[412px]:py-2">
         {PROMOS.map((promo) => (
           <Link
             key={promo.title}
             href={promo.href}
-            className="relative h-[64px] w-[64px] shrink-0 overflow-hidden rounded-[8px] min-[412px]:h-[66px] min-[412px]:w-[66px] min-[430px]:h-[68px] min-[430px]:w-[68px]"
+            className="relative h-[48px] w-[48px] shrink-0 overflow-hidden rounded-[6px] min-[375px]:h-[50px] min-[375px]:w-[50px] min-[412px]:h-[54px] min-[412px]:w-[54px] min-[430px]:h-[56px] min-[430px]:w-[56px]"
           >
             <img
               src={promo.src}
@@ -121,17 +121,17 @@ export function HomeView({
         ))}
       </div>
 
-      <div className="grid grid-cols-6 bg-white px-1 pb-2 pt-0.5">
+      <div className="grid grid-cols-6 bg-white px-0.5 pb-1.5 pt-0.5 min-[412px]:pb-2">
         {SHORTCUTS.map((item) => {
           const Icon = item.Icon;
           return (
             <Link
               key={item.label}
               href={item.href}
-              className="flex flex-col items-center gap-[3px] text-[10px] leading-tight text-[#4b5563]"
+              className="flex flex-col items-center gap-px text-[8.5px] leading-tight text-[#4b5563] min-[375px]:text-[9px] min-[412px]:text-[10px]"
             >
-              <span className="grid h-8 w-8 place-items-center text-[#374151]">
-                <Icon className="h-[22px] w-[22px]" />
+              <span className="grid h-6 w-6 place-items-center text-[#374151] min-[412px]:h-7 min-[412px]:w-7">
+                <Icon className="h-[16px] w-[16px] min-[412px]:h-[18px] min-[412px]:w-[18px]" />
               </span>
               {item.label}
             </Link>
@@ -139,13 +139,13 @@ export function HomeView({
         })}
       </div>
 
-      <div className="no-scrollbar flex gap-2 overflow-x-auto bg-[#f4f5f7] px-3 py-2">
+      <div className="no-scrollbar flex gap-1.5 overflow-x-auto bg-[#f4f5f7] px-2.5 py-1.5 min-[412px]:gap-2 min-[412px]:px-3 min-[412px]:py-2">
         {CATEGORY_CARDS.map((card) => (
           <Link
             key={card.label}
             href={card.href}
             className={cn(
-              "h-[54px] w-[116px] shrink-0 rounded-md border border-[#eceff3] border-t-[3px] bg-white px-2 py-1.5 text-[11px] font-bold leading-tight text-[#2b3038] shadow-[0_1px_3px_rgba(16,24,40,0.08)] min-[412px]:w-[124px]",
+              "h-[40px] w-[92px] shrink-0 rounded-md border border-[#eceff3] border-t-[2px] bg-white px-1.5 py-1 text-[9px] font-bold leading-tight text-[#2b3038] shadow-[0_1px_3px_rgba(16,24,40,0.08)] min-[375px]:h-[42px] min-[375px]:w-[98px] min-[375px]:text-[10px] min-[412px]:h-[46px] min-[412px]:w-[108px] min-[430px]:w-[112px]",
               card.border,
             )}
           >
@@ -154,16 +154,16 @@ export function HomeView({
         ))}
       </div>
 
-      <div className="flex items-center gap-3 overflow-x-auto bg-white px-3 pt-2.5 text-[14px] font-semibold">
-        <span className="shrink-0 text-[16px] font-black text-ink">Featured</span>
-        <span className="h-4 w-px shrink-0 bg-[#d1d5db]" />
+      <div className="flex items-center gap-2 overflow-x-auto bg-white px-2.5 pt-2 text-[12px] font-semibold min-[412px]:gap-2.5 min-[412px]:px-3 min-[412px]:text-[13px]">
+        <span className="shrink-0 text-[13px] font-black text-ink min-[412px]:text-[14px]">Featured</span>
+        <span className="h-3 w-px shrink-0 bg-[#d1d5db]" />
         {CONTENT_TABS.map((tab) => (
           <button
             key={tab}
             type="button"
             onClick={() => setContentTab(tab)}
             className={cn(
-              "shrink-0 pb-2 transition-colors duration-150",
+              "shrink-0 pb-1.5 transition-colors duration-150",
               contentTab === tab ? "text-accent" : "text-[#6b7280]",
             )}
           >
@@ -174,7 +174,7 @@ export function HomeView({
 
       {contentTab === "Matches" ? (
         <>
-          <div className="no-scrollbar flex items-center gap-3 overflow-x-auto bg-white px-3 pb-3.5 pt-2">
+          <div className="no-scrollbar flex items-center gap-2 overflow-x-auto bg-white px-2.5 pb-2.5 pt-1.5 min-[412px]:gap-2.5 min-[412px]:px-3">
             {LEAGUE_PILLS.map((league, index) => {
               const selected = index === 0;
               return (
@@ -184,22 +184,22 @@ export function HomeView({
                   title={league.name}
                   className={cn(
                     "relative flex shrink-0 items-center justify-center border-[1.5px] border-[#d4d8de] bg-white",
-                    selected ? "h-9 gap-1.5 rounded-full px-3" : "h-9 w-[56px] rounded-full",
+                    selected ? "h-7 gap-1 rounded-full px-2.5 min-[412px]:h-8 min-[412px]:px-3" : "h-7 w-[44px] rounded-full min-[412px]:h-8 min-[412px]:w-[50px]",
                   )}
                 >
                   <img
                     src={league.icon}
                     alt=""
-                    width={selected ? 18 : 24}
-                    height={selected ? 18 : 24}
-                    className={cn("object-contain object-center", selected ? "h-[18px] w-[18px]" : "h-6 w-6")}
+                    width={selected ? 14 : 18}
+                    height={selected ? 14 : 18}
+                    className={cn("object-contain object-center", selected ? "h-[14px] w-[14px] min-[412px]:h-4 min-[412px]:w-4" : "h-[18px] w-[18px] min-[412px]:h-5 min-[412px]:w-5")}
                   />
                   {selected ? (
                     <>
-                      <span className="text-[13px] font-semibold leading-none text-ink">{league.name}</span>
+                      <span className="text-[11px] font-semibold leading-none text-ink min-[412px]:text-[12px]">{league.name}</span>
                       <span
                         aria-hidden
-                        className="pointer-events-none absolute left-1/2 top-[calc(100%-6px)] z-[1] h-3 w-3 -translate-x-1/2 rotate-45 border-b-[1.5px] border-r-[1.5px] border-[#d4d8de] bg-white"
+                        className="pointer-events-none absolute left-1/2 top-[calc(100%-5px)] z-[1] h-2.5 w-2.5 -translate-x-1/2 rotate-45 border-b-[1.5px] border-r-[1.5px] border-[#d4d8de] bg-white"
                       />
                     </>
                   ) : null}
@@ -208,21 +208,21 @@ export function HomeView({
             })}
           </div>
           {featuredCards.length ? (
-            <div className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto bg-white px-3 pb-3">
+            <div className="no-scrollbar flex snap-x snap-mandatory gap-1.5 overflow-x-auto bg-white px-2.5 pb-2 min-[412px]:gap-2 min-[412px]:px-3 min-[412px]:pb-2.5">
               {featuredCards.map((match) => (
                 <HomeFeaturedMatch key={match.id} match={match} />
               ))}
             </div>
           ) : (
-            <p className="bg-white px-3 py-6 text-sm text-muted">
+            <p className="bg-white px-2.5 py-5 text-[12px] text-muted">
               {feed.error ?? "No matches available"}
             </p>
           )}
         </>
       ) : null}
       {contentTab === "Games" ? (
-        <div className="no-scrollbar flex gap-2 overflow-x-auto bg-white px-3 py-3">
-          <Link href="/games/lucky-numbers" className="relative h-[100px] w-[132px] shrink-0 overflow-hidden rounded-md">
+        <div className="no-scrollbar flex gap-1.5 overflow-x-auto bg-white px-2.5 py-2 min-[412px]:gap-2 min-[412px]:px-3">
+          <Link href="/games/lucky-numbers" className="relative h-[82px] w-[110px] shrink-0 overflow-hidden rounded-md min-[412px]:h-[88px] min-[412px]:w-[118px]">
             <img src="/home/lucky-numbers.jpg" alt="Lucky Numbers" className="h-full w-full object-cover" />
           </Link>
           {CRASH_GAMES.map((game) => (
@@ -230,19 +230,19 @@ export function HomeView({
               key={game.id}
               href={game.href}
               className={cn(
-                "relative h-[100px] w-[132px] shrink-0 overflow-hidden rounded-md bg-gradient-to-br p-2.5 text-white",
+                "relative h-[82px] w-[110px] shrink-0 overflow-hidden rounded-md bg-gradient-to-br p-2 text-white min-[412px]:h-[88px] min-[412px]:w-[118px]",
                 game.art,
               )}
             >
-              <p className="mt-8 text-[13px] font-bold">{game.name}</p>
-              <p className="text-[10px] text-white/70">{game.tag}</p>
+              <p className="mt-6 text-[12px] font-bold">{game.name}</p>
+              <p className="text-[9px] text-white/70">{game.tag}</p>
             </Link>
           ))}
         </div>
       ) : null}
       {contentTab === "Codes" ? <RecommendedCodes matches={feed.featured.length ? feed.featured : footballToday} /> : null}
       {contentTab === "Virtuals" ? (
-        <p className="bg-white px-3 py-6 text-sm text-muted">
+        <p className="bg-white px-2.5 py-5 text-[12px] text-muted">
           Virtuals are a placeholder. Open{" "}
           <Link href="/virtuals" className="font-semibold text-accent">
             Virtuals

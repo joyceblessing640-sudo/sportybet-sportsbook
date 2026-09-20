@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { ClientRoot } from "@/components/client-root";
 import { getAuthPayload } from "@/lib/session";
@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   title: "SportyBets — Bet Smart. Win Big.",
   description:
     "SportyBets is a demo sportsbook for football, basketball, tennis and more. 18+ only. Play responsibly.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

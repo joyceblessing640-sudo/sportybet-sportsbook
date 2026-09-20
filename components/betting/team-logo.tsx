@@ -12,8 +12,15 @@ export function TeamLogo({
   size?: "sm" | "md" | "lg" | "xl";
 }) {
   const [failed, setFailed] = useState(false);
-  const dim = size === "sm" ? "h-5 w-5 text-[8px]" : size === "xl" ? "h-[52px] w-[52px] text-lg" : size === "lg" ? "h-12 w-12 text-base" : "h-9 w-9 text-[11px]";
-  const px = size === "sm" ? 20 : size === "xl" ? 52 : size === "lg" ? 48 : 36;
+  const dim =
+    size === "sm"
+      ? "h-4 w-4 text-[7px]"
+      : size === "xl"
+        ? "h-9 w-9 text-[11px] min-[412px]:h-10 min-[412px]:w-10"
+        : size === "lg"
+          ? "h-8 w-8 text-[10px] min-[412px]:h-9 min-[412px]:w-9"
+          : "h-7 w-7 text-[10px]";
+  const px = size === "sm" ? 16 : size === "xl" ? 40 : size === "lg" ? 36 : 28;
 
   if (team.logoUrl && !failed) {
     return (

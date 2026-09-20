@@ -12,45 +12,45 @@ export default function MePage() {
 
   return (
     <div className="min-h-dvh bg-[#1b1d22] pb-8 text-white">
-      <section className="px-4 pb-4 pt-5">
+      <section className="px-3 pb-3 pt-3.5">
         <div className="flex items-start justify-between">
-          <Link href={user ? "/me" : "/login"} className="flex items-center gap-3">
-            <span className="grid h-14 w-14 place-items-center rounded-full bg-[#2e323a]">
-              <UserRound className="h-7 w-7 text-white/90" />
+          <Link href={user ? "/me" : "/login"} className="flex items-center gap-2.5">
+            <span className="grid h-11 w-11 place-items-center rounded-full bg-[#2e323a]">
+              <UserRound className="h-5 w-5 text-white/90" />
             </span>
-            <p className="flex items-center gap-1 text-[16px] font-bold">
-              {user ? user.username : "Login to View"} <ChevronRight className="h-4 w-4 text-white/50" />
+            <p className="flex items-center gap-1 text-[14px] font-bold">
+              {user ? user.username : "Login to View"} <ChevronRight className="h-3.5 w-3.5 text-white/50" />
             </p>
           </Link>
-          <span className="flex items-center gap-1 pt-1 text-[12px] text-white/70">
-            Dark Mode <Moon className="h-4 w-4" />
+          <span className="flex items-center gap-1 pt-1 text-[11px] text-white/70">
+            Dark Mode <Moon className="h-3.5 w-3.5" />
           </span>
         </div>
-        <div className="mt-6 flex items-end justify-between">
-          <p className="text-[13px] text-white/55">Total Balance</p>
-          <p className="text-[22px] font-bold tabular-nums">{user ? formatGhs(user.wallet?.balancePesewas ?? 0) : "GHS --"}</p>
+        <div className="mt-4 flex items-end justify-between">
+          <p className="text-[12px] text-white/55">Total Balance</p>
+          <p className="text-[18px] font-bold tabular-nums">{user ? formatGhs(user.wallet?.balancePesewas ?? 0) : "GHS --"}</p>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="mt-3 grid grid-cols-2 gap-2">
           <Link
             href="/deposit"
-            className="inline-flex h-[46px] items-center justify-center gap-2 rounded-md bg-accent text-[15px] font-bold text-white"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-accent text-[13px] font-bold text-white"
           >
-            <Wallet className="h-4 w-4" /> Deposit
+            <Wallet className="h-3.5 w-3.5" /> Deposit
           </Link>
           <Link
             href="/withdraw"
-            className="inline-flex h-[46px] items-center justify-center gap-2 rounded-md border border-accent text-[15px] font-bold text-accent"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md border border-accent text-[13px] font-bold text-accent"
           >
-            <Landmark className="h-4 w-4" /> Withdraw
+            <Landmark className="h-3.5 w-3.5" /> Withdraw
           </Link>
         </div>
         <Link
           href="/promotions"
-          className="relative mt-4 flex h-[52px] items-center justify-between overflow-hidden rounded-md bg-gradient-to-r from-[#3f0d12] via-[#1f2937] to-[#111827] px-3"
+          className="relative mt-3 flex h-11 items-center justify-between overflow-hidden rounded-md bg-gradient-to-r from-[#3f0d12] via-[#1f2937] to-[#111827] px-2.5"
         >
-          <span className="pointer-events-none absolute -left-2 text-[36px] opacity-30">⚽</span>
-          <p className="relative text-[13px] font-bold italic">SportyBets Loyalty</p>
-          <span className="relative text-[12px] font-semibold text-accent">{user ? "Open" : "Log in to join"} ›</span>
+          <span className="pointer-events-none absolute -left-2 text-[28px] opacity-30">⚽</span>
+          <p className="relative text-[12px] font-bold italic">SportyBets Loyalty</p>
+          <span className="relative text-[11px] font-semibold text-accent">{user ? "Open" : "Log in to join"} ›</span>
         </Link>
       </section>
       <AccountFooter />

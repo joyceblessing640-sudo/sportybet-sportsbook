@@ -29,7 +29,7 @@ export function CountryMark({
   return (
     <span
       className={cn(
-        "grid h-4 w-4 shrink-0 place-items-center rounded-[3px] text-[8px] font-black text-white",
+        "grid h-3.5 w-3.5 shrink-0 place-items-center rounded-[2px] text-[7px] font-black text-white",
         className,
       )}
         style={{ background: TONES[country] ?? "#e31837" }}

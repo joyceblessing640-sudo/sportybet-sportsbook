@@ -14,12 +14,12 @@ export function BetSlipFab({ items, onOpen }: { items: SlipItem[]; onOpen: () =>
       onClick={() => onOpen()}
       aria-label="Open betslip"
       className={cn(
-        "fab-pop fixed right-3 z-[45] grid h-14 w-14 place-items-center rounded-full bg-accent text-white shadow-[0_4px_16px_rgba(18,161,80,0.45)] lg:hidden",
+        "fab-pop fixed right-2.5 z-[45] grid h-11 w-11 place-items-center rounded-full bg-accent text-white shadow-[0_4px_16px_rgba(18,161,80,0.45)] min-[412px]:h-12 min-[412px]:w-12 lg:hidden",
       )}
-      style={{ bottom: "calc(4.35rem + env(safe-area-inset-bottom))" }}
+      style={{ bottom: "calc(3.65rem + env(safe-area-inset-bottom))" }}
     >
-      <Ticket className="h-6 w-6" />
-      <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-white px-1 text-[11px] font-bold text-accent">
+      <Ticket className="h-5 w-5" />
+      <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-white px-0.5 text-[10px] font-bold text-accent">
         {items.length}
       </span>
     </button>

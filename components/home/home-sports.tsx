@@ -40,17 +40,17 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
 
   return (
     <section className="mt-0 bg-white">
-      <div className="flex items-end gap-2 border-b border-line px-3 pt-2">
-        <p className="shrink-0 pb-1.5 text-[16px] font-bold leading-none text-ink">Sports</p>
-        <span className="mb-[7px] shrink-0 text-[#d1d5db]">|</span>
-        <div className="no-scrollbar flex min-w-0 flex-1 gap-3 overflow-x-auto text-[13px] font-semibold">
+      <div className="flex items-end gap-1.5 border-b border-line px-2.5 pt-1.5 min-[412px]:px-3 min-[412px]:pt-2">
+        <p className="shrink-0 pb-1 text-[13px] font-bold leading-none text-ink min-[412px]:text-[14px]">Sports</p>
+        <span className="mb-1.5 shrink-0 text-[#d1d5db]">|</span>
+        <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto text-[11px] font-semibold min-[412px]:gap-2.5 min-[412px]:text-[12px]">
           {HOME_SPORT_TABS.map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => setSport(tab.id)}
               className={cn(
-                "shrink-0 pb-1.5 transition-colors duration-150",
+                "shrink-0 pb-1 transition-colors duration-150",
                 sport === tab.id ? "border-b-2 border-accent text-accent" : "text-[#6b7280]",
               )}
             >
@@ -59,14 +59,14 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-3 border-b border-line text-center text-[13px] font-semibold">
+      <div className="grid grid-cols-3 border-b border-line text-center text-[12px] font-semibold">
         {(["highlights", "today", "countries"] as const).map((id) => (
           <button
             key={id}
             type="button"
             onClick={() => setTopTab(id)}
             className={cn(
-              "py-2.5 capitalize",
+              "py-2 capitalize",
               topTab === id ? "border-b-2 border-accent text-accent" : "text-[#6b7280]",
             )}
           >
@@ -80,7 +80,7 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
             <Link
               key={league.slug}
               href={`/sports/${league.sportId}/${league.slug}`}
-              className="block border-b border-line px-3 py-3 text-[13px] text-[#374151]"
+              className="block border-b border-line px-2.5 py-2 text-[12px] text-[#374151]"
             >
               {league.country} - {league.name}
             </Link>
@@ -88,14 +88,14 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
         </div>
       ) : (
         <>
-          <div className="no-scrollbar flex gap-3 overflow-x-auto px-3 pt-2 text-[12px] font-semibold">
+          <div className="no-scrollbar flex gap-2 overflow-x-auto px-2.5 pt-1.5 text-[11px] font-semibold min-[412px]:gap-2.5 min-[412px]:px-3">
             {HOME_MARKETS.map((item) => (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => setMarket(item.id)}
                 className={cn(
-                  "shrink-0 pb-1.5 transition-colors duration-150",
+                  "shrink-0 pb-1 transition-colors duration-150",
                   market === item.id ? "border-b-2 border-accent text-accent" : "text-[#6b7280]",
                 )}
               >
@@ -104,7 +104,7 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
             ))}
           </div>
           {sport === "vfootball" ? (
-            <p className="px-3 py-6 text-sm text-muted">
+            <p className="px-2.5 py-5 text-[12px] text-muted">
               Virtual football is a placeholder. Open{" "}
               <Link href="/virtuals" className="font-semibold text-accent">
                 Virtuals
@@ -112,7 +112,7 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
               .
             </p>
           ) : visible.length === 0 ? (
-            <p className="px-3 py-6 text-sm text-muted">No matches available</p>
+            <p className="px-2.5 py-5 text-[12px] text-muted">No matches available</p>
           ) : (
             <div className="[&>div]:rounded-none [&>div]:border-x-0 [&>div]:border-t-0">
               <MatchList matches={visible.slice(0, 12)} marketType={market} showBadges groupDates />

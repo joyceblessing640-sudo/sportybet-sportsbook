@@ -166,7 +166,7 @@ export function SiteFooter() {
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className={cn(
-            "h-12 w-full rounded-md bg-[#3a3f46] text-[16px] font-bold text-white",
+            "h-10 w-full rounded-md bg-[#3a3f46] text-[14px] font-bold text-white",
             fabVisible && "max-lg:pr-16",
           )}
         >

@@ -55,7 +55,7 @@ export function AppShell({ children, slipItems }: { children: ReactNode; slipIte
           {children}
           <SiteFooter />
         </main>
-        <div className="sticky top-[5.75rem] hidden h-[calc(100dvh-5.75rem)] w-[300px] shrink-0 self-start lg:block">
+        <div className="sticky top-[5.25rem] hidden h-[calc(100dvh-5.25rem)] w-[300px] shrink-0 self-start lg:block">
           <BetSlipPanel embedded items={slipItems} />
         </div>
       </div>
