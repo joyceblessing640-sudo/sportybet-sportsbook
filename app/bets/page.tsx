@@ -3,9 +3,11 @@ import { CircleHelp } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import { getUserBets } from "@/lib/betting";
 import { prisma } from "@/lib/db";
+import { excludeDemoFootball } from "@/lib/football/query";
 import { formatGhs, formatOdds } from "@/lib/money";
 import { serializeMatch } from "@/lib/serialize";
-import { liveMinute } from "@/lib/audit";
+import { withClocks } from "@/lib/data";
+import { ensureFootballSynced } from "@/lib/football/sync";
 import { RecommendedCodes } from "@/components/bets/recommended-codes";
 import { cn } from "@/lib/utils";
 
@@ -21,8 +23,9 @@ export default async function BetsPage({
   const session = await getSession();
   const data = session ? await getUserBets(session.id, current) : { items: [], total: 0, page: 1, pageSize: 20 };
 
+  await ensureFootballSynced("home");
   const featured = await prisma.match.findMany({
-    where: { isFeatured: true, status: { in: ["SCHEDULED", "LIVE", "HT"] } },
+    where: excludeDemoFootball({ isFeatured: true, status: { in: ["SCHEDULED", "LIVE", "HT"] } }),
     include: {
       league: true,
       sport: true,
@@ -32,9 +35,7 @@ export default async function BetsPage({
     },
     take: 8,
   });
-  const codes = await Promise.all(
-    featured.map(async (m) => serializeMatch({ ...m, clock: await liveMinute(m.startTime, m.status) })),
-  );
+  const codes = (await withClocks(featured)).map(serializeMatch);
 
   return (
     <div className="min-h-dvh bg-[#f4f5f7]">

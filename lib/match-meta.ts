@@ -1,5 +1,7 @@
-/** Stable 5-digit fixture code shown next to kick-off (demo, not a feed ID). */
+/** Stable 5-digit fixture code shown next to kick-off. */
 export function matchDisplayId(id: string) {
+  const numeric = id.replace(/\D/g, "");
+  if (numeric.length >= 5) return numeric.slice(-5);
   let hash = 2166136261;
   for (let i = 0; i < id.length; i += 1) {
     hash ^= id.charCodeAt(i);
@@ -8,16 +10,11 @@ export function matchDisplayId(id: string) {
   return String(10000 + ((hash >>> 0) % 90000));
 }
 
-/** Extra-market count for the +N affordance on a match row. */
-export function extraMarketsCount(id: string, outcomeCount: number) {
-  const code = Number(matchDisplayId(id));
-  return 18 + (code % 72) + Math.min(outcomeCount, 6);
+/** Extra-market count for the +N affordance. Uses real outcome counts only. */
+export function extraMarketsCount(outcomeCount: number) {
+  return Math.max(0, outcomeCount - 3);
 }
 
 export function isHotMatch(status: string, isFeatured: boolean) {
   return isFeatured || status === "LIVE" || status === "HT";
-}
-
-export function isBestOddsMatch(sportId: string, status: string) {
-  return sportId === "football" && status !== "ENDED";
 }

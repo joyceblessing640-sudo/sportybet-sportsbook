@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { format } from "date-fns";
+import { formatKickoff } from "@/lib/football/time";
 import { BarChart2 } from "lucide-react";
 import { CountryMark } from "@/components/brand/country-mark";
 import type { ClientMatch } from "@/lib/serialize";
@@ -10,7 +10,7 @@ import { TeamBadge } from "./team-badge";
 import { cn } from "@/lib/utils";
 
 function marketByType(match: ClientMatch, type: string) {
-  return match.markets.find((m) => m.type === type) ?? match.markets[0];
+  return match.markets.find((m) => m.type === type);
 }
 
 export function groupByLeague(matches: ClientMatch[]) {
@@ -57,7 +57,7 @@ export function DateOddsHeader({
 export function FeaturedMatchCard({ match }: { match: ClientMatch }) {
   const market = marketByType(match, "1X2");
   const live = match.status === "LIVE" || match.status === "HT";
-  const kick = live ? match.clock : format(new Date(match.startTime), "HH:mm");
+  const kick = live ? match.clock : formatKickoff(match.startTime);
 
   return (
     <article className="bg-white px-3 pb-3 pt-2">
@@ -125,10 +125,10 @@ export function MatchCard({
   hideLeague?: boolean;
   showBadges?: boolean;
 }) {
-  const market = marketByType(match, marketType) ?? match.markets[0];
+  const market = marketByType(match, marketType);
   const ou = match.markets.find((m) => m.type === "OU");
   const live = match.status === "LIVE" || match.status === "HT";
-  const clock = live ? match.clock : format(new Date(match.startTime), "HH:mm");
+  const clock = live ? match.clock : formatKickoff(match.startTime);
   const period =
     live && match.periodLabel && match.periodLabel !== clock && !String(clock ?? "").includes(match.periodLabel)
       ? match.periodLabel
@@ -206,14 +206,18 @@ export function MatchCard({
             ))}
           </div>
         ) : (
-          <p className="text-right text-[11px] text-muted">Locked</p>
+          <span className="w-0" />
         )}
       </div>
       {showOu && ou ? (
         <div className="mt-1.5 grid grid-cols-[minmax(0,1fr)_auto_9.75rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_auto_11rem]">
-          <Link href={`/match/${match.id}`} className={cn("text-[11px] font-semibold", light ? "text-accent" : "text-accent")}>
-            +{match.extraMarkets}
-          </Link>
+          {match.extraMarkets > 0 ? (
+            <Link href={`/match/${match.id}`} className={cn("text-[11px] font-semibold", light ? "text-accent" : "text-accent")}>
+              +{match.extraMarkets}
+            </Link>
+          ) : (
+            <span />
+          )}
           <span className={cn("text-[10px] font-semibold", light ? "text-muted" : "text-white/50")}>{ou.line ?? "O/U"}</span>
           <div className="flex gap-1">
             {ou.outcomes.slice(0, 2).map((outcome) => (
@@ -221,11 +225,11 @@ export function MatchCard({
             ))}
           </div>
         </div>
-      ) : (
+      ) : match.extraMarkets > 0 ? (
         <Link href={`/match/${match.id}`} className={cn("mt-0.5 inline-block text-[11px] font-semibold", light ? "text-accent" : "text-accent")}>
           +{match.extraMarkets}
         </Link>
-      )}
+      ) : null}
     </article>
   );
 }
@@ -273,10 +277,23 @@ export function MatchList({
   groupLeagues?: boolean;
   showBadges?: boolean;
 }) {
-  const sample = matches[0];
-  const market = sample ? marketByType(sample, marketType) ?? sample.markets[0] : null;
-  const headers = market ? market.outcomes.slice(0, 3).map((o) => o.label) : ["1", "X", "2"];
-  const groups = groupLeagues ? groupByLeague(matches) : null;
+  const playable =
+    marketType === "1X2"
+      ? matches
+      : matches.filter((match) => match.markets.some((market) => market.type === marketType));
+  const sample = playable[0];
+  const market = sample ? marketByType(sample, marketType) : null;
+  const headers = market ? market.outcomes.slice(0, 3).map((o) => o.label) : marketType === "OU" || marketType === "FHOU" ? ["Over", "Under"] : marketType === "DC" ? ["1X", "12", "X2"] : ["1", "X", "2"];
+  const groups = groupLeagues ? groupByLeague(playable) : null;
+
+  if (playable.length === 0) {
+    return (
+      <div className={dark ? "bg-live text-white" : "overflow-hidden rounded-md border border-line bg-white"}>
+        {dateLabel ? <DateOddsHeader label={dateLabel} headers={headers} dark={dark} /> : null}
+        <p className={cn("px-3 py-6 text-[13px]", dark ? "text-white/55" : "text-muted")}>No matches available</p>
+      </div>
+    );
+  }
 
   return (
     <div className={dark ? "bg-live text-white" : "overflow-hidden rounded-md border border-line bg-white"}>
@@ -295,7 +312,7 @@ export function MatchList({
               ))}
             </div>
           ))
-        : matches.map((match) => (
+        : playable.map((match) => (
             <MatchRow key={match.id} match={match} marketType={marketType} compactOdds onDark={dark} showBadges={showBadges} />
           ))}
     </div>

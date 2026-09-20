@@ -1,31 +1,25 @@
 import { SportsView } from "@/components/sports/sports-view";
-import { getLeagues, getSports } from "@/lib/data";
+import { getLeagues, getSports, matchInclude, withClocks } from "@/lib/data";
 import { prisma } from "@/lib/db";
-import { liveMinute } from "@/lib/audit";
 import { serializeMatch } from "@/lib/serialize";
+import { excludeDemoFootball } from "@/lib/football/query";
+import { ensureFootballSynced } from "@/lib/football/sync";
 
 export const dynamic = "force-dynamic";
 
 export default async function SportsPage() {
+  await ensureFootballSynced("home");
   const [sports, leagues, raw] = await Promise.all([
     getSports(),
     getLeagues(),
     prisma.match.findMany({
-      where: { status: { in: ["SCHEDULED", "LIVE", "HT"] } },
-      include: {
-        league: true,
-        sport: true,
-        homeTeam: true,
-        awayTeam: true,
-        markets: { include: { outcomes: { where: { active: true }, orderBy: { code: "asc" } } } },
-      },
+      where: excludeDemoFootball({ status: { in: ["SCHEDULED", "LIVE", "HT"] } }),
+      include: matchInclude,
       orderBy: { startTime: "asc" },
       take: 120,
     }),
   ]);
-  const matches = await Promise.all(
-    raw.map(async (m) => serializeMatch({ ...m, clock: await liveMinute(m.startTime, m.status) })),
-  );
+  const matches = (await withClocks(raw)).map(serializeMatch);
   return (
     <SportsView
       sports={sports.map((s) => ({ id: s.id, name: s.name, slug: s.slug }))}

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { excludeDemoFootball } from "@/lib/football/query";
 import { readSlipItems, writeSlipItems } from "@/lib/slip";
 
 export async function toggleSlipSelection(formData: FormData) {
@@ -93,7 +94,7 @@ export async function loadBookingCodeAction(_prev: { error?: string } | null, fo
     return { error: "Unknown booking code. Demo codes: SB7K2Q and D5P6AF." };
   }
   const featured = await prisma.match.findMany({
-    where: { isFeatured: true, status: { in: ["SCHEDULED", "LIVE", "HT"] } },
+    where: excludeDemoFootball({ isFeatured: true, status: { in: ["SCHEDULED", "LIVE", "HT"] } }),
     include: {
       homeTeam: true,
       awayTeam: true,

@@ -1,7 +1,10 @@
 import { prisma } from "./db";
 import { liveMinute } from "./audit";
+import { excludeDemoFootball } from "./football/query";
+import { ensureFootballSynced, getFootballFeedMeta, type FootballFeedMeta } from "./football/sync";
+import { startOfGhanaDay } from "./football/time";
 
-const matchInclude = {
+export const matchInclude = {
   league: true,
   sport: true,
   homeTeam: true,
@@ -23,9 +26,14 @@ export async function getLeagues(sportId?: string) {
   });
 }
 
+const OPEN = { in: ["SCHEDULED", "LIVE", "HT"] };
+
 export async function getHomePayload() {
+  const feed = await ensureFootballSynced("home");
   const now = new Date();
   const inThreeHours = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+  const todayStart = startOfGhanaDay(0);
+  const tomorrowStart = startOfGhanaDay(1);
 
   const [sports, leagues, featured, live, today, upcoming, promotions] = await Promise.all([
     getSports(),
@@ -35,34 +43,31 @@ export async function getHomePayload() {
       take: 12,
     }),
     prisma.match.findMany({
-      where: { isFeatured: true, status: { in: ["SCHEDULED", "LIVE", "HT"] } },
+      where: excludeDemoFootball({ isFeatured: true, status: OPEN }),
       include: matchInclude,
       orderBy: { startTime: "asc" },
       take: 8,
     }),
     prisma.match.findMany({
-      where: { status: { in: ["LIVE", "HT"] } },
+      where: excludeDemoFootball({ status: { in: ["LIVE", "HT"] } }),
       include: matchInclude,
       orderBy: { startTime: "asc" },
       take: 20,
     }),
     prisma.match.findMany({
-      where: {
-        status: { in: ["SCHEDULED", "LIVE", "HT"] },
-        startTime: {
-          gte: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-          lt: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
-        },
-      },
+      where: excludeDemoFootball({
+        status: OPEN,
+        startTime: { gte: todayStart, lt: tomorrowStart },
+      }),
       include: matchInclude,
       orderBy: { startTime: "asc" },
       take: 40,
     }),
     prisma.match.findMany({
-      where: {
+      where: excludeDemoFootball({
         status: "SCHEDULED",
         startTime: { gte: now, lte: inThreeHours },
-      },
+      }),
       include: matchInclude,
       orderBy: { startTime: "asc" },
       take: 20,
@@ -78,22 +83,34 @@ export async function getHomePayload() {
     today: await withClocks(today),
     upcoming: await withClocks(upcoming),
     promotions,
+    feed,
   };
 }
 
+export async function getLivePayload() {
+  const feed = await ensureFootballSynced("live");
+  const matches = await prisma.match.findMany({
+    where: excludeDemoFootball({ status: { in: ["LIVE", "HT"] } }),
+    include: matchInclude,
+    orderBy: { startTime: "asc" },
+  });
+  return { matches: await withClocks(matches), feed };
+}
+
 export async function getMatchesByLeague(slug: string) {
+  await ensureFootballSynced("home");
   const league = await prisma.league.findUnique({
     where: { slug },
     include: { sport: true },
   });
   if (!league) return null;
   const matches = await prisma.match.findMany({
-    where: { leagueId: league.id, status: { in: ["SCHEDULED", "LIVE", "HT"] } },
+    where: excludeDemoFootball({ leagueId: league.id, status: OPEN }),
     include: matchInclude,
     orderBy: { startTime: "asc" },
     take: 80,
   });
-  return { league, matches: await withClocks(matches) };
+  return { league, matches: await withClocks(matches), feed: await getFootballFeedMeta() };
 }
 
 export async function getMatchById(id: string) {
@@ -102,6 +119,7 @@ export async function getMatchById(id: string) {
     include: matchInclude,
   });
   if (!match) return null;
+  if (match.sportId === "football" && match.isDemo) return null;
   const [withClock] = await withClocks([match]);
   return withClock;
 }
@@ -109,15 +127,16 @@ export async function getMatchById(id: string) {
 export async function searchMatches(q: string) {
   const query = q.trim();
   if (query.length < 2) return [];
+  await ensureFootballSynced("home");
   const matches = await prisma.match.findMany({
-    where: {
-      status: { in: ["SCHEDULED", "LIVE", "HT"] },
+    where: excludeDemoFootball({
+      status: OPEN,
       OR: [
         { homeTeam: { name: { contains: query } } },
         { awayTeam: { name: { contains: query } } },
         { league: { name: { contains: query } } },
       ],
-    },
+    }),
     include: matchInclude,
     orderBy: { startTime: "asc" },
     take: 40,
@@ -125,11 +144,13 @@ export async function searchMatches(q: string) {
   return withClocks(matches);
 }
 
-async function withClocks<T extends { startTime: Date; status: string }>(matches: T[]) {
+export async function withClocks<
+  T extends { startTime: Date; status: string; elapsed?: number | null },
+>(matches: T[]) {
   return Promise.all(
     matches.map(async (match) => ({
       ...match,
-      clock: await liveMinute(match.startTime, match.status),
+      clock: await liveMinute(match.startTime, match.status, match.elapsed),
     })),
   );
 }
@@ -139,3 +160,5 @@ export function market1x2<T extends { type: string; outcomes: { code: string; od
 ) {
   return markets.find((m) => m.type === "1X2");
 }
+
+export type { FootballFeedMeta };

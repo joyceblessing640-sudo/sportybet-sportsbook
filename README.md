@@ -2,7 +2,23 @@
 
 SportyBets is a demo sportsbook web app with a compact red-and-white sportsbook interface. Layout, density, and navigation follow common mobile sportsbook patterns. Branding, logo, and copy are original — this product is not affiliated with any third-party operator.
 
-**18+ only. Play responsibly. Betting can be addictive.** Matches, odds, balances, and payments in this repository are **demo data** unless you connect a real sports feed and payment provider.
+**18+ only. Play responsibly. Betting can be addictive.** Football fixtures, scores, and (when your plan includes them) odds come from API-Football. Other sports and cashier flows remain demo until you connect licensed providers.
+
+## Football data (API-Football)
+
+Set this **server-side** environment variable. Never put it in client code, HTML, or git.
+
+```
+API_FOOTBALL_KEY=your_key_here
+```
+
+Copy `.env.example` to `.env` locally. On Vercel, add `API_FOOTBALL_KEY` to the **SportyBets** project only — do not add it to a separate predictor project.
+
+The key is read only in `lib/football/api.ts` and proxied through `/api/football/snapshot` and `/api/football/match`. Homepage Featured, Matches, Today, Next 3 Hours, and Live poll those routes. Live matches refresh about every 15 seconds; upcoming fixtures are cached longer.
+
+If the key is missing or the provider is down, the sportsbook UI stays up and shows **Unable to load live matches** (or **No matches available**). Demo football rows are hidden from the production UI.
+
+Kickoff times are formatted in **Africa/Accra**. UTC instants are converted; they are not labelled as Ghana time without conversion.
 
 ## Stack
 
@@ -41,15 +57,16 @@ Registration is a three-step Ghana mobile flow (number → demo OTP `123456` →
 - `npm run dev` — development server on port 43141
 - `npm run lint` — ESLint
 - `npm run typecheck` — TypeScript
-- `npm run test` — Vitest (odds/money/phone validation)
+- `npm run test` — Vitest (odds, money, phone, football feed mapping)
 - `npm run build` — production build
 - `npm run db:setup` — push schema and seed demo fixtures
 
 ## Production notes
 
 - Replace SQLite with Postgres (or another hosted database) before deploying to serverless hosts.
-- Connect a licensed odds feed and a payment provider. Until then, keep `NEXT_PUBLIC_DEMO_MODE=true`.
-- Put `AUTH_SECRET` in the host environment. Never store passwords in plain text.
+- Set `API_FOOTBALL_KEY` on the SportyBets host (not on a separate predictor project). Optional: `API_FOOTBALL_PROVIDER=rapidapi` if the key is a RapidAPI key.
+- Connect a payment provider. Until then, keep `NEXT_PUBLIC_DEMO_MODE=true`.
+- Put `AUTH_SECRET` in the host environment. Never store passwords in plain text. Never commit `.env`.
 - Rate limits are in-memory per instance; use Redis (or similar) behind multiple replicas.
 - Admins review cashier requests. Financial totals always come from the database, never from the browser.
 

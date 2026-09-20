@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { MatchRow } from "@/components/betting/match-card";
 import { MARKET_TABS } from "@/lib/constants";
+import { formatFixtureDay } from "@/lib/football/time";
 import type { ClientMatch } from "@/lib/serialize";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +20,7 @@ export function LeagueView({
   const grouped = useMemo(() => {
     const map = new Map<string, ClientMatch[]>();
     for (const match of matches) {
-      const day = new Date(match.startTime).toDateString();
+      const day = formatFixtureDay(match.startTime);
       map.set(day, [...(map.get(day) ?? []), match]);
     }
     return [...map.entries()];
@@ -34,7 +35,7 @@ export function LeagueView({
         <div>
           <p className="text-sm font-bold">{league.name}</p>
           <p className="text-[11px] text-white/70">
-            {league.country} · {league.sport} · DEMO fixtures
+            {league.country} · {league.sport}
           </p>
         </div>
       </div>
@@ -55,7 +56,7 @@ export function LeagueView({
       </div>
       <div className="space-y-3 p-3">
         {grouped.length === 0 ? (
-          <div className="rounded-xl bg-white p-8 text-center text-sm text-muted">No upcoming demo matches in this league.</div>
+          <div className="rounded-xl bg-white p-8 text-center text-sm text-muted">No matches available</div>
         ) : (
           grouped.map(([day, list]) => (
             <section key={day}>

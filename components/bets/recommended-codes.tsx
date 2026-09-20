@@ -5,7 +5,7 @@ import { ChevronDown, Share2 } from "lucide-react";
 import type { ClientMatch } from "@/lib/serialize";
 import { formatOdds } from "@/lib/money";
 import { loadCodeAction } from "@/app/actions/slip";
-import { format } from "date-fns";
+import { formatKickoffStamp } from "@/lib/football/time";
 import { IconFootball } from "@/components/home/shortcut-icons";
 import { cn } from "@/lib/utils";
 
@@ -68,7 +68,7 @@ export function RecommendedCodes({ matches }: { matches: ClientMatch[] }) {
                           </span>
                         </span>
                         <span className="shrink-0 text-[11px] text-muted">
-                          {format(new Date(match.startTime), "dd/MM HH:mm")}
+                          {formatKickoffStamp(match.startTime)}
                         </span>
                       </li>
                     );

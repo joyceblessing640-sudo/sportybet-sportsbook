@@ -11,10 +11,12 @@ export function LiveBoard({
   matches,
   limit,
   homeLayout = false,
+  feedError = null,
 }: {
   matches: ClientMatch[];
   limit?: number;
   homeLayout?: boolean;
+  feedError?: string | null;
 }) {
   const [sport, setSport] = useState(homeLayout ? "football" : "live");
   const [market, setMarket] = useState("1X2");
@@ -128,7 +130,7 @@ export function LiveBoard({
           </Link>
         </p>
       ) : rows.length === 0 ? (
-        <p className="px-3 py-6 text-[13px] text-white/55">No live demo events right now.</p>
+        <p className="px-3 py-6 text-[13px] text-white/55">{feedError ?? "No matches available"}</p>
       ) : (
         rows.map((match) => <MatchRow key={match.id} match={match} marketType={market} compactOdds onDark />)
       )}

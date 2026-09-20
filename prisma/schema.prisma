@@ -68,16 +68,18 @@ model Sport {
 }
 
 model League {
-  id        String  @id @default(cuid())
-  sportId   String
-  sport     Sport   @relation(fields: [sportId], references: [id])
-  name      String
-  country   String
-  slug      String  @unique
-  sortOrder Int     @default(0)
-  matches   Match[]
+  id         String  @id @default(cuid())
+  sportId    String
+  sport      Sport   @relation(fields: [sportId], references: [id])
+  name       String
+  country    String
+  slug       String  @unique
+  sortOrder  Int     @default(0)
+  externalId String?
+  matches    Match[]
 
   @@index([sportId])
+  @@index([externalId])
 }
 
 model Team {
@@ -87,6 +89,8 @@ model Team {
   abbreviation String
   color        String
   sportId      String
+  logoUrl      String?
+  externalId   String? @unique
   homeMatches  Match[] @relation("HomeTeam")
   awayMatches  Match[] @relation("AwayTeam")
 
@@ -107,9 +111,13 @@ model Match {
   status      String    @default("SCHEDULED")
   homeScore   Int       @default(0)
   awayScore   Int       @default(0)
+  htHomeScore Int?
+  htAwayScore Int?
+  elapsed     Int?
   periodLabel String?
   isFeatured  Boolean   @default(false)
   isDemo      Boolean   @default(true)
+  externalId  String?   @unique
   markets     Market[]
   selections  BetSelection[]
   favorites   Favorite[]

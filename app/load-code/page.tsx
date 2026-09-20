@@ -1,25 +1,20 @@
 import { LoadCodeForm } from "@/components/betting/load-code-form";
 import { prisma } from "@/lib/db";
-import { liveMinute } from "@/lib/audit";
+import { withClocks, matchInclude } from "@/lib/data";
 import { serializeMatch } from "@/lib/serialize";
+import { excludeDemoFootball } from "@/lib/football/query";
+import { ensureFootballSynced } from "@/lib/football/sync";
 
 export const dynamic = "force-dynamic";
 
 export default async function LoadCodePage() {
+  await ensureFootballSynced("home");
   const raw = await prisma.match.findMany({
-    where: { isFeatured: true, status: { in: ["SCHEDULED", "LIVE", "HT"] } },
-    include: {
-      league: true,
-      sport: true,
-      homeTeam: true,
-      awayTeam: true,
-      markets: { include: { outcomes: { where: { active: true }, orderBy: { code: "asc" } } } },
-    },
+    where: excludeDemoFootball({ isFeatured: true, status: { in: ["SCHEDULED", "LIVE", "HT"] } }),
+    include: matchInclude,
     orderBy: { startTime: "asc" },
     take: 8,
   });
-  const matches = await Promise.all(
-    raw.map(async (m) => serializeMatch({ ...m, clock: await liveMinute(m.startTime, m.status) })),
-  );
+  const matches = (await withClocks(raw)).map(serializeMatch);
   return <LoadCodeForm matches={matches} />;
 }

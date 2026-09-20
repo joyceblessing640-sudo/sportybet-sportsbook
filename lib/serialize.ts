@@ -1,4 +1,4 @@
-import { extraMarketsCount, isBestOddsMatch, isHotMatch, matchDisplayId } from "./match-meta";
+import { extraMarketsCount, isHotMatch, matchDisplayId } from "./match-meta";
 
 const ONE_X_TWO: Record<string, number> = { "1": 0, X: 1, "2": 2, "1X": 0, "12": 1, X2: 2 };
 
@@ -13,6 +13,7 @@ export type ClientTeam = {
   shortName: string;
   abbreviation: string;
   color: string;
+  logoUrl: string | null;
 };
 
 export type ClientOutcome = {
@@ -37,6 +38,9 @@ export type ClientMatch = {
   startTime: string;
   homeScore: number;
   awayScore: number;
+  htHomeScore: number | null;
+  htAwayScore: number | null;
+  elapsed: number | null;
   periodLabel: string | null;
   isDemo: boolean;
   isFeatured: boolean;
@@ -51,6 +55,24 @@ export type ClientMatch = {
   isBestOdds: boolean;
 };
 
+function asTeam(team: {
+  id: string;
+  name: string;
+  shortName: string;
+  abbreviation: string;
+  color: string;
+  logoUrl?: string | null;
+}): ClientTeam {
+  return {
+    id: team.id,
+    name: team.name,
+    shortName: team.shortName,
+    abbreviation: team.abbreviation,
+    color: team.color,
+    logoUrl: team.logoUrl ?? null,
+  };
+}
+
 export function serializeMatch(match: {
   id: string;
   status: string;
@@ -58,13 +80,30 @@ export function serializeMatch(match: {
   startTime: Date;
   homeScore: number;
   awayScore: number;
+  htHomeScore?: number | null;
+  htAwayScore?: number | null;
+  elapsed?: number | null;
   periodLabel: string | null;
   isDemo: boolean;
   isFeatured: boolean;
   league: { name: string; slug: string; country: string };
   sport: { id: string; name: string; slug: string };
-  homeTeam: ClientTeam;
-  awayTeam: ClientTeam;
+  homeTeam: {
+    id: string;
+    name: string;
+    shortName: string;
+    abbreviation: string;
+    color: string;
+    logoUrl?: string | null;
+  };
+  awayTeam: {
+    id: string;
+    name: string;
+    shortName: string;
+    abbreviation: string;
+    color: string;
+    logoUrl?: string | null;
+  };
   markets: {
     id: string;
     type: string;
@@ -73,6 +112,7 @@ export function serializeMatch(match: {
     outcomes: ClientOutcome[];
   }[];
 }): ClientMatch {
+  const outcomeCount = match.markets.reduce((sum, market) => sum + market.outcomes.length, 0);
   return {
     id: match.id,
     status: match.status,
@@ -80,20 +120,20 @@ export function serializeMatch(match: {
     startTime: match.startTime.toISOString(),
     homeScore: match.homeScore,
     awayScore: match.awayScore,
+    htHomeScore: match.htHomeScore ?? null,
+    htAwayScore: match.htAwayScore ?? null,
+    elapsed: match.elapsed ?? null,
     periodLabel: match.periodLabel,
     isDemo: match.isDemo,
     isFeatured: match.isFeatured,
     league: match.league,
     sport: match.sport,
-    home: match.homeTeam,
-    away: match.awayTeam,
+    home: asTeam(match.homeTeam),
+    away: asTeam(match.awayTeam),
     displayId: matchDisplayId(match.id),
-    extraMarkets: extraMarketsCount(
-      match.id,
-      match.markets.reduce((sum, market) => sum + market.outcomes.length, 0),
-    ),
+    extraMarkets: extraMarketsCount(outcomeCount),
     isHot: isHotMatch(match.status, match.isFeatured),
-    isBestOdds: isBestOddsMatch(match.sport.id, match.status),
+    isBestOdds: false,
     markets: match.markets.map((market) => ({
       id: market.id,
       type: market.type,

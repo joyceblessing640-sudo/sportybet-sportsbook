@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import type { ClientMatch } from "@/lib/serialize";
 import { MARKET_TABS, LIVE_SPORT_TABS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { formatFixtureDay } from "@/lib/football/time";
 
 type League = { id: string; name: string; slug: string; sportId: string; country: string };
 type Sport = { id: string; name: string; slug: string };
@@ -54,7 +54,7 @@ export function SportsView({
   const grouped = useMemo(() => {
     const map = new Map<string, ClientMatch[]>();
     for (const match of visible.slice(0, limit)) {
-      const day = format(new Date(match.startTime), "dd/MM eeee");
+      const day = formatFixtureDay(match.startTime);
       map.set(day, [...(map.get(day) ?? []), match]);
     }
     return [...map.entries()];
@@ -190,7 +190,7 @@ export function SportsView({
               when a licensed feed is connected.
             </p>
           ) : grouped.length === 0 ? (
-            <div className="m-3 rounded-xl bg-white p-8 text-center text-sm text-muted">No demo matches match this filter.</div>
+            <div className="m-3 rounded-xl bg-white p-8 text-center text-sm text-muted">No matches available</div>
           ) : (
             grouped.map(([day, list]) => (
               <div key={day} className="mb-2 px-3">
@@ -211,7 +211,7 @@ export function SportsView({
           ) : null}
         </>
       )}
-      <p className="px-4 py-3 text-xs text-muted">Live events in this demo: {liveCount}. Search also accepts Game ID.</p>
+      <p className="px-4 py-3 text-xs text-muted">Live events: {liveCount}. Search also accepts Game ID.</p>
     </div>
   );
 }

@@ -54,6 +54,7 @@ export const MARKET_TABS = [
   { id: "OU", label: "Over/Under" },
   { id: "DC", label: "Double Chance" },
   { id: "BTTS", label: "BTTS" },
+  { id: "DNB", label: "Draw No Bet" },
   { id: "AH", label: "Handicap" },
   { id: "FH", label: "First Half" },
   { id: "FHOU", label: "1st Half O/U" },

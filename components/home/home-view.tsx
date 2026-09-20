@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { useFootballSnapshot } from "@/components/football/use-football-snapshot";
 import { RecommendedCodes } from "@/components/bets/recommended-codes";
 import { HomeFeaturedMatch } from "@/components/home/featured-match-card";
 import { HomeSportsBoard } from "@/components/home/home-sports";
@@ -62,6 +63,7 @@ export function HomeView({
   upcoming,
   promotions,
   leagues,
+  feedError = null,
 }: {
   featured: ClientMatch[];
   live: ClientMatch[];
@@ -69,32 +71,35 @@ export function HomeView({
   upcoming: ClientMatch[];
   promotions: { id: string; title: string; subtitle: string; href: string; theme: string }[];
   leagues: { name: string; slug: string; country: string }[];
+  feedError?: string | null;
 }) {
   void promotions;
   void leagues;
   const [contentTab, setContentTab] = useState<(typeof CONTENT_TABS)[number]>("Matches");
-  const footballToday = useMemo(() => today.filter((m) => m.sport.id === "football"), [today]);
+  const feed = useFootballSnapshot({ featured, live, today, upcoming, error: feedError, scope: "home" });
+  const footballToday = useMemo(
+    () => feed.today.filter((m) => m.sport.id === "football"),
+    [feed.today],
+  );
 
   const featuredCards = useMemo(() => {
-    const pool = [...featured, ...footballToday];
-    const derby = pool.find((m) => m.home.abbreviation === "ATM" && m.away.abbreviation === "RMA");
-    const scheduled = featured.filter((m) => m.status === "SCHEDULED");
-    const first = derby ?? scheduled[0] ?? featured[0] ?? footballToday[0];
+    const scheduled = feed.featured.filter((m) => m.status === "SCHEDULED");
+    const first = scheduled[0] ?? feed.featured[0] ?? footballToday[0];
     if (!first) return [];
     const rest = scheduled.filter((m) => m.id !== first.id);
     return [first, ...rest].slice(0, 4);
-  }, [featured, footballToday]);
+  }, [feed.featured, footballToday]);
 
   const sportsMatches = useMemo(() => {
     const seen = new Set<string>();
     const list: ClientMatch[] = [];
-    for (const match of [...featured, ...today, ...upcoming]) {
+    for (const match of [...feed.featured, ...feed.today, ...feed.upcoming]) {
       if (seen.has(match.id)) continue;
       seen.add(match.id);
       list.push(match);
     }
     return list;
-  }, [featured, today, upcoming]);
+  }, [feed.featured, feed.today, feed.upcoming]);
 
   return (
     <div className="bg-[#f4f5f7]">
@@ -203,7 +208,9 @@ export function HomeView({
               ))}
             </div>
           ) : (
-            <p className="bg-white px-3 py-6 text-sm text-muted">No featured demo matches.</p>
+            <p className="bg-white px-3 py-6 text-sm text-muted">
+              {feed.error ?? "No matches available"}
+            </p>
           )}
         </>
       ) : null}
@@ -227,7 +234,7 @@ export function HomeView({
           ))}
         </div>
       ) : null}
-      {contentTab === "Codes" ? <RecommendedCodes matches={featured.length ? featured : footballToday} /> : null}
+      {contentTab === "Codes" ? <RecommendedCodes matches={feed.featured.length ? feed.featured : footballToday} /> : null}
       {contentTab === "Virtuals" ? (
         <p className="bg-white px-3 py-6 text-sm text-muted">
           Virtuals are a placeholder. Open{" "}
@@ -238,7 +245,7 @@ export function HomeView({
         </p>
       ) : null}
 
-      <LiveBoard matches={live} limit={8} homeLayout />
+      <LiveBoard matches={feed.live} limit={8} homeLayout feedError={feed.error} />
       <HomeSportsBoard matches={sportsMatches} />
     </div>
   );
