@@ -181,18 +181,16 @@ export function MatchCard({
         )}
       </div>
       {showOu && ou ? (
-        <div className="mt-1.5 flex items-center gap-1.5">
-          <span className={cn("w-10 shrink-0 text-[10px] font-semibold", light ? "text-muted" : "text-white/50")}>
-            {ou.line ?? "O/U"}
-          </span>
-          <div className="flex min-w-0 flex-1 gap-1">
+        <div className="mt-1.5 grid grid-cols-[minmax(0,1fr)_auto_9.75rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_auto_11rem]">
+          <Link href={`/match/${match.id}`} className={cn("text-[11px] font-semibold", light ? "text-brand" : "text-[#8dffb8]")}>
+            +{match.extraMarkets} markets
+          </Link>
+          <span className={cn("text-[10px] font-semibold", light ? "text-muted" : "text-white/50")}>{ou.line ?? "O/U"}</span>
+          <div className="flex gap-1">
             {ou.outcomes.slice(0, 2).map((outcome) => (
               <OddsButton key={outcome.id} match={match} marketName={ou.name} outcome={outcome} compact />
             ))}
           </div>
-          <Link href={`/match/${match.id}`} className={cn("shrink-0 text-[11px] font-semibold", light ? "text-brand" : "text-[#8dffb8]")}>
-            +{match.extraMarkets}
-          </Link>
         </div>
       ) : (
         <Link href={`/match/${match.id}`} className={cn("mt-1 inline-block text-[11px] font-semibold", light ? "text-muted" : "text-white/45")}>

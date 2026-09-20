@@ -23,7 +23,7 @@ export function SportsNav() {
 
   return (
     <div className="border-b border-white/10 bg-[#0f4a38] text-white">
-      <div className="mx-auto flex max-w-[1440px] items-stretch">
+      <div className="relative mx-auto flex max-w-[1440px] items-stretch">
         <nav className="no-scrollbar flex min-w-0 flex-1 items-stretch overflow-x-auto">
           {PRIMARY_SPORTS.map((item) => {
             const active =
@@ -46,7 +46,8 @@ export function SportsNav() {
             );
           })}
         </nav>
-        <div ref={wrap} className="relative shrink-0">
+        <div className="pointer-events-none absolute inset-y-0 right-[4.35rem] w-6 bg-gradient-to-l from-[#0f4a38] sm:right-[5.75rem]" />
+        <div ref={wrap} className="relative z-10 shrink-0 bg-[#0f4a38]">
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
