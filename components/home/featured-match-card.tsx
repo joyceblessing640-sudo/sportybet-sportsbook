@@ -5,7 +5,12 @@ import { format, isToday, isTomorrow } from "date-fns";
 import { BarChart2 } from "lucide-react";
 import { OddsButton } from "@/components/betting/odds-button";
 import { TeamBadge } from "@/components/betting/team-badge";
-import type { ClientMatch } from "@/lib/serialize";
+import type { ClientMatch, ClientTeam } from "@/lib/serialize";
+
+const CRESTS: Record<string, string> = {
+  ATM: "/home/crest-atm.png",
+  RMA: "/home/crest-rma.png",
+};
 
 function kickLabel(match: ClientMatch) {
   if (match.status === "LIVE" || match.status === "HT") {
@@ -16,6 +21,16 @@ function kickLabel(match: ClientMatch) {
   if (isToday(start)) return `${time} | Today`;
   if (isTomorrow(start)) return `${time} | Tomorrow`;
   return `${time} | ${format(start, "dd MMM")}`;
+}
+
+function TeamMark({ team }: { team: ClientTeam }) {
+  const src = CRESTS[team.abbreviation];
+  if (src) {
+    return (
+      <img src={src} alt="" width={48} height={48} className="h-12 w-12 object-contain" />
+    );
+  }
+  return <TeamBadge team={team} size="lg" />;
 }
 
 export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
@@ -49,7 +64,7 @@ export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
       </div>
       <Link href={`/match/${match.id}`} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
         <div className="flex flex-col items-center gap-1.5 text-center">
-          <TeamBadge team={match.home} size="lg" />
+          <TeamMark team={match.home} />
           <p className="text-[12px] font-medium leading-tight text-[#8a9199]">{match.home.name}</p>
         </div>
         <div className="text-center">
@@ -66,7 +81,7 @@ export function HomeFeaturedMatch({ match }: { match: ClientMatch }) {
           <p className="mt-1.5 text-[13px] font-bold text-[#12a150]">1X2</p>
         </div>
         <div className="flex flex-col items-center gap-1.5 text-center">
-          <TeamBadge team={match.away} size="lg" />
+          <TeamMark team={match.away} />
           <p className="text-[12px] font-medium leading-tight text-[#8a9199]">{match.away.name}</p>
         </div>
       </Link>
