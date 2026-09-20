@@ -47,10 +47,12 @@
   overflow: hidden;
 }
 
-.sb-top-photo {
+img.sb-top-photo {
   display: block;
   width: 100%;
+  max-width: none;
   height: 100%;
+  max-height: none;
   object-fit: cover;
   object-position: center;
 }

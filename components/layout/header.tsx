@@ -25,7 +25,7 @@ export function Header({ onMenu }: { onMenu?: () => void }) {
       {user ? null : (
         <div className="sb-top-inner sb-top-inner-photo">
           <img
-            src="/header/header-provided.png"
+            src="/header/header-fit-v2.png"
             alt=""
             width={1080}
             height={122}
