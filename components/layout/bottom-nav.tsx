@@ -26,7 +26,16 @@ export function BottomNav({ onOpenMenu }: { onOpenMenu: () => void }) {
           const inner = (
             <>
               <span className="bn-icon">
-                {item.icon === "home" ? <IconHomeS className="bn-s" /> : null}
+                {item.icon === "home" ? (
+                  <img
+                    src="/nav/home-s.png"
+                    alt=""
+                    width={22}
+                    height={26}
+                    className="bn-s"
+                    draggable={false}
+                  />
+                ) : null}
                 {item.icon === "az" ? <IconAzMenu className="bn-menu" /> : null}
                 {item.icon === "games" ? <IconGames className="bn-games" /> : null}
                 {item.icon === "bets" ? (
@@ -75,21 +84,6 @@ export function BottomNav({ onOpenMenu }: { onOpenMenu: () => void }) {
         })}
       </div>
     </nav>
-  );
-}
-
-/** SportyBet S mark: thick rounded S with circular terminals. */
-function IconHomeS({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 32 36" className={className} fill="none" aria-hidden>
-      <path
-        d="M25.35 7.15C22.2 3.55 16.55 2.45 11.9 5.35 6.85 8.5 6.2 15.35 11.15 19.05c4.55 3.4 10.55 3.55 13.15 7.55 2.15 3.3.05 8.05-6.05 9.15-4.25.75-8.85-.85-10.85-4.55"
-        stroke="currentColor"
-        strokeWidth="10.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }
 

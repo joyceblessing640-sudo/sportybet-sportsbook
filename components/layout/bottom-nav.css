@@ -54,6 +54,7 @@
 .bn-s {
   width: 22px;
   height: 26px;
+  object-fit: contain;
 }
 
 .bn-menu {
@@ -91,6 +92,7 @@
 
 .bn-item[data-active="true"] .bn-s {
   color: #fff;
+  opacity: 1;
 }
 
 .bn-item:not([data-active="true"]) .bn-s,
@@ -98,6 +100,10 @@
 .bn-item .bn-bets,
 .bn-item .bn-me {
   color: #c8c8c8;
+}
+
+.bn-item:not([data-active="true"]) .bn-s {
+  opacity: 0.78;
 }
 
 .bn-indicator {
@@ -157,6 +163,7 @@
   .bn-s {
     width: 20px;
     height: 24px;
+    object-fit: contain;
   }
 
   .bn-games {
