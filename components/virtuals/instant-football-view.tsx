@@ -28,7 +28,7 @@ function TeamMark({ team }: { team: VirtualTeam }) {
   return (
     // Generated crest, not a live-API logo.
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={teamMarkSvg(team)} alt="" width={28} height={28} className="h-7 w-7 shrink-0 rounded-full" />
+    <img src={teamMarkSvg(team)} alt="" width={16} height={16} className="h-4 w-4 shrink-0 rounded-full" />
   );
 }
 
@@ -50,12 +50,9 @@ function InstantOdds({
       aria-pressed={selected}
       aria-label={`${match.home.shortName} vs ${match.away.shortName} ${marketId} ${outcome.code} ${formatOdds(outcome.odds)}`}
       onClick={() => toggle(match, marketId, outcome)}
-      className="odds-btn flex h-9 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 min-[390px]:h-[38px]"
+      className="odds-btn flex h-[22px] min-w-0 flex-1 items-center justify-center px-0.5 text-[12px] font-bold tabular-nums leading-none min-[412px]:h-6"
     >
-      <span className={cn("text-[9px] font-semibold leading-none", selected ? "text-white/90" : "text-[#5b6b63]")}>
-        {outcome.code}
-      </span>
-      <span className="text-[12px] font-bold tabular-nums leading-none min-[390px]:text-[13px]">{formatOdds(outcome.odds)}</span>
+      {formatOdds(outcome.odds)}
     </button>
   );
 }
@@ -63,33 +60,28 @@ function InstantOdds({
 function MatchRow({ match, marketId }: { match: VirtualMatch; marketId: VirtualMarketId }) {
   const market = marketById(match, marketId);
   return (
-    <article className="border-b border-[#eef0f3] bg-white px-2.5 py-2 min-[390px]:px-3">
-      <div className="mb-1.5 flex items-center gap-1 text-[10px] leading-none text-[#8b919a]">
+    <article className="overflow-hidden border-b border-[#eef0f3] bg-white px-2.5 py-1 min-[412px]:px-3 min-[412px]:py-1.5">
+      <div className="mb-1 flex min-w-0 items-center gap-1 text-[10px] leading-none text-[#8b919a]">
         <CountryMark country={match.league.country} />
-        <span className="min-w-0 flex-1 truncate">{leagueLine(match.league)}</span>
         <span className="shrink-0 tabular-nums">{match.kickClock}</span>
+        <span className="min-w-0 truncate">{leagueLine(match.league)}</span>
       </div>
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1">
-        <div className="flex min-w-0 items-center gap-1.5">
-          <TeamMark team={match.home} />
-          <div className="min-w-0">
-            <p className="truncate text-[12px] font-semibold leading-tight text-ink">{match.home.shortName}</p>
-            <p className="text-[10px] font-bold tracking-wide text-[#8b919a]">{match.home.abbreviation}</p>
-          </div>
+      <div className="flex min-w-0 items-center gap-1.5">
+        <div className="min-w-0 flex-1">
+          <p className="flex min-w-0 items-center gap-1">
+            <TeamMark team={match.home} />
+            <span className="truncate text-[12px] leading-[15px] text-ink">{match.home.name}</span>
+          </p>
+          <p className="flex min-w-0 items-center gap-1">
+            <TeamMark team={match.away} />
+            <span className="truncate text-[12px] leading-[15px] text-ink">{match.away.name}</span>
+          </p>
         </div>
-        <p className="px-1 text-[11px] font-black text-[#9aa3b2]">VS</p>
-        <div className="flex min-w-0 items-center justify-end gap-1.5">
-          <div className="min-w-0 text-right">
-            <p className="truncate text-[12px] font-semibold leading-tight text-ink">{match.away.shortName}</p>
-            <p className="text-[10px] font-bold tracking-wide text-[#8b919a]">{match.away.abbreviation}</p>
-          </div>
-          <TeamMark team={match.away} />
+        <div className="flex w-[8.25rem] shrink-0 gap-[3px] min-[412px]:w-[8.75rem]">
+          {market.outcomes.map((outcome) => (
+            <InstantOdds key={outcome.id} match={match} marketId={market.id} outcome={outcome} />
+          ))}
         </div>
-      </div>
-      <div className="mt-1.5 flex gap-[5px]">
-        {market.outcomes.map((outcome) => (
-          <InstantOdds key={outcome.id} match={match} marketId={market.id} outcome={outcome} />
-        ))}
       </div>
     </article>
   );
@@ -176,7 +168,15 @@ export function InstantFootballView() {
       {visible.length === 0 ? (
         <p className="px-3 py-8 text-center text-[12px] text-muted">No virtual matches in this league.</p>
       ) : (
-        <div>
+        <div className="overflow-hidden bg-white">
+          <div className="flex items-center gap-1 bg-white px-2.5 py-1 text-[11px] text-[#6b7280] min-[412px]:px-3">
+            <span className="min-w-0 flex-1 truncate font-medium">Virtual matches</span>
+            <div className="grid w-[8.25rem] shrink-0 grid-cols-3 text-center text-[10px] font-medium min-[412px]:w-[8.75rem]">
+              <span>1</span>
+              <span>X</span>
+              <span>2</span>
+            </div>
+          </div>
           {visible.map((match) => (
             <MatchRow key={match.id} match={match} marketId={market} />
           ))}
