@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
       { key: "Cache-Control", value: "private, no-cache, no-store, max-age=0, must-revalidate" },
       { key: "CDN-Cache-Control", value: "no-store" },
       { key: "Vercel-CDN-Cache-Control", value: "no-store" },
-      { key: "x-if-build", value: "page-scroll" },
+          { key: "x-if-build", value: "virtual-board" },
     ];
     return [
       { source: "/virtuals/instant-football", headers: instantFootballHeaders },

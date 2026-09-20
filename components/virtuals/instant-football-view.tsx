@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { ChevronLeft, Info, Share2, Wallet } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ChevronLeft, Wallet } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/components/providers";
-import { DemoCrest, StarRating } from "@/components/virtuals/demo-crest";
+import { DemoCrest } from "@/components/virtuals/demo-crest";
 import { InstantSlipPanel, openInstantSlip } from "@/components/virtuals/instant-slip";
 import { formatGhs, formatOdds, toGhs } from "@/lib/money";
-import { cn } from "@/lib/utils";
 import {
   DEMO_BOARDS,
   DEMO_MARKET_TABS,
@@ -21,6 +20,7 @@ import {
 } from "@/lib/virtuals/demo-board";
 import type { VirtualMarketId } from "@/lib/virtuals/engine";
 import { useVirtualSlip } from "@/store/virtual-slip";
+import "./instant-football.css";
 
 export function InstantFootballView() {
   const { user } = useAuth();
@@ -34,6 +34,24 @@ export function InstantFootballView() {
     () => DEMO_BOARDS.map((board) => ({ ...board, matches: boardMatches(board.id) })),
     [],
   );
+
+  useEffect(() => {
+    const nodes = DEMO_BOARDS.map((board) => document.getElementById(`if-section-${board.id}`)).filter(
+      (node): node is HTMLElement => Boolean(node),
+    );
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        const id = visible?.target.getAttribute("data-league") as DemoBoardId | null;
+        if (id) setBoardId(id);
+      },
+      { root: null, rootMargin: "-126px 0px -58% 0px", threshold: 0 },
+    );
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
 
   function selectOdd(match: DemoMatch, code: "1" | "X" | "2") {
     const outcome = demoOutcomes(match, marketId).find((item) => item.code === code);
@@ -74,146 +92,124 @@ export function InstantFootballView() {
   }
 
   return (
-    <div className="relative mx-auto max-w-[430px] bg-white">
-      <div className="if-board pb-[calc(48px+env(safe-area-inset-bottom))]" data-testid="if-board">
-        <div className="sticky top-0 z-30">
-          <header className="flex h-11 items-center bg-[#e31837] px-0.5 text-white">
-            <Link href="/virtuals" aria-label="Back to Virtuals" className="grid h-10 w-10 shrink-0 place-items-center">
-              <ChevronLeft className="h-6 w-6" />
+    <div className="if" data-testid="if-board">
+      <div className="if-chrome">
+        <header className="if-top">
+          <Link href="/virtuals" aria-label="Back to Virtuals" className="if-back">
+            <ChevronLeft size={24} strokeWidth={2.2} />
+          </Link>
+          <h1>Instant Football</h1>
+          {user ? (
+            <Link href="/me" className="if-wallet">
+              <span>
+                <small>GHS</small>
+                <strong>{toGhs(user.wallet?.balancePesewas ?? 0)}</strong>
+              </span>
+              <Wallet size={18} strokeWidth={2} aria-hidden />
+              <span className="sr-only">{formatGhs(user.wallet?.balancePesewas ?? 0)}</span>
             </Link>
-            <h1 className="min-w-0 flex-1 text-center text-[16px] font-semibold">Instant Football</h1>
-            {user ? (
-              <Link href="/me" className="mr-1.5 flex min-w-[92px] items-center justify-end gap-1 pr-0.5 text-right leading-tight">
-                <span>
-                  <span className="block text-[10px] font-semibold opacity-90">GHS</span>
-                  <span className="block text-[12px] font-bold tabular-nums">{toGhs(user.wallet?.balancePesewas ?? 0)}</span>
-                </span>
-                <Wallet className="h-5 w-5 opacity-95" aria-hidden />
-                <span className="sr-only">{formatGhs(user.wallet?.balancePesewas ?? 0)}</span>
-              </Link>
-            ) : (
-              <div className="min-w-[92px] pr-2.5 text-right text-[12px] font-semibold">
-                <Link href="/register">Register</Link>
-                <span className="mx-1 text-white/45">|</span>
-                <Link href="/login">Login</Link>
-              </div>
-            )}
-          </header>
+          ) : (
+            <div className="if-account">
+              <Link href="/register">Register</Link>
+              <span className="sep">|</span>
+              <Link href="/login">Login</Link>
+            </div>
+          )}
+        </header>
 
-          <div
-            className="if-h-scroll no-scrollbar flex bg-[#2b3038] text-[13px] font-semibold text-white"
-            data-testid="if-league-tabs"
-          >
+        <div className="if-leagues-wrap">
+          <nav className="if-leagues if-h-scroll" data-testid="if-league-tabs" aria-label="Leagues">
             {DEMO_BOARDS.map((item) => (
               <button
                 key={item.id}
                 type="button"
+                aria-current={boardId === item.id ? "true" : undefined}
                 onClick={() => goToBoard(item.id)}
-                className={cn(
-                  "relative shrink-0 px-3 py-2 whitespace-nowrap",
-                  boardId === item.id ? "text-white" : "text-white/75",
-                )}
               >
                 {item.label}
-                {boardId === item.id ? (
-                  <span className="absolute inset-x-2 bottom-0 h-[3px] rounded-t-full bg-[#12a150]" />
-                ) : null}
+              </button>
+            ))}
+          </nav>
+          <button
+            type="button"
+            className="if-spark"
+            aria-label="Demo stats"
+            onClick={() => toast.message("Instant Football is a DEMO simulation. No real-money bets.")}
+          >
+            <SparkIcon />
+            <span className="dot" />
+          </button>
+        </div>
+
+        <div className="if-tools">
+          <span className="if-bb">BB</span>
+          <button
+            type="button"
+            className="if-switch"
+            role="switch"
+            aria-checked={bookingBonus}
+            aria-label="Booking bonus"
+            onClick={() => setBookingBonus((value) => !value)}
+          >
+            <i />
+          </button>
+          <button type="button" className="if-share" aria-label="Share" onClick={() => void shareBoard()}>
+            <ShareNodes />
+          </button>
+          <div className="if-markets if-h-scroll" data-testid="if-market-tabs">
+            {DEMO_MARKET_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                aria-current={marketId === tab.id ? "true" : undefined}
+                onClick={() => setMarketId(tab.id)}
+              >
+                {tab.label}
               </button>
             ))}
           </div>
-
-          <div className="flex items-end gap-1.5 border-b border-[#eef0f4] bg-white px-2 pb-0 pt-1.5">
-            <span className="mb-1.5 inline-flex h-[22px] items-center rounded-sm bg-[#12a150] px-1.5 text-[10px] font-black tracking-tight text-white">
-              BB
-            </span>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={bookingBonus}
-              aria-label="Booking bonus"
-              onClick={() => setBookingBonus((value) => !value)}
-              className={cn(
-                "relative mb-2 h-[16px] w-[28px] shrink-0 rounded-full transition-colors",
-                bookingBonus ? "bg-[#12a150]" : "bg-[#c5cad3]",
-              )}
-            >
-              <span
-                className={cn(
-                  "absolute top-[1px] h-[14px] w-[14px] rounded-full bg-white shadow-sm transition-transform",
-                  bookingBonus ? "left-[13px]" : "left-[1px]",
-                )}
-              />
-            </button>
-            <button
-              type="button"
-              aria-label="Share"
-              className="mb-1 grid h-7 w-7 shrink-0 place-items-center text-[#12a150]"
-              onClick={() => void shareBoard()}
-            >
-              <Share2 className="h-3.5 w-3.5" />
-            </button>
-            <div
-              className="if-h-scroll no-scrollbar flex min-w-0 flex-1 items-end text-[11px] font-semibold text-[#6b7280]"
-              data-testid="if-market-tabs"
-            >
-              {DEMO_MARKET_TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setMarketId(tab.id)}
-                  className={cn(
-                    "relative shrink-0 px-2.5 pb-1.5 pt-1 text-center whitespace-nowrap",
-                    marketId === tab.id ? "text-[#12a150]" : "text-[#6b7280]",
-                  )}
-                >
-                  {tab.label}
-                  {marketId === tab.id ? (
-                    <span className="absolute inset-x-2 bottom-0 h-[3px] rounded-t-full bg-[#12a150]" />
-                  ) : null}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
+      </div>
 
+      <div className="if-list">
         {sections.map((section) => (
-          <section key={section.id} id={`if-section-${section.id}`} className="if-section" data-league={section.id}>
-            <div className="flex items-center gap-1.5 border-b border-[#eef0f4] px-2 py-1 text-[12px]">
-              <BoardFlag boardId={section.id} />
-              <span className="font-medium text-[#222]">{section.league}</span>
-              <button
-                type="button"
-                aria-label="Demo information"
-                className="grid h-5 w-5 place-items-center text-[#9aa3af]"
-                onClick={() => toast.message("Instant Football is a DEMO simulation. No real-money bets.")}
-              >
-                <Info className="h-3.5 w-3.5" />
-              </button>
-              <span className="ml-auto grid w-[54%] grid-cols-3 text-center text-[11px] font-semibold text-[#8b93a0]">
+          <section key={section.id} id={`if-section-${section.id}`} className="if-league" data-league={section.id}>
+            <div className="if-league-h">
+              <div className="if-league-name">
+                <BoardFlag boardId={section.id} />
+                <span>{section.league}</span>
+                <button
+                  type="button"
+                  className="if-info"
+                  aria-label="Demo information"
+                  onClick={() => toast.message("Instant Football is a DEMO simulation. No real-money bets.")}
+                >
+                  i
+                </button>
+              </div>
+              <div className="if-cols">
                 <span>1</span>
                 <span>X</span>
                 <span>2</span>
-              </span>
+              </div>
             </div>
-            <div>
-              {section.matches.map((match) => (
-                <DemoMatchRow
-                  key={match.id}
-                  match={match}
-                  marketId={marketId}
-                  selectedId={items.find((item) => item.matchId === match.id)?.outcomeId}
-                  onSelect={selectOdd}
-                />
-              ))}
-            </div>
+            {section.matches.map((match) => (
+              <MatchRow
+                key={match.id}
+                match={match}
+                marketId={marketId}
+                selectedId={items.find((item) => item.matchId === match.id)?.outcomeId}
+                onSelect={selectOdd}
+              />
+            ))}
           </section>
         ))}
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 mx-auto grid h-12 max-w-[430px] grid-cols-2 pb-[env(safe-area-inset-bottom)] text-[15px] font-bold text-white">
+      <div className="if-dock">
         <button
           type="button"
-          className="bg-[#2a2d36]"
+          className="next"
           onClick={() => {
             const next = round + 1;
             setRound(next);
@@ -222,7 +218,7 @@ export function InstantFootballView() {
         >
           Next Round
         </button>
-        <button type="button" className="bg-[#12a150]" onClick={openInstantSlip}>
+        <button type="button" className="slip" onClick={openInstantSlip}>
           Betslip
         </button>
       </div>
@@ -234,7 +230,7 @@ export function InstantFootballView() {
   );
 }
 
-function DemoMatchRow({
+function MatchRow({
   match,
   marketId,
   selectedId,
@@ -247,30 +243,28 @@ function DemoMatchRow({
 }) {
   const outcomes = demoOutcomes(match, marketId);
   return (
-    <article className="flex items-center gap-1 border-b border-[#f1f3f7] px-2 py-1">
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center">
-          <DemoCrest team={match.home} size={24} />
-          <span className="ml-1 truncate text-[13px] font-bold text-[#1a1d24]">{match.home.abbreviation}</span>
-          <span className="px-1 text-[10px] font-semibold text-[#9aa3af]">VS</span>
-          <span className="truncate text-[13px] font-bold text-[#1a1d24]">{match.away.abbreviation}</span>
-          <DemoCrest team={match.away} size={24} />
+    <article className="if-row">
+      <div className="if-teams">
+        <div className="if-pair">
+          <div className="if-side">
+            <DemoCrest team={match.home} size={24} />
+            <span className="if-meta">
+              <span className="if-abbr">{match.home.abbreviation}</span>
+              <Stars value={match.home.stars} />
+            </span>
+          </div>
+          <span className="if-vs">VS</span>
+          <div className="if-side if-side-away">
+            <span className="if-meta">
+              <span className="if-abbr">{match.away.abbreviation}</span>
+              <Stars value={match.away.stars} />
+            </span>
+            <DemoCrest team={match.away} size={24} />
+          </div>
         </div>
-        <div className="flex items-start">
-          <span className="w-[24px]" />
-          <StarRating value={match.home.stars} />
-          <span className="flex-1" />
-          <StarRating value={match.away.stars} />
-          <span className="w-[24px]" />
-        </div>
-        <p className="flex items-center gap-1 text-[10px] font-semibold leading-none text-[#8b93a0]">
-          +71 &gt;
-          <svg width="12" height="10" viewBox="0 0 12 10" aria-hidden className="shrink-0">
-            <polyline points="0.5,8.5 3.5,5 6.5,6.5 11.5,1.5" fill="none" stroke="currentColor" strokeWidth="1.2" />
-          </svg>
-        </p>
+        <p className="if-more">+71 &gt;</p>
       </div>
-      <div className="grid w-[54%] shrink-0 grid-cols-3 gap-1">
+      <div className="if-odds">
         {outcomes.map((outcome) => {
           const active = selectedId === outcome.id;
           return (
@@ -280,7 +274,6 @@ function DemoMatchRow({
               data-active={active ? "true" : "false"}
               aria-pressed={active}
               aria-label={`${match.home.abbreviation} vs ${match.away.abbreviation} ${outcome.code} ${formatOdds(outcome.odds)}`}
-              className="odds-btn min-h-[36px] text-[13px] font-bold"
               onClick={() => onSelect(match, outcome.code)}
             >
               {formatOdds(outcome.odds)}
@@ -292,59 +285,68 @@ function DemoMatchRow({
   );
 }
 
+function Stars({ value }: { value: number }) {
+  return (
+    <span className="if-stars" aria-hidden>
+      {[1, 2, 3].map((star) => (
+        <span key={star} className={star <= value ? "on" : undefined}>
+          ★
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function ShareNodes() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
+      <circle cx="4.2" cy="9" r="2" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="13.2" cy="4.2" r="2" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="13.2" cy="13.8" r="2" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M6 8.2 11.4 5.2M6 9.8 11.4 12.8" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+function SparkIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path d="M1.5 11.5 5 7.5 8 9.5 14.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M1.5 13.5h13" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
 function BoardFlag({ boardId }: { boardId: DemoBoardId }) {
-  if (boardId === "england") {
-    return (
-      <span className="relative h-[14px] w-[18px] overflow-hidden rounded-[2px] bg-white">
-        <span className="absolute inset-x-0 top-1/2 h-[4px] -translate-y-1/2 bg-[#cf142b]" />
-        <span className="absolute inset-y-0 left-1/2 w-[4px] -translate-x-1/2 bg-[#cf142b]" />
-      </span>
-    );
-  }
+  if (boardId === "england") return <span className="if-flag if-flag-eng" />;
   if (boardId === "spain") {
     return (
-      <span className="flex h-[14px] w-[18px] flex-col overflow-hidden rounded-[2px]">
-        <span className="flex-1 bg-[#c60b1e]" />
-        <span className="flex-[1.4] bg-[#ffc400]" />
-        <span className="flex-1 bg-[#c60b1e]" />
+      <span className="if-flag if-flag-esp">
+        <span />
+        <span />
+        <span />
       </span>
     );
   }
   if (boardId === "germany") {
     return (
-      <span className="flex h-[14px] w-[18px] flex-col overflow-hidden rounded-[2px]">
-        <span className="flex-1 bg-black" />
-        <span className="flex-1 bg-[#dd0000]" />
-        <span className="flex-1 bg-[#ffce00]" />
+      <span className="if-flag if-flag-ger">
+        <span />
+        <span />
+        <span />
       </span>
     );
   }
   if (boardId === "italy") {
     return (
-      <span className="flex h-[14px] w-[18px] overflow-hidden rounded-[2px]">
-        <span className="flex-1 bg-[#009246]" />
-        <span className="flex-1 bg-white" />
-        <span className="flex-1 bg-[#ce2b37]" />
+      <span className="if-flag if-flag-ita">
+        <span />
+        <span />
+        <span />
       </span>
     );
   }
-  if (boardId === "champions") {
-    return (
-      <span className="grid h-[16px] w-[16px] place-items-center rounded-full bg-[#0b1b4a] text-[8px] text-[#7dd3fc]">
-        ★
-      </span>
-    );
-  }
-  if (boardId === "euros") {
-    return (
-      <span className="grid h-[16px] w-[16px] place-items-center rounded-full bg-[#003399] text-[9px] text-[#ffcc00]">
-        ★
-      </span>
-    );
-  }
-  return (
-    <span className="grid h-[16px] w-[16px] place-items-center rounded-full bg-[#c9a227] text-[8px] font-black text-white">
-      W
-    </span>
-  );
+  if (boardId === "champions") return <span className="if-badge if-badge-ucl">★</span>;
+  if (boardId === "euros") return <span className="if-badge if-badge-eur">★</span>;
+  return <span className="if-badge if-badge-cwc">W</span>;
 }

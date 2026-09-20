@@ -233,37 +233,6 @@ label {
   background: rgb(0 0 0 / 0.4);
 }
 
-/* Instant Football: document/page is the only vertical scroller. */
-.if-board {
-  overflow: visible;
-  touch-action: pan-y;
-}
-.if-section {
-  scroll-margin-top: 7.25rem;
-}
-.if-h-scroll {
-  overflow-x: auto;
-  overflow-y: hidden;
-  touch-action: pan-x;
-  overscroll-behavior-x: contain;
-  overscroll-behavior-y: none;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.if-h-scroll::-webkit-scrollbar {
-  display: none;
-}
-.if-h-scroll button,
-.if-h-scroll a {
-  touch-action: pan-x;
-}
-.if-board .odds-btn {
-  min-height: 36px;
-  font-size: 13px;
-  background: #e7f5ee;
-  color: #0f7a3d;
-  touch-action: pan-y;
-}
 
 @media (min-width: 1024px) {
   .bottom-pad {
