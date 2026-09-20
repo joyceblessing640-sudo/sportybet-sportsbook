@@ -73,7 +73,7 @@ export function MatchCard({
         </span>
         <span className={cn("ml-auto tabular-nums", light ? "text-muted" : "text-white/55")}>{kick}</span>
       </div>
-      <div className="grid grid-cols-[minmax(0,1fr)_minmax(128px,0.95fr)] items-center gap-2">
+      <div className="grid grid-cols-[minmax(0,1fr)_9.75rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_11rem]">
         <Link href={`/match/${match.id}`} className="min-w-0">
           <p className={cn("flex items-center gap-1.5 truncate text-[13px] font-medium", light ? "text-ink" : "text-white")}>
             <TeamBadge team={match.home} size="sm" />

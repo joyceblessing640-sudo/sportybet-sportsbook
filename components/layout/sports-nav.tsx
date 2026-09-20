@@ -50,7 +50,8 @@ export function SportsNav() {
             onClick={() => setOpen((v) => !v)}
             className="flex h-full items-center gap-1 px-3 text-[12px] font-semibold text-white/85 hover:text-white"
           >
-            More Sports <ChevronDown className={cn("h-3.5 w-3.5 transition-transform duration-200", open && "rotate-180")} />
+            More <span className="hidden sm:inline">Sports</span>{" "}
+            <ChevronDown className={cn("inline h-3.5 w-3.5 transition-transform duration-200", open && "rotate-180")} />
           </button>
           {open ? (
             <div className="absolute right-0 top-full z-40 w-[min(92vw,280px)] rounded-b-md border border-line bg-white py-1 shadow-lg">
