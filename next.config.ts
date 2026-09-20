@@ -6,6 +6,18 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/*": ["./data/baseline.sqlite"],
   },
+  async headers() {
+    const instantFootballHeaders = [
+      { key: "Cache-Control", value: "private, no-cache, no-store, max-age=0, must-revalidate" },
+      { key: "CDN-Cache-Control", value: "no-store" },
+      { key: "Vercel-CDN-Cache-Control", value: "no-store" },
+      { key: "x-if-build", value: "page-scroll" },
+    ];
+    return [
+      { source: "/virtuals/instant-football", headers: instantFootballHeaders },
+      { source: "/virtuals/instant-football/:path*", headers: instantFootballHeaders },
+    ];
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [360, 375, 390, 412, 430, 720, 1080, 1280, 1440, 1920],

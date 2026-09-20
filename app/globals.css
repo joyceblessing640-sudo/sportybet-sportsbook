@@ -233,11 +233,24 @@ label {
   background: rgb(0 0 0 / 0.4);
 }
 
-/* Instant Football: document-level vertical scroll + horizontal tabs only. */
+/* Instant Football: one document scroller. Do not put overflow-y on both html and body. */
+html:has(.if-page),
 html:has(.if-board),
-body:has(.if-board) {
+html.if-page {
+  height: auto;
+  min-height: 100%;
   overflow-x: clip;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+body:has(.if-page),
+body:has(.if-board),
+body.if-page {
+  height: auto;
+  min-height: 100dvh;
+  overflow: visible;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }

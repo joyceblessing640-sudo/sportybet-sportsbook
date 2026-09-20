@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { InstantFootballView } from "@/components/virtuals/instant-football-view";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Instant Football — Virtual matches",
   description: "Virtual Instant Football fixtures, 1X2 odds, and simulated results. These are not live football matches.",

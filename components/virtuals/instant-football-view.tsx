@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, Info, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { DemoCrest, StarRating } from "@/components/virtuals/demo-crest";
@@ -31,6 +31,25 @@ export function InstantFootballView() {
   const togglePick = useVirtualSlip((state) => state.togglePick);
   const matches = useMemo(() => boardMatches(boardId), [boardId]);
   const board = getDemoBoard(boardId);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    html.classList.add("if-page");
+    body.classList.add("if-page");
+    const prevHtmlHeight = html.style.height;
+    const prevBodyOverflow = body.style.overflow;
+    html.style.height = "auto";
+    body.style.height = "auto";
+    body.style.overflow = "visible";
+    return () => {
+      html.classList.remove("if-page");
+      body.classList.remove("if-page");
+      html.style.height = prevHtmlHeight;
+      body.style.overflow = prevBodyOverflow;
+      body.style.height = "";
+    };
+  }, []);
 
   function selectOdd(match: DemoMatch, code: "1" | "X" | "2") {
     const outcome = demoOutcomes(match, marketId).find((item) => item.code === code);
@@ -67,7 +86,7 @@ export function InstantFootballView() {
 
   return (
     <div className="relative mx-auto max-w-[430px] bg-white">
-      <div className="if-board pb-[calc(50px+env(safe-area-inset-bottom))]" data-testid="if-board">
+      <div className="if-page if-board pb-[calc(50px+env(safe-area-inset-bottom))]" data-testid="if-board" data-if-build="page-scroll">
       <header className="sticky top-0 z-30 flex h-11 items-center bg-[#e31837] px-1 text-white">
         <Link href="/virtuals" aria-label="Back to Virtuals" className="grid h-10 w-10 place-items-center">
           <ChevronLeft className="h-6 w-6" />
