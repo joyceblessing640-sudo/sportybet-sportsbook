@@ -1,15 +1,15 @@
 .sb-top {
-  background: #e31837;
+  background: var(--header, #e31837);
   color: #fff;
 }
 
 .sb-top-inner {
   display: flex;
   align-items: center;
-  height: 56px;
+  height: 44px;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 12px 0 16px;
+  padding: 0 8px 0 12px;
 }
 
 .sb-wordmark {
@@ -17,10 +17,10 @@
   align-items: baseline;
   color: #fff;
   text-decoration: none;
-  font-size: 24px;
+  font-size: 17px;
   font-weight: 900;
   font-style: italic;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.05em;
   line-height: 1;
   white-space: nowrap;
 }
@@ -32,26 +32,26 @@
 
 .sb-s i {
   position: absolute;
-  left: 0.07em;
-  bottom: 0.04em;
-  width: 0.4em;
-  height: 0.4em;
+  left: 0.08em;
+  bottom: 0.05em;
+  width: 0.34em;
+  height: 0.34em;
   border-radius: 50%;
   background: #fff;
-  box-shadow: inset 0 0 0 1.5px #e31837;
+  box-shadow: inset 0 0 0 1px #e31837;
 }
 
 .sb-top-actions {
   display: flex;
   align-items: center;
   margin-left: auto;
-  gap: 12px;
+  gap: 4px;
 }
 
 .sb-search {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   place-items: center;
   color: #fff;
   background: transparent;
@@ -62,14 +62,14 @@
 .sb-balance {
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 38px;
-  padding: 3px 12px 3px 3px;
-  border: 2px solid #fff;
-  border-radius: 6px;
+  gap: 6px;
+  height: 28px;
+  padding: 2px 8px 2px 2px;
+  border: 1px solid #fff;
+  border-radius: 3px;
   color: #fff;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
@@ -77,8 +77,8 @@
 }
 
 .sb-avatar {
-  width: 30px;
-  height: 30px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
   border-radius: 50%;
   display: block;
@@ -87,40 +87,34 @@
 .sb-guest {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .sb-guest a {
   display: inline-flex;
   align-items: center;
   height: 28px;
-  padding: 0 10px;
-  border: 1.5px solid #fff;
-  border-radius: 6px;
+  padding: 0 8px;
+  border: 1px solid #fff;
+  border-radius: 2px;
   color: #fff;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   text-decoration: none;
 }
 
-.sb-guest a.login {
+.sb-guest a.join {
   background: #fff;
   color: #e31837;
 }
 
-@media (min-width: 412px) {
-  .sb-top-inner {
-    padding: 0 16px 0 18px;
-  }
-}
-
 @media (min-width: 1024px) {
   .sb-top-inner {
-    height: 60px;
-    padding: 0 20px;
+    height: 48px;
+    padding: 0 12px 0 16px;
   }
 
   .sb-wordmark {
-    font-size: 26px;
+    font-size: 18px;
   }
 }

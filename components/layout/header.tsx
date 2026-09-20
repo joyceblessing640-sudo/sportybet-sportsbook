@@ -31,7 +31,7 @@ export function Header({ onMenu }: { onMenu?: () => void }) {
         </Link>
         <div className="sb-top-actions">
           <button type="button" className="sb-search" aria-label="Search" onClick={() => router.push("/sports")}>
-            <Search size={22} strokeWidth={2.25} />
+            <Search size={18} strokeWidth={2.2} />
           </button>
           {user ? (
             <Link href="/me" className="sb-balance" aria-label={formatHeaderBalance(user.wallet?.balancePesewas ?? 0)}>
@@ -40,10 +40,10 @@ export function Header({ onMenu }: { onMenu?: () => void }) {
             </Link>
           ) : (
             <div className="sb-guest">
-              <Link href="/register">Join Now</Link>
-              <Link href="/login" className="login">
-                Login
+              <Link href="/register" className="join">
+                Join Now
               </Link>
+              <Link href="/login">Log in</Link>
             </div>
           )}
         </div>
