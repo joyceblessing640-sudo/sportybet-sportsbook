@@ -43,21 +43,11 @@ export function AccountFooter({ gifts = 0, wheel = 0 }: { gifts?: number; wheel?
         </Link>
         <div className="flex items-center justify-between bg-[#f4f5f7] px-4 py-3 text-xs text-muted">
           <span className="flex items-center gap-1 font-semibold">
-            <FileText className="h-3.5 w-3.5" /> 18+
+            <FileText className="h-3.5 w-3.5" /> Support
           </span>
-          <span>© {new Date().getFullYear()} SportyBets. All rights reserved.</span>
+          <span>Demo account tools</span>
         </div>
       </div>
-      <section className="bg-[#111111] px-4 py-10 text-center text-white">
-        <p className="text-[22px] font-black italic tracking-tight">
-          <span className="text-header">Sporty</span>Bets
-        </p>
-        <p className="mt-3 text-[12px] text-white/55">Independent demo sportsbook. 18+ Play responsibly.</p>
-        <p className="mt-5 text-[11px] leading-relaxed text-white/40">
-          Age 18 and above only. Betting is addictive and can be psychologically harmful. SportyBets is a software
-          demonstration and is not licensed by any gaming commission. Not affiliated with any third-party betting brand.
-        </p>
-      </section>
     </>
   );
 }

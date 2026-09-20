@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import { RecommendedCodes } from "@/components/bets/recommended-codes";
+import { LeagueMark, SparkMark } from "@/components/brand/league-marks";
 import { HomeFeaturedMatch } from "@/components/home/featured-match-card";
 import { HomeSportsBoard } from "@/components/home/home-sports";
 import {
@@ -19,12 +21,12 @@ import type { ClientMatch } from "@/lib/serialize";
 import { cn } from "@/lib/utils";
 
 const PROMOS = [
-  { href: "/sports/football/premier-league", title: "MCI vs SUN", src: "/home/mci-sun.jpg" },
-  { href: "/sports/football/premier-league", title: "FUL vs MUN", src: "/home/ful-mun.jpg" },
-  { href: "/games/lucky-numbers", title: "Lucky Numbers", src: "/home/lucky-numbers.jpg" },
-  { href: "/sports/football/la-liga", title: "ATM vs RMA", src: "/home/atm-rma.jpg" },
-  { href: "/games", title: "TaDa Halloween", src: "/home/tada-halloween.jpg" },
-  { href: "/sports/basketball", title: "NBA Night", src: "/home/nba-night.jpg" },
+  { href: "/sports/football/premier-league", title: "MCI vs SUN", src: "/home/mci-sun.png" },
+  { href: "/sports/football/premier-league", title: "FUL vs MUN", src: "/home/ful-mun.png" },
+  { href: "/games/lucky-numbers", title: "Lucky Numbers", src: "/home/lucky-numbers.png" },
+  { href: "/sports/football/la-liga", title: "ATM vs RMA", src: "/home/atm-rma.png" },
+  { href: "/games", title: "TaDa Halloween", src: "/home/tada-halloween.png" },
+  { href: "/sports/basketball", title: "NBA Night", src: "/home/nba-night.png" },
 ];
 
 const SHORTCUTS = [
@@ -43,14 +45,20 @@ const CATEGORY_CARDS = [
   { href: "/sports/basketball", label: "BASKETBALL", border: "border-t-[#111111]" },
 ];
 
-const LEAGUE_PILLS = [
-  { slug: "la-liga", name: "LaLiga", href: "/sports/football/la-liga", icon: "/home/laliga-mark.png", labeled: true },
-  { slug: "premier-league", name: "Premier League", href: "/sports/football/premier-league", icon: "/home/league-pl.png" },
-  { slug: "ligue-1", name: "Ligue 1", href: "/sports/football/ligue-1", icon: "/home/league-l1.png" },
-  { slug: "football", name: "Football", href: "/sports/football", icon: "/home/league-portugal.png" },
-  { slug: "ligue-1-alt", name: "Ligue 1", href: "/sports/football/ligue-1", icon: "/home/league-rooster.png" },
-  { slug: "serie-a", name: "Serie A", href: "/sports/football/serie-a", icon: "/home/league-a.png" },
-  { slug: "football-alt", name: "Football", href: "/sports/football", icon: "/home/league-player.png" },
+const LEAGUE_PILLS: {
+  slug: string;
+  name: string;
+  href: string;
+  labeled?: boolean;
+  kind?: "pl" | "l1" | "bolt" | "bird" | "a" | "player";
+}[] = [
+  { slug: "la-liga", name: "LaLiga", href: "/sports/football/la-liga", labeled: true },
+  { slug: "premier-league", name: "Premier League", href: "/sports/football/premier-league", kind: "pl" },
+  { slug: "ligue-1", name: "Ligue 1", href: "/sports/football/ligue-1", kind: "l1" },
+  { slug: "football", name: "Football", href: "/sports/football", kind: "bolt" },
+  { slug: "ligue-1-alt", name: "Ligue 1", href: "/sports/football/ligue-1", kind: "bird" },
+  { slug: "serie-a", name: "Serie A", href: "/sports/football/serie-a", kind: "a" },
+  { slug: "football-alt", name: "Football", href: "/sports/football", kind: "player" },
 ];
 
 const CONTENT_TABS = ["Matches", "Games", "Codes", "Virtuals"] as const;
@@ -103,14 +111,16 @@ export function HomeView({
           <Link
             key={promo.title}
             href={promo.href}
-            className="relative h-[64px] w-[64px] shrink-0 overflow-hidden rounded-[8px] min-[412px]:h-[66px] min-[412px]:w-[66px] min-[430px]:h-[68px] min-[430px]:w-[68px]"
+            className="relative h-[64px] w-[64px] shrink-0 overflow-hidden rounded-[8px] min-[412px]:h-[66px] min-[412px]:w-[66px] min-[430px]:h-[68px] min-[430px]:w-[68px] lg:h-24 lg:w-24"
           >
-            <img
+            <Image
               src={promo.src}
               alt={promo.title}
-              width={137}
-              height={139}
+              width={512}
+              height={512}
               className="h-full w-full object-cover object-center"
+              sizes="(min-width: 1024px) 96px, 68px"
+              priority={promo.title === "MCI vs SUN" || promo.title === "FUL vs MUN"}
             />
           </Link>
         ))}
@@ -184,13 +194,7 @@ export function HomeView({
                       : "h-10 w-10 rounded-full border-[#e5e7eb]",
                   )}
                 >
-                  <img
-                    src={league.icon}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className={cn("object-contain contrast-125 brightness-[0.72]", selected ? "h-4 w-4 brightness-100 contrast-100" : "h-7 w-7")}
-                  />
+                  {league.labeled ? <SparkMark className="h-4 w-4" /> : <LeagueMark kind={league.kind ?? "pl"} />}
                   {selected ? <span className="text-[13px] font-semibold text-ink">{league.name}</span> : null}
                 </Link>
               );
@@ -210,7 +214,7 @@ export function HomeView({
       {contentTab === "Games" ? (
         <div className="no-scrollbar flex gap-2 overflow-x-auto bg-white px-3 py-3">
           <Link href="/games/lucky-numbers" className="relative h-[100px] w-[132px] shrink-0 overflow-hidden rounded-md">
-            <img src="/home/lucky-numbers.jpg" alt="Lucky Numbers" className="h-full w-full object-cover" />
+            <Image src="/home/lucky-numbers.png" alt="Lucky Numbers" width={512} height={512} className="h-full w-full object-cover" sizes="132px" />
           </Link>
           {CRASH_GAMES.map((game) => (
             <Link

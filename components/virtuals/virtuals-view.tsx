@@ -72,8 +72,15 @@ export function VirtualsView() {
       <div className="px-2.5">
         <Link href={banner.href} className="relative block overflow-hidden rounded-lg">
           {banner.src === "/virtuals/banner.jpg" ? (
-            <span className="relative block h-[64px] w-full min-[375px]:h-[68px] min-[390px]:h-[72px] min-[412px]:h-[76px] min-[430px]:h-[78px]">
-              <Image src={banner.src} alt={banner.alt} fill className="object-cover object-center" sizes="(max-width: 480px) 100vw, 480px" />
+            <span className="relative block aspect-[16/3] w-full min-h-[64px] max-h-[88px] sm:max-h-[110px] lg:max-h-[128px]">
+              <Image
+                src={banner.src}
+                alt={banner.alt}
+                fill
+                priority={slide === 0}
+                className="object-cover object-center"
+                sizes="(max-width: 720px) 100vw, 720px"
+              />
             </span>
           ) : (
             <div className={cn("relative flex h-[64px] items-center overflow-hidden bg-gradient-to-r px-3 min-[375px]:h-[68px] min-[390px]:h-[72px] min-[412px]:h-[76px] min-[430px]:h-[78px]", banner.tone)}>
@@ -83,7 +90,7 @@ export function VirtualsView() {
                 <span className="mt-2 inline-flex rounded-full bg-accent px-3 py-1 text-[10px] font-bold uppercase">Play now</span>
               </div>
               <span className="pointer-events-none absolute right-1 top-1/2 h-[90%] w-[48%] -translate-y-1/2">
-                <Image src={banner.src} alt="" fill className="object-contain object-right" sizes="200px" />
+                <Image src={banner.src} alt="" fill className="object-contain object-right" sizes="(max-width: 430px) 45vw, 320px" />
               </span>
             </div>
           )}
@@ -122,7 +129,7 @@ export function VirtualsView() {
               )}
             >
               <span className="pointer-events-none absolute -right-0.5 top-1/2 h-[94%] w-[54%] -translate-y-1/2">
-                <Image src={game.art} alt="" fill className="object-contain object-right" sizes="160px" />
+                <Image src={game.art} alt="" fill className="object-contain object-right" sizes="(max-width: 430px) 45vw, 280px" />
               </span>
               <div className="relative z-10 flex min-h-[88px] w-[52%] flex-col items-start justify-center gap-2 p-2.5 min-[390px]:min-h-[94px]">
                 <h2 className="whitespace-pre-line text-[13px] font-bold leading-[1.15] text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.55)] min-[375px]:text-[14px]">
