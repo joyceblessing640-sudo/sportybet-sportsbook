@@ -90,13 +90,22 @@
 
 .gl-row {
   display: flex;
-  gap: 10px;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  column-gap: 14px;
+  row-gap: 0;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0 14px 4px;
+  padding: 0 0 4px 14px;
+  scroll-padding-inline: 14px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   touch-action: pan-x;
+}
+
+.gl-row::after {
+  content: "";
+  flex: 0 0 14px;
 }
 
 .gl-row::-webkit-scrollbar {
@@ -107,11 +116,15 @@
   position: relative;
   flex: 0 0 108px;
   width: 108px;
+  min-width: 108px;
+  max-width: 108px;
   height: 108px;
+  border: 0;
   border-radius: 16px;
   overflow: hidden;
   background: #fff;
   box-shadow: 0 1px 4px rgb(16 24 20 / 0.08);
+  isolation: isolate;
 }
 
 .gl-card img {
@@ -121,6 +134,70 @@
   object-fit: cover;
   object-position: center;
   pointer-events: none;
+}
+
+/* Screenshot tiles that still include a neighbor: fill the card with the primary game only. */
+.gl-card img[src$="sporty-hero.jpg"],
+.gl-card img[src$="spin-match.jpg"],
+.gl-card img[src$="holdem-poker.jpg"],
+.gl-card img[src$="baccarat.jpg"],
+.gl-card img[src$="bet-jack.jpg"],
+.gl-card img[src$="slingo-day-2-dab.jpg"],
+.gl-card img[src$="slingo-fire-ice.jpg"],
+.gl-card img[src$="red-slingo.jpg"],
+.gl-card img[src$="sporty-kick.jpg"] {
+  position: absolute;
+  top: 50%;
+  height: auto;
+  max-width: none;
+  transform: translateY(-50%);
+}
+
+.gl-card img[src$="sporty-hero.jpg"] {
+  left: 0;
+  width: 198.53%;
+}
+
+.gl-card img[src$="spin-match.jpg"] {
+  left: 0;
+  width: 142.11%;
+}
+
+.gl-card img[src$="holdem-poker.jpg"] {
+  left: 0;
+  width: 197.08%;
+}
+
+.gl-card img[src$="baccarat.jpg"] {
+  left: 0;
+  width: 168.75%;
+}
+
+.gl-card img[src$="bet-jack.jpg"] {
+  left: 0;
+  width: 241.07%;
+}
+
+.gl-card img[src$="slingo-day-2-dab.jpg"] {
+  left: 0;
+  width: 110.2%;
+}
+
+.gl-card img[src$="slingo-fire-ice.jpg"] {
+  left: 0;
+  width: 109.31%;
+}
+
+.gl-card img[src$="red-slingo.jpg"] {
+  left: auto;
+  right: 0;
+  width: 175.32%;
+}
+
+.gl-card img[src$="sporty-kick.jpg"] {
+  left: auto;
+  right: 0;
+  width: 109.76%;
 }
 
 .gl-heart {
