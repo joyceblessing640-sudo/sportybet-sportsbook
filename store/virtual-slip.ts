@@ -24,6 +24,7 @@ type VirtualSlipState = {
   togglePick: (item: VirtualSlipItem) => void;
   remove: (outcomeId: string) => void;
   clear: () => void;
+  hydrate: (items: VirtualSlipItem[]) => void;
   setTab: (tab: "SINGLE" | "MULTI") => void;
   setStake: (stake: string) => void;
 };
@@ -31,7 +32,7 @@ type VirtualSlipState = {
 export const useVirtualSlip = create<VirtualSlipState>()((set, get) => ({
   items: [],
   tab: "SINGLE",
-  stake: "10",
+  stake: "1.0",
   toggle: (match, marketId, outcome) => {
     const current = get().items;
     const existing = current.find((item) => item.outcomeId === outcome.id);
@@ -70,14 +71,32 @@ export const useVirtualSlip = create<VirtualSlipState>()((set, get) => ({
     set({ items: next, tab: next.length > 1 ? "MULTI" : "SINGLE" });
   },
   clear: () => set({ items: [], tab: "SINGLE" }),
+  hydrate: (next) => set({ items: next, tab: next.length > 1 ? "MULTI" : "SINGLE" }),
   setTab: (tab) => set({ tab }),
   setStake: (stake) => set({ stake }),
 }));
 
 export function virtualSlipSummary(items: VirtualSlipItem[], stakePesewas: number) {
   const totalOdds = combineOddsHundredths(items.map((item) => item.odds));
+  const potentialWin = potentialWinPesewas(stakePesewas, totalOdds);
+  const maxBonus = Math.round(potentialWin * 0.04);
   return {
     totalOdds,
-    potentialWin: potentialWinPesewas(stakePesewas, totalOdds),
+    potentialWin,
+    maxBonus,
+    potentialWithBonus: potentialWin + maxBonus,
   };
+}
+
+export function selectionLabel(code: "1" | "X" | "2") {
+  if (code === "1") return "Home";
+  if (code === "2") return "Away";
+  return "Draw";
+}
+
+export function multipleLabel(count: number) {
+  if (count === 2) return "Doubles";
+  if (count === 3) return "Trebles";
+  if (count > 3) return "Accumulator";
+  return "Single";
 }
