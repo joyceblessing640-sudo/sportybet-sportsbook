@@ -1,0 +1,664 @@
+/* Instant Football betslip — states match the reference screenshots. */
+
+.ifs-root {
+  --ifs-green: #12a150;
+  --ifs-green-btn: #1bb05c;
+  --ifs-dark: #2a2d36;
+  --ifs-ink: #1a1d24;
+  --ifs-muted: #8b93a0;
+  --ifs-line: #eef0f4;
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+.ifs-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 48;
+  max-width: 430px;
+  margin: 0 auto;
+  border: 0;
+  background: rgb(0 0 0 / 0.45);
+}
+
+.ifs-dock,
+.ifs-mini,
+.ifs-sheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 50;
+  width: 100%;
+  max-width: 430px;
+  transform: translateX(-50%);
+}
+
+.ifs-dock {
+  z-index: 40;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: calc(48px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.ifs-dock button {
+  border: 0;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.ifs-dock .next {
+  background: #2a2d36;
+}
+
+.ifs-dock .slip {
+  background: var(--ifs-green);
+}
+
+.ifs-mini {
+  background: #fff;
+  box-shadow: 0 -4px 18px rgb(16 24 20 / 0.12);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.ifs-handle {
+  position: relative;
+  height: 18px;
+}
+
+.ifs-handle::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 7px;
+  width: 36px;
+  height: 4px;
+  border-radius: 99px;
+  background: #d8dde6;
+  transform: translateX(-50%);
+}
+
+.ifs-close {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #9aa1ad;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.ifs-single-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 14px 0;
+}
+
+.ifs-ball {
+  flex-shrink: 0;
+  color: var(--ifs-ink);
+}
+
+.ifs-pick-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ifs-ink);
+}
+
+.ifs-pick-title em {
+  font-style: normal;
+  color: #9aa1ad;
+  font-weight: 400;
+}
+
+.ifs-pick-odds {
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ifs-ink);
+}
+
+.ifs-single-match {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 12px;
+}
+
+.ifs-remove {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #9aa1ad;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.ifs-match {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ifs-ink);
+  letter-spacing: 0.02em;
+}
+
+.ifs-stake-box {
+  width: 88px;
+  height: 36px;
+  border: 1px solid #d8dde6;
+  border-radius: 2px;
+  background: #fff;
+  color: var(--ifs-ink);
+  font-size: 16px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding: 0 10px;
+  outline: none;
+}
+
+.ifs-stake-box:focus {
+  border-color: var(--ifs-green);
+}
+
+.ifs-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 56px;
+}
+
+.ifs-win {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: var(--ifs-dark);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.ifs-win strong {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ifs-place {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: var(--ifs-green-btn);
+  color: #fff;
+  line-height: 1.15;
+}
+
+.ifs-place b {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ifs-place small {
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.95;
+}
+
+.ifs-place:disabled {
+  opacity: 0.7;
+}
+
+.ifs-multi-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 4px 16px 10px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+}
+
+.ifs-count {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 99px;
+  background: var(--ifs-green);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ifs-multi-title {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ifs-ink);
+}
+
+.ifs-multi-meta {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.ifs-multi-meta strong {
+  margin-left: 6px;
+  color: var(--ifs-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.ifs-bonus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 12px 12px;
+  padding: 8px 10px;
+  border-radius: 99px;
+  background: #e8f7ee;
+  color: var(--ifs-green);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ifs-bonus i {
+  width: 10px;
+  height: 10px;
+  border-radius: 99px;
+  background: #7dcea0;
+  flex-shrink: 0;
+}
+
+.ifs-sheet {
+  z-index: 55;
+  display: flex;
+  flex-direction: column;
+  height: min(92dvh, 780px);
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 -8px 32px rgb(16 24 20 / 0.28);
+}
+
+.ifs-sheet-head {
+  background: var(--ifs-dark);
+  color: #fff;
+  padding: 10px 12px 8px;
+  flex-shrink: 0;
+}
+
+.ifs-sheet-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ifs-sheet-top .ifs-count {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.ifs-sheet-name {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.ifs-chevron {
+  display: grid;
+  width: 36px;
+  height: 28px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #fff;
+}
+
+.ifs-balance {
+  font-size: 13px;
+  font-weight: 500;
+  color: #f5c518;
+  font-variant-numeric: tabular-nums;
+}
+
+.ifs-sheet-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #c5cad3;
+}
+
+.ifs-sheet-tools button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+}
+
+.ifs-settings {
+  position: relative;
+}
+
+.ifs-settings .dot {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 99px;
+  background: #e31837;
+}
+
+.ifs-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: #eceff3;
+  flex-shrink: 0;
+}
+
+.ifs-tabs button {
+  height: 40px;
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ifs-tabs button[aria-current="true"] {
+  background: #fff;
+  color: var(--ifs-ink);
+}
+
+.ifs-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.ifs-sel {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  gap: 6px 8px;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid #f3f4f7;
+}
+
+.ifs-sel-icon {
+  grid-row: 1;
+  color: var(--ifs-ink);
+  padding-top: 2px;
+}
+
+.ifs-sel-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ifs-ink);
+}
+
+.ifs-sel-odds {
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ifs-sel-match {
+  grid-column: 1 / 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ifs-ink);
+}
+
+.ifs-sel-market {
+  grid-column: 2;
+  font-size: 12px;
+  color: #9aa1ad;
+}
+
+.ifs-totals {
+  padding: 4px 14px 0;
+}
+
+.ifs-stake-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  font-size: 14px;
+  color: var(--ifs-ink);
+}
+
+.ifs-stake-row > span:first-child {
+  font-weight: 500;
+}
+
+.ifs-stake-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.ifs-insure {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.ifs-insure strong {
+  color: var(--ifs-green);
+  font-size: 14px;
+  font-weight: 700;
+  margin-right: 2px;
+}
+
+.ifs-insure label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ifs-insure input {
+  accent-color: var(--ifs-green);
+}
+
+.ifs-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 30px;
+  font-size: 14px;
+  color: var(--ifs-ink);
+}
+
+.ifs-line strong {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ifs-pot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px -14px 0;
+  padding: 10px 14px;
+  background: #eef8f1;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.ifs-pot strong {
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ifs-sheet-place {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  border: 0;
+  background: var(--ifs-green-btn);
+  color: #fff;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.ifs-sheet-place b {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ifs-sheet-place small {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.ifs-sheet-place:disabled {
+  opacity: 0.85;
+}
+
+.ifs-spin {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  border: 2px solid rgb(255 255 255 / 0.35);
+  border-top-color: #fff;
+  border-radius: 99px;
+  animation: ifs-spin 0.7s linear infinite;
+  vertical-align: -2px;
+}
+
+.ifs-confirm-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.ifs-confirm-dim {
+  flex: 1;
+  border: 0;
+  background: rgb(0 0 0 / 0.42);
+}
+
+.ifs-confirm {
+  background: #fff;
+  padding: 28px 16px 0;
+}
+
+.ifs-confirm p {
+  margin: 0;
+  text-align: center;
+  color: var(--ifs-ink);
+}
+
+.ifs-confirm .label {
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.ifs-confirm .amount {
+  margin-top: 8px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.ifs-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  margin-top: 28px;
+  height: 52px;
+}
+
+.ifs-confirm-actions button {
+  border: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ifs-cancel {
+  background: var(--ifs-dark);
+}
+
+.ifs-ok {
+  background: var(--ifs-green-btn);
+}
+
+.ifs-ok:disabled {
+  opacity: 0.8;
+}
+
+.ifs-empty {
+  padding: 36px 20px;
+  text-align: center;
+  color: #8b93a0;
+  font-size: 13px;
+}
+
+.ifs-warn {
+  padding: 8px 14px 0;
+  font-size: 12px;
+  color: #e31837;
+}
+
+@keyframes ifs-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ifs-up {
+  from {
+    transform: translateX(-50%) translateY(18px);
+    opacity: 0.7;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+.ifs-mini,
+.ifs-sheet {
+  animation: ifs-up 160ms ease;
+}

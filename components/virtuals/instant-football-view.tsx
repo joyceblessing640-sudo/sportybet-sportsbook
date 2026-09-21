@@ -6,7 +6,7 @@ import { ChevronLeft, Wallet } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/components/providers";
 import { DemoCrest } from "@/components/virtuals/demo-crest";
-import { InstantSlipPanel, openInstantSlip } from "@/components/virtuals/instant-slip";
+import { InstantFootballSlip } from "@/components/virtuals/instant-slip";
 import { formatGhs, formatOdds, toGhs } from "@/lib/money";
 import {
   DEMO_BOARDS,
@@ -206,26 +206,13 @@ export function InstantFootballView() {
         ))}
       </div>
 
-      <div className="if-dock">
-        <button
-          type="button"
-          className="next"
-          onClick={() => {
-            const next = round + 1;
-            setRound(next);
-            toast.message(`Demo round ${next} ready`);
-          }}
-        >
-          Next Round
-        </button>
-        <button type="button" className="slip" onClick={openInstantSlip}>
-          Betslip
-        </button>
-      </div>
-
-      <div id="instant-football-betslip" popover="auto" className="betslip-popover">
-        <InstantSlipPanel />
-      </div>
+      <InstantFootballSlip
+        onNextRound={() => {
+          const next = round + 1;
+          setRound(next);
+          toast.message(`Demo round ${next} ready`);
+        }}
+      />
     </div>
   );
 }
