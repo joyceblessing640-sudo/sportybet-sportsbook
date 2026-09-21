@@ -86,14 +86,14 @@ function SignedDashboard({ user }: { user: AuthUser }) {
       />
       <DashHits hits={SIGNED_HITS} />
       <p
-        className="absolute z-[2] truncate text-[14px] font-bold leading-none text-white"
-        style={{ left: "22%", top: "4.2%", width: "28%", height: "2.8%", background: "#1b1e27" }}
+        className="absolute z-[2] flex items-center overflow-hidden truncate text-[14px] font-bold leading-none text-white"
+        style={{ left: "20.5%", top: "4.1%", width: "30%", height: "1.7%", background: "#1b1e27" }}
       >
         {user.username}
       </p>
       <p
-        className="absolute z-[2] text-right text-[18px] font-bold leading-none tabular-nums text-white"
-        style={{ left: "55%", top: "14.2%", width: "32%", height: "2.2%", background: "#1b1e27" }}
+        className="absolute z-[2] flex items-center justify-end overflow-hidden text-[16px] font-bold leading-none tabular-nums text-white"
+        style={{ left: "62%", top: "14.25%", width: "26.8%", height: "1.9%", background: "#1b1e27" }}
       >
         {formatGhs(user.wallet?.balancePesewas ?? 0)}
       </p>
@@ -106,19 +106,21 @@ export default function MePage() {
 
   return (
     <div className="min-h-dvh bg-[#1b1d22] pb-8 text-white">
-      {user ? <SignedDashboard user={user} /> : <GuestDashboard />}
-      {user ? (
-        <form action={logoutAction} className="bg-[#111111] pb-4 pt-2 text-center">
-          <button type="submit" className="text-[13px] font-semibold text-white/80">
-            Logout
-          </button>
-        </form>
-      ) : null}
-      {user?.role === "ADMIN" || user?.role === "SUB_ADMIN" ? (
-        <Link href="/admin" className="block bg-[#111111] pb-6 text-center text-[13px] font-semibold text-accent">
-          Admin dashboard
-        </Link>
-      ) : null}
+      <div className="mx-auto w-full max-w-[430px]">
+        {user ? <SignedDashboard user={user} /> : <GuestDashboard />}
+        {user ? (
+          <form action={logoutAction} className="bg-[#111111] pb-4 pt-2 text-center">
+            <button type="submit" className="text-[13px] font-semibold text-white/80">
+              Logout
+            </button>
+          </form>
+        ) : null}
+        {user?.role === "ADMIN" || user?.role === "SUB_ADMIN" ? (
+          <Link href="/admin" className="block bg-[#111111] pb-6 text-center text-[13px] font-semibold text-accent">
+            Admin dashboard
+          </Link>
+        ) : null}
+      </div>
     </div>
   );
 }
