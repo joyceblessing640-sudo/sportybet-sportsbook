@@ -7,7 +7,8 @@ import {
   handicapForMarket,
   marketOdds,
 } from "./demo-board";
-import { settleDemoTicket, type DemoTicket } from "./demo-tickets";
+import { combineOddsHundredths, potentialWinPesewas } from "../money";
+import { placeDemoBet, settleDemoTicket, type DemoTicket } from "./demo-tickets";
 import { selectionWon, simulateMatch } from "./engine";
 
 describe("Instant Football demo board", () => {
@@ -43,6 +44,7 @@ describe("Instant Football demo tickets", () => {
       kind: "instant-football-demo",
       id: "DEMOTEST",
       publicId: "IFTEST",
+      ticketNo: "1000001",
       createdAt: "2026-09-20T12:00:00.000Z",
       type: "SINGLE",
       stakePesewas: 1000,
@@ -75,5 +77,45 @@ describe("Instant Football demo tickets", () => {
     expect(settled.results?.[0]?.homeScore).toBe(sim.homeScore);
     expect(settled.won).toBe(selectionWon("1", sim.homeScore, sim.awayScore, 0));
     expect(settled.payoutPesewas).toBe(settled.won ? 2560 : 0);
+  });
+
+  it("computes multiple odds and a 4% max bonus from the live selections", () => {
+    const totalOdds = combineOddsHundredths([438, 208]);
+    const potentialWin = potentialWinPesewas(100, totalOdds);
+    expect(totalOdds).toBe(911);
+    expect(potentialWin + Math.round(potentialWin * 0.04)).toBe(947);
+  });
+
+  it("places a demo ticket from the current slip instead of screenshot data", () => {
+    const ticket = placeDemoBet({
+      type: "MULTI",
+      stakePesewas: 100,
+      items: [
+        {
+          matchId: "if-england-mun-lee",
+          matchLabel: "MUN vs LEE",
+          league: "England",
+          marketId: "1X2",
+          marketName: "1X2",
+          outcomeId: "if-england-mun-lee:1X2:1",
+          selection: "1",
+          odds: 174,
+        },
+        {
+          matchId: "if-england-ast-nfo",
+          matchLabel: "AST vs NFO",
+          league: "England",
+          marketId: "1X2",
+          marketName: "1X2",
+          outcomeId: "if-england-ast-nfo:1X2:1",
+          selection: "1",
+          odds: 220,
+        },
+      ],
+    });
+    expect(ticket.ticketNo).toMatch(/^\d{7}$/);
+    expect(ticket.picks.map((pick) => pick.matchLabel)).toEqual(["MUN vs LEE", "AST vs NFO"]);
+    expect(ticket.totalOdds).toBe(Math.round(1.74 * 2.2 * 100));
+    expect(ticket.type).toBe("MULTI");
   });
 });

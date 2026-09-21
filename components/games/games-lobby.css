@@ -1,0 +1,143 @@
+.gl {
+  max-width: 430px;
+  margin: 0 auto;
+  background: #f4f5f7;
+  min-height: 100dvh;
+  padding-bottom: calc(64px + env(safe-area-inset-bottom));
+}
+
+.gl-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 14px;
+  background: #e31837;
+  color: #fff;
+}
+
+.gl-top p {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.gl-top span {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.gl-search {
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px 6px;
+}
+
+.gl-search input {
+  flex: 1;
+  height: 40px;
+  border: 0;
+  border-radius: 99px;
+  background: #fff;
+  padding: 0 16px;
+  font-size: 14px;
+  outline: none;
+}
+
+.gl-home {
+  display: grid;
+  place-items: center;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 99px;
+  background: #e8f6ee;
+  color: #0f7a3c;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.gl-sec {
+  padding: 10px 0 6px;
+}
+
+.gl-sec-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px 10px;
+}
+
+.gl-sec-h h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1d24;
+}
+
+.gl-all {
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 99px;
+  background: #e8f6ee;
+  color: #0f7a3c;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 24px;
+  text-decoration: none;
+}
+
+.gl-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 14px 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+
+.gl-row::-webkit-scrollbar {
+  display: none;
+}
+
+.gl-card {
+  position: relative;
+  flex: 0 0 108px;
+  width: 108px;
+  height: 108px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(16 24 20 / 0.08);
+}
+
+.gl-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.gl-heart {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
+}
+
+.gl-heart.is-on {
+  color: #e31837;
+}
