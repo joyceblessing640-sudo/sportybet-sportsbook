@@ -87,13 +87,13 @@ function SignedDashboard({ user }: { user: AuthUser }) {
       <DashHits hits={SIGNED_HITS} />
       <p
         className="absolute z-[2] truncate text-[14px] font-bold leading-none text-white"
-        style={{ left: "18%", top: "4.6%", width: "36%", height: "3.2%", background: "#1b1e27", paddingTop: "0.15%" }}
+        style={{ left: "22%", top: "4.2%", width: "28%", height: "2.8%", background: "#1b1e27" }}
       >
         {user.username}
       </p>
       <p
         className="absolute z-[2] text-right text-[18px] font-bold leading-none tabular-nums text-white"
-        style={{ left: "50%", top: "14.3%", width: "42%", height: "2.4%", background: "#1b1e27" }}
+        style={{ left: "55%", top: "14.2%", width: "32%", height: "2.2%", background: "#1b1e27" }}
       >
         {formatGhs(user.wallet?.balancePesewas ?? 0)}
       </p>
