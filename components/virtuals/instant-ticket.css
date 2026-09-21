@@ -9,16 +9,20 @@
 }
 
 .ift-state-img {
-  display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
+  object-position: top center;
+  opacity: 0;
   pointer-events: none;
   user-select: none;
 }
 
 .ift-state-ui {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .ift-top {
@@ -29,7 +33,7 @@
   align-items: center;
   height: 44px;
   padding: 0 6px 0 2px;
-  background: transparent;
+  background: #e31837;
 }
 
 .ift-back {
@@ -77,7 +81,7 @@
   gap: 8px;
   height: 40px;
   padding: 0 14px;
-  background: transparent;
+  background: #fff;
   color: #1a1d24;
   font-size: 15px;
   font-weight: 500;
@@ -96,7 +100,7 @@
 }
 
 .ift-card {
-  background: transparent;
+  background: #fff;
   color: #1a1d24;
   padding: 12px 14px 10px;
 }

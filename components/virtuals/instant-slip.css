@@ -34,17 +34,32 @@
   isolation: isolate;
 }
 
-.ifs-state-img {
+.ifs-mini .ifs-state-img {
+  position: static;
   display: block;
   width: 100%;
   height: auto;
+  object-fit: contain;
+  object-position: bottom center;
   pointer-events: none;
   user-select: none;
+}
+
+.ifs-sheet .ifs-state-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .ifs-state-ui {
   position: absolute;
   inset: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
 }
@@ -74,14 +89,15 @@
 }
 
 .ifs-mini {
-  background: transparent;
-  box-shadow: none;
+  background: #fff;
+  box-shadow: 0 -4px 18px rgb(16 24 20 / 0.12);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
 .ifs-handle {
   position: relative;
   height: 18px;
+  background: #fff;
 }
 
 .ifs-handle::before {
@@ -116,6 +132,7 @@
   align-items: center;
   gap: 8px;
   padding: 2px 14px 0;
+  background: #fff;
 }
 
 .ifs-ball {
@@ -149,6 +166,7 @@
   align-items: center;
   gap: 8px;
   padding: 8px 14px 12px;
+  background: #fff;
 }
 
 .ifs-remove {
@@ -247,7 +265,7 @@
   width: 100%;
   padding: 4px 16px 10px;
   border: 0;
-  background: transparent;
+  background: #fff;
   text-align: left;
   color: inherit;
 }
@@ -307,12 +325,18 @@
 
 .ifs-sheet {
   z-index: 90;
-  display: block;
-  height: auto;
-  max-height: 92dvh;
-  background: transparent;
+  display: flex;
+  flex-direction: column;
+  height: min(92dvh, 780px);
+  background: #fff;
   overflow: hidden;
-  box-shadow: none;
+  box-shadow: 0 -8px 32px rgb(16 24 20 / 0.28);
+}
+
+.ifs-sheet .ifs-state-ui {
+  position: relative;
+  flex: 1;
+  min-height: 0;
 }
 
 .ifs-sheet-head {
@@ -677,30 +701,13 @@
   animation: ifs-up 180ms ease both;
 }
 
-.ifs-sheet-head,
-.ifs-tabs,
-.ifs-body,
-.ifs-sheet-place,
-.ifs-win,
-.ifs-place,
-.ifs-bonus,
-.ifs-pot,
-.ifs-confirm,
-.ifs-confirm-dim {
-  background: transparent;
-}
-
-.ifs-pick-title,
-.ifs-pick-odds,
-.ifs-match,
-.ifs-sel-name,
-.ifs-sel-odds,
-.ifs-sel-match span,
-.ifs-multi-title,
-.ifs-multi-meta,
-.ifs-confirm .amount,
-.ifs-line strong,
-.ifs-pot strong,
-.ifs-stake-box {
-  background: #fff;
+.ifs-state-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  opacity: 0;
+  pointer-events: none;
 }
