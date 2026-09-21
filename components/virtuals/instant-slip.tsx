@@ -15,6 +15,14 @@ import {
 } from "@/store/virtual-slip";
 import "./instant-slip.css";
 
+const IF_STATES = {
+  single: "/virtuals/if-states/1-single.jpg",
+  multi: "/virtuals/if-states/2-multi.jpg",
+  sheet: "/virtuals/if-states/3-sheet.jpg",
+  confirm: "/virtuals/if-states/4-confirm.jpg",
+  submitting: "/virtuals/if-states/5-submitting.jpg",
+} as const;
+
 export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }) {
   const router = useRouter();
   const { user } = useAuth();
@@ -26,6 +34,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const [flexi, setFlexi] = useState(false);
   const [oneCut, setOneCut] = useState(false);
   const prevCount = useRef(0);
+  const placing = useRef(false);
 
   const stakePesewas = parseGhsToPesewas(stake) ?? 0;
   const summary = virtualSlipSummary(items, stakePesewas);
@@ -87,11 +96,12 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   }
 
   async function confirmPlace() {
-    if (busy || items.length === 0 || invalid || !stakePesewas) return;
+    if (busy || placing.current || items.length === 0 || invalid || !stakePesewas) return;
+    placing.current = true;
     setMode("submitting");
     setError(null);
     try {
-      await new Promise((resolve) => window.setTimeout(resolve, 900));
+      await new Promise((resolve) => window.setTimeout(resolve, 5000));
       const ticket = placeDemoBet({ type: tab, stakePesewas, items });
       clear();
       setPhase("dock");
@@ -100,6 +110,8 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
     } catch (err) {
       setMode("edit");
       setError(err instanceof Error ? err.message : "Could not place this demo bet.");
+    } finally {
+      placing.current = false;
     }
   }
 
@@ -154,6 +166,13 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
 
       {phase === "sheet" ? (
         <section className="ifs-sheet" data-testid="if-slip-sheet" aria-label="Betslip">
+          <img
+            className="ifs-state-img"
+            src={mode === "submitting" ? IF_STATES.submitting : mode === "confirm" ? IF_STATES.confirm : IF_STATES.sheet}
+            alt=""
+            draggable={false}
+          />
+          <div className="ifs-state-ui">
           <header className="ifs-sheet-head">
             <div className="ifs-sheet-top">
               <span className="ifs-count">{items.length}</span>
@@ -296,6 +315,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
               </div>
             </div>
           ) : null}
+          </div>
         </section>
       ) : null}
     </div>
@@ -325,6 +345,8 @@ function SingleMini({
 }) {
   return (
     <section className="ifs-mini" data-testid="if-slip-single">
+      <img className="ifs-state-img" src={IF_STATES.single} alt="" draggable={false} />
+      <div className="ifs-state-ui">
       <div className="ifs-handle">
         <button type="button" className="ifs-close" aria-label="Close betslip" onClick={onClose}>
           ×
@@ -363,6 +385,7 @@ function SingleMini({
           <small>About to pay {payLabel}</small>
         </button>
       </div>
+      </div>
     </section>
   );
 }
@@ -380,6 +403,8 @@ function MultipleMini({
 }) {
   return (
     <section className="ifs-mini" data-testid="if-slip-multi">
+      <img className="ifs-state-img" src={IF_STATES.multi} alt="" draggable={false} />
+      <div className="ifs-state-ui">
       <div className="ifs-handle">
         <button type="button" className="ifs-close" aria-label="Close betslip" onClick={onClose}>
           ×
@@ -397,6 +422,7 @@ function MultipleMini({
         <i />
         Add more qualifying selections to boost your bonus
       </p>
+      </div>
     </section>
   );
 }

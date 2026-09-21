@@ -138,6 +138,8 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
 
   return (
     <div className="ift" data-testid="if-open-bets">
+      <img className="ift-state-img" src="/virtuals/if-states/6-ticket.jpg" alt="" draggable={false} />
+      <div className="ift-state-ui">
       <header className="ift-top">
         <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
           <ChevronLeft size={24} strokeWidth={2.2} />
@@ -272,6 +274,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
         <button type="button" className="ift-kick" data-testid="if-kick-off" disabled={started && !settled} onClick={kickOff}>
           Kick Off
         </button>
+      </div>
       </div>
     </div>
   );

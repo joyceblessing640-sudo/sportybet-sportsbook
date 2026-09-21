@@ -34,6 +34,21 @@
   isolation: isolate;
 }
 
+.ifs-state-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ifs-state-ui {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .ifs-dock {
   z-index: 40;
   display: grid;
@@ -59,8 +74,8 @@
 }
 
 .ifs-mini {
-  background: #fff;
-  box-shadow: 0 -4px 18px rgb(16 24 20 / 0.12);
+  background: transparent;
+  box-shadow: none;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -292,12 +307,12 @@
 
 .ifs-sheet {
   z-index: 90;
-  display: flex;
-  flex-direction: column;
-  height: min(92dvh, 780px);
-  background: #fff;
+  display: block;
+  height: auto;
+  max-height: 92dvh;
+  background: transparent;
   overflow: hidden;
-  box-shadow: 0 -8px 32px rgb(16 24 20 / 0.28);
+  box-shadow: none;
 }
 
 .ifs-sheet-head {
@@ -660,4 +675,32 @@
 .ifs-mini,
 .ifs-sheet {
   animation: ifs-up 180ms ease both;
+}
+
+.ifs-sheet-head,
+.ifs-tabs,
+.ifs-body,
+.ifs-sheet-place,
+.ifs-win,
+.ifs-place,
+.ifs-bonus,
+.ifs-pot,
+.ifs-confirm,
+.ifs-confirm-dim {
+  background: transparent;
+}
+
+.ifs-pick-title,
+.ifs-pick-odds,
+.ifs-match,
+.ifs-sel-name,
+.ifs-sel-odds,
+.ifs-sel-match span,
+.ifs-multi-title,
+.ifs-multi-meta,
+.ifs-confirm .amount,
+.ifs-line strong,
+.ifs-pot strong,
+.ifs-stake-box {
+  background: #fff;
 }

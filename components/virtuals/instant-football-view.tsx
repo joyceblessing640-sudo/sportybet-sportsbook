@@ -19,7 +19,7 @@ import {
   type DemoMatch,
 } from "@/lib/virtuals/demo-board";
 import type { VirtualMarketId } from "@/lib/virtuals/engine";
-import { useVirtualSlip } from "@/store/virtual-slip";
+import { readPersistedSlip, useVirtualSlip } from "@/store/virtual-slip";
 import "./instant-football.css";
 
 export function InstantFootballView() {
@@ -37,6 +37,11 @@ export function InstantFootballView() {
 
   useEffect(() => {
     toast.dismiss();
+  }, []);
+
+  useEffect(() => {
+    const saved = readPersistedSlip();
+    if (saved?.items.length) useVirtualSlip.setState(saved);
   }, []);
 
   useEffect(() => {
