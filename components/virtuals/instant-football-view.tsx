@@ -36,6 +36,10 @@ export function InstantFootballView() {
   );
 
   useEffect(() => {
+    toast.dismiss();
+  }, []);
+
+  useEffect(() => {
     const nodes = DEMO_BOARDS.map((board) => document.getElementById(`if-section-${board.id}`)).filter(
       (node): node is HTMLElement => Boolean(node),
     );

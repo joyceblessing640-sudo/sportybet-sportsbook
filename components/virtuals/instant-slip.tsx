@@ -96,7 +96,6 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
       clear();
       setPhase("dock");
       setMode("edit");
-      toast.success(`Ticket #${ticket.ticketNo} has been created successfully.`);
       router.push(`/virtuals/instant-football/ticket/${ticket.id}`);
     } catch (err) {
       setMode("edit");

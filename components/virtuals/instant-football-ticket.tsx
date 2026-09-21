@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, Wallet } from "lucide-react";
@@ -34,7 +34,6 @@ export function InstantFootballTicket({ ticketId }: { ticketId: string }) {
     const load = () => setTicket(getDemoTicket(ticketId));
     load();
     setReady(true);
-    toast.dismiss();
     return subscribeDemoTickets(load);
   }, [ticketId]);
 
@@ -67,6 +66,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   const [cursor, setCursor] = useState(ticket.status === "SETTLED" ? 999 : 0);
   const [showDetails, setShowDetails] = useState(true);
   const [openCount, setOpenCount] = useState(1);
+  const toasted = useRef(false);
 
   const pick = ticket.picks[index];
   const sim = useMemo(() => (pick ? simulateDemoPick(pick) : null), [pick]);
@@ -81,6 +81,12 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
     load();
     return subscribeDemoTickets(load);
   }, []);
+
+  useEffect(() => {
+    if (toasted.current || ticket.status !== "OPEN") return;
+    toasted.current = true;
+    toast.success(`Ticket #${ticket.ticketNo || ticket.publicId} has been created successfully.`);
+  }, [ticket]);
 
   useEffect(() => {
     if (!started || !sim || cursor >= events.length) return;
@@ -260,9 +266,9 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
       </div>
 
       <div className="ift-dock">
-        <Link href="/virtuals/instant-football" className="ift-keep" data-testid="if-keep-betting">
+        <button type="button" className="ift-keep" data-testid="if-keep-betting" onClick={() => router.push("/virtuals/instant-football")}>
           Keep Betting
-        </Link>
+        </button>
         <button type="button" className="ift-kick" data-testid="if-kick-off" disabled={started && !settled} onClick={kickOff}>
           Kick Off
         </button>
