@@ -1,0 +1,276 @@
+.live-board {
+  background: var(--live);
+  color: #fff;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.lb-nav {
+  min-width: 0;
+}
+
+.lb-row {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  padding: 0 10px;
+}
+
+.lb-row-sports {
+  height: 30px;
+}
+
+.lb-row-markets {
+  height: 28px;
+}
+
+.lb-live {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  height: 100%;
+  padding: 0;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.lb-pipe {
+  display: block;
+  flex: 0 0 auto;
+  width: 1px;
+  height: 12px;
+  margin: auto 8px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.lb-scroll {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.lb-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.lb-tab {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  height: 100%;
+  margin: 0;
+  padding: 0 1px 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.lb-tab.is-active {
+  color: #fff;
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+}
+
+.lb-up {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  margin-left: 8px;
+  height: 100%;
+}
+
+.lb-up-rule {
+  width: 1px;
+  height: 12px;
+  margin-right: 8px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.lb-up-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #3a3f46;
+}
+
+.lb-up-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lb-up-dot.is-on,
+.lb-up-chip.is-on {
+  color: #fff;
+}
+
+.lb-up-dot + .lb-up-dot {
+  margin-left: 3px;
+}
+
+.lb-up-dot i {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.lb-up-btns {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lb-up-chip {
+  height: 18px;
+  padding: 0 5px;
+  border: 1px solid rgba(18, 161, 80, 0.8);
+  border-radius: 3px;
+  background: none;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.lb-up-chip.is-on {
+  background: rgba(18, 161, 80, 0.16);
+  border-color: var(--accent);
+}
+
+.lb-headers {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 18px;
+  padding: 0 10px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.lb-headers-grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.lb-headers-cols {
+  display: grid;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.lb-cols-3 {
+  width: 8.25rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lb-cols-2 {
+  width: 5.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.lb-empty {
+  margin: 0;
+  padding: 10px 10px 12px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.lb-empty a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@media (min-width: 375px) {
+  .lb-row-sports {
+    height: 32px;
+  }
+
+  .lb-row-markets {
+    height: 30px;
+  }
+
+  .lb-scroll {
+    gap: 14px;
+  }
+}
+
+@media (min-width: 412px) {
+  .lb-row,
+  .lb-headers,
+  .lb-empty {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .lb-live {
+    font-size: 14px;
+  }
+
+  .lb-tab {
+    font-size: 13px;
+  }
+
+  .lb-headers {
+    height: 20px;
+    font-size: 11px;
+  }
+
+  .lb-cols-3 {
+    width: 8.75rem;
+  }
+
+  .lb-cols-2 {
+    width: 6rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .lb-row-sports {
+    height: 34px;
+  }
+
+  .lb-row-markets {
+    height: 32px;
+  }
+
+  .lb-scroll {
+    gap: 18px;
+  }
+}
