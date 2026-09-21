@@ -134,7 +134,7 @@ export default function DepositPage() {
     <div className="bg-white">
       <div className="relative mx-auto w-full max-w-[430px]">
         <img
-          src="/deposit/deposit-provided.png"
+          src="/cashier/deposit-provided.png"
           alt=""
           width={923}
           height={1430}
@@ -221,7 +221,7 @@ export default function DepositPage() {
             <div className="absolute overflow-hidden bg-[#fafafa] shadow-md" style={{ left: "3.5%", top: "37.6%", width: "93%" }}>
               <div className="relative w-full">
                 <img
-                  src="/deposit/payment-methods-provided.png"
+                  src="/cashier/payment-methods-provided.png"
                   alt=""
                   width={1080}
                   height={437}
