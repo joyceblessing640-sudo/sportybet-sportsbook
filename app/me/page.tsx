@@ -1,59 +1,112 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Moon, UserRound, Wallet, Landmark } from "lucide-react";
 import { logoutAction } from "@/app/actions/auth";
-import { AccountFooter } from "@/components/account/account-footer";
-import { useAuth } from "@/components/providers";
+import { useAuth, type AuthUser } from "@/components/providers";
 import { formatGhs } from "@/lib/money";
+
+type Hit = {
+  href: string;
+  label: string;
+  left: string;
+  top: string;
+  width: string;
+  height: string;
+};
+
+const GUEST_HITS: Hit[] = [
+  { href: "/login", label: "Login to View", left: "0%", top: "4.5%", width: "62%", height: "9%" },
+  { href: "/deposit", label: "Deposit", left: "3%", top: "21.8%", width: "46%", height: "8.2%" },
+  { href: "/withdraw", label: "Withdraw", left: "51%", top: "21.8%", width: "46%", height: "8.2%" },
+  { href: "/promotions", label: "Sporty Loyalty", left: "3%", top: "32.5%", width: "94%", height: "8.5%" },
+  { href: "/bets?tab=history", label: "Sports Bet History", left: "0%", top: "43.5%", width: "34.7%", height: "13.2%" },
+  { href: "/transactions", label: "Transaction Records", left: "34.7%", top: "43.5%", width: "30.6%", height: "13.2%" },
+  { href: "/rewards", label: "Gifts and Lucky Wheel", left: "65.3%", top: "43.5%", width: "34.7%", height: "13.2%" },
+  { href: "/support", label: "Customer Service", left: "0%", top: "59.9%", width: "100%", height: "8.2%" },
+  { href: "/how-to-play", label: "How to play", left: "0%", top: "76.3%", width: "100%", height: "8.2%" },
+  { href: "/update", label: "Update App", left: "0%", top: "84.5%", width: "100%", height: "8.2%" },
+];
+
+const SIGNED_HITS: Hit[] = [
+  { href: "/me", label: "Account", left: "0%", top: "3.2%", width: "58%", height: "8%" },
+  { href: "/deposit", label: "Deposit", left: "3%", top: "18.7%", width: "46%", height: "6.2%" },
+  { href: "/withdraw", label: "Withdraw", left: "51%", top: "18.7%", width: "46%", height: "6.2%" },
+  { href: "/promotions", label: "Sporty Loyalty", left: "3%", top: "26.8%", width: "94%", height: "6%" },
+  { href: "/bets?tab=history", label: "Sports Bet History", left: "0%", top: "34.7%", width: "34.6%", height: "9.6%" },
+  { href: "/transactions", label: "Transaction Records", left: "34.6%", top: "34.7%", width: "30.9%", height: "9.6%" },
+  { href: "/rewards", label: "Gifts and Lucky Wheel", left: "65.5%", top: "34.7%", width: "34.5%", height: "9.6%" },
+  { href: "/support", label: "Customer Service", left: "0%", top: "58.8%", width: "100%", height: "6%" },
+  { href: "/notifications", label: "Notification Center", left: "0%", top: "64.8%", width: "100%", height: "6%" },
+  { href: "/how-to-play", label: "How to play", left: "0%", top: "76.8%", width: "100%", height: "6%" },
+  { href: "/update", label: "Update App", left: "0%", top: "88.8%", width: "100%", height: "6%" },
+];
+
+function DashHits({ hits }: { hits: Hit[] }) {
+  return (
+    <>
+      {hits.map((hit) => (
+        <Link
+          key={hit.label}
+          href={hit.href}
+          aria-label={hit.label}
+          className="absolute z-[1]"
+          style={{ left: hit.left, top: hit.top, width: hit.width, height: hit.height }}
+        />
+      ))}
+    </>
+  );
+}
+
+function GuestDashboard() {
+  return (
+    <div className="relative w-full">
+      <img
+        src="/me/me-guest-provided.png"
+        alt=""
+        width={1080}
+        height={1755}
+        className="pointer-events-none block h-auto w-full object-contain"
+        draggable={false}
+      />
+      <DashHits hits={GUEST_HITS} />
+    </div>
+  );
+}
+
+function SignedDashboard({ user }: { user: AuthUser }) {
+  return (
+    <div className="relative w-full">
+      <img
+        src="/me/me-signed-provided.png"
+        alt=""
+        width={899}
+        height={2000}
+        className="pointer-events-none block h-auto w-full object-contain"
+        draggable={false}
+      />
+      <DashHits hits={SIGNED_HITS} />
+      <p
+        className="absolute z-[2] truncate text-[14px] font-bold leading-none text-white"
+        style={{ left: "18%", top: "4.6%", width: "36%", height: "3.2%", background: "#1b1e27", paddingTop: "0.15%" }}
+      >
+        {user.username}
+      </p>
+      <p
+        className="absolute z-[2] text-right text-[18px] font-bold leading-none tabular-nums text-white"
+        style={{ left: "50%", top: "14.3%", width: "42%", height: "2.4%", background: "#1b1e27" }}
+      >
+        {formatGhs(user.wallet?.balancePesewas ?? 0)}
+      </p>
+    </div>
+  );
+}
 
 export default function MePage() {
   const { user } = useAuth();
 
   return (
     <div className="min-h-dvh bg-[#1b1d22] pb-8 text-white">
-      <section className="px-3 pb-3 pt-3.5">
-        <div className="flex items-start justify-between">
-          <Link href={user ? "/me" : "/login"} className="flex items-center gap-2.5">
-            <span className="grid h-11 w-11 place-items-center rounded-full bg-[#2e323a]">
-              <UserRound className="h-5 w-5 text-white/90" />
-            </span>
-            <p className="flex items-center gap-1 text-[14px] font-bold">
-              {user ? user.username : "Login to View"} <ChevronRight className="h-3.5 w-3.5 text-white/50" />
-            </p>
-          </Link>
-          <span className="flex items-center gap-1 pt-1 text-[11px] text-white/70">
-            Dark Mode <Moon className="h-3.5 w-3.5" />
-          </span>
-        </div>
-        <div className="mt-4 flex items-end justify-between">
-          <p className="text-[12px] text-white/55">Total Balance</p>
-          <p className="text-[18px] font-bold tabular-nums">{user ? formatGhs(user.wallet?.balancePesewas ?? 0) : "GHS --"}</p>
-        </div>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <Link
-            href="/deposit"
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-accent text-[13px] font-bold text-white"
-          >
-            <Wallet className="h-3.5 w-3.5" /> Deposit
-          </Link>
-          <Link
-            href="/withdraw"
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md border border-accent text-[13px] font-bold text-accent"
-          >
-            <Landmark className="h-3.5 w-3.5" /> Withdraw
-          </Link>
-        </div>
-        <Link
-          href="/promotions"
-          className="relative mt-3 flex h-11 items-center justify-between overflow-hidden rounded-md bg-gradient-to-r from-[#3f0d12] via-[#1f2937] to-[#111827] px-2.5"
-        >
-          <span className="pointer-events-none absolute -left-2 text-[28px] opacity-30">⚽</span>
-          <p className="relative text-[12px] font-bold italic">SportyBets Loyalty</p>
-          <span className="relative text-[11px] font-semibold text-accent">{user ? "Open" : "Log in to join"} ›</span>
-        </Link>
-      </section>
-      <AccountFooter />
+      {user ? <SignedDashboard user={user} /> : <GuestDashboard />}
       {user ? (
         <form action={logoutAction} className="bg-[#111111] pb-4 pt-2 text-center">
           <button type="submit" className="text-[13px] font-semibold text-white/80">
