@@ -64,7 +64,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   const [started, setStarted] = useState(Boolean(ticket.playing || ticket.status === "SETTLED"));
   const [speed, setSpeed] = useState<"1x" | "2x">("1x");
   const [cursor, setCursor] = useState(ticket.status === "SETTLED" ? 999 : 0);
-  const [showDetails, setShowDetails] = useState(true);
+  const [showDetails, setShowDetails] = useState(false);
   const [openCount, setOpenCount] = useState(1);
   const toasted = useRef(false);
 
@@ -138,8 +138,6 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
 
   return (
     <div className="ift" data-testid="if-open-bets">
-      <img className="ift-state-img" src="/virtuals/if-states/6-ticket.jpg?v=5" alt="" draggable={false} />
-      <div className="ift-state-ui">
       <header className="ift-top">
         <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
           <ChevronLeft size={24} strokeWidth={2.2} />
@@ -170,18 +168,24 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
             ↗ Reload Selections
           </button>
         </div>
-        {ticket.picks.map((row) => (
-          <div key={row.matchId + row.selection} className="ift-pick">
-            <p className="ift-pick-line">
-              {selectionLabel(row.selection)} @<strong>{formatOdds(row.odds)}</strong>
-            </p>
-            <p className="ift-pick-market">{row.marketName}</p>
-            <p className="ift-pick-match">{row.matchLabel.replace(" vs ", " VS ")}</p>
-            {showDetails ? <p className="ift-pick-league">League: {row.league}</p> : null}
-          </div>
-        ))}
+        {showDetails ? (
+          ticket.picks.map((row) => (
+            <div key={row.matchId + row.selection} className="ift-pick">
+              <p className="ift-pick-line">
+                {selectionLabel(row.selection)} @<strong>{formatOdds(row.odds)}</strong>
+              </p>
+              <p className="ift-pick-market">{row.marketName}</p>
+              <p className="ift-pick-match">{row.matchLabel.replace(" vs ", " VS ")}</p>
+              <p className="ift-pick-league">League: {row.league}</p>
+            </div>
+          ))
+        ) : (
+          <p className="ift-pick-match" style={{ margin: "12px 0 4px" }}>
+            {ticket.picks.map((row) => row.matchLabel.replace(" vs ", " vs ")).join(", ")}
+          </p>
+        )}
         <button type="button" className="ift-details" onClick={() => setShowDetails((value) => !value)}>
-          {showDetails ? "Hide Match Details ▴" : "Show Match Details ▾"}
+          {showDetails ? "Hide Match Details ▴" : "Match Details ▾"}
         </button>
         <div className="ift-foot">
           <span>
@@ -274,7 +278,6 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
         <button type="button" className="ift-kick" data-testid="if-kick-off" disabled={started && !settled} onClick={kickOff}>
           Kick Off
         </button>
-      </div>
       </div>
     </div>
   );

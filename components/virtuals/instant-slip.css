@@ -12,12 +12,15 @@
 
 .ifs-backdrop {
   position: fixed;
-  inset: 0;
+  top: 44px;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 70;
   max-width: 430px;
   margin: 0 auto;
   border: 0;
-  background: rgb(0 0 0 / 0.5);
+  background: rgb(0 0 0 / 0.45);
 }
 
 .ifs-dock,
@@ -86,8 +89,20 @@
   min-height: 132px;
 }
 
-.ifs-sheet-shot {
-  aspect-ratio: 684 / 1080;
+.ifs-sheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  max-height: calc(100dvh - 44px);
+  transform: translateX(-50%);
+  background: #fff;
+  box-shadow: 0 -8px 32px rgb(16 24 20 / 0.28);
+  animation: ifs-up 180ms ease both;
 }
 
 .ifs-chip,
@@ -295,19 +310,24 @@
   font-variant-numeric: tabular-nums;
 }
 
-.ifs-sheet-shot {
-  z-index: 90;
-  max-height: 92dvh;
-  overflow: hidden;
-  box-shadow: 0 -8px 32px rgb(16 24 20 / 0.28);
+.ifs-sheet-head {
+  flex-shrink: 0;
+  background: #2a2d36;
+  color: #fff;
+  padding: 10px 12px 8px;
 }
 
-.ifs-sheet-shot .ifs-chip-count {
-  top: 2.6%;
-  left: 4.2%;
-  width: 6.4%;
-  height: 3.6%;
-  justify-content: center;
+.ifs-sheet-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ifs-count {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
   border-radius: 99px;
   background: var(--ifs-green);
   color: #fff;
@@ -315,77 +335,83 @@
   font-weight: 700;
 }
 
-.ifs-sheet-shot .ifs-chip-balance {
-  top: 2.8%;
-  right: 3%;
-  width: 28%;
-  height: 3.4%;
-  justify-content: flex-end;
-  background: #2a2d36;
+.ifs-sheet-name {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.ifs-chevron {
+  width: 36px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+}
+
+.ifs-balance {
   color: #f5c518;
   font-size: 13px;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
-.ifs-hit-collapse {
-  top: 1.8%;
-  left: 38%;
-  width: 24%;
-  height: 5.2%;
+.ifs-sheet-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #c5cad3;
 }
 
-.ifs-hit-clear {
-  top: 7.6%;
-  left: 2%;
-  width: 28%;
-  height: 4.4%;
+.ifs-sheet-tools button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
 }
 
-.ifs-hit-settings {
-  top: 7.6%;
-  right: 2%;
-  width: 28%;
-  height: 4.4%;
-}
-
-.ifs-tab-hits {
-  position: absolute;
-  top: 13.2%;
-  left: 0;
+.ifs-tabs {
+  flex-shrink: 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  width: 100%;
-  height: 6.2%;
+  background: #2a2d36;
 }
 
-.ifs-tab-hits .ifs-hit {
-  position: relative;
-  inset: auto;
-  width: 100%;
-  height: 100%;
+.ifs-tabs button {
+  height: 40px;
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.ifs-live-body {
-  position: absolute;
-  top: 20.4%;
-  left: 0;
-  right: 0;
-  height: 62%;
+.ifs-tabs button[aria-current="true"] {
+  background: #fff;
+  color: var(--ifs-ink);
+}
+
+.ifs-sheet-body {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   background: #fff;
   line-height: 1.2;
-}
-
-.ifs-live-body.is-dim {
-  height: 40%;
-  background: #d8d8d8;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ifs-live-pick {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 4px 8px;
-  padding: 10px 14px 8px;
+  padding: 12px 14px 10px;
   border-bottom: 1px solid #f3f4f7;
 }
 
@@ -423,19 +449,52 @@
   color: #9aa1ad;
 }
 
-.ifs-live-totals {
-  position: relative;
-  min-height: 220px;
-  background: #fff;
+.ifs-bonus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px;
+  padding: 8px 10px;
+  border-radius: 99px;
+  background: #e8f7ee;
+  color: var(--ifs-green);
+  font-size: 13px;
+  font-weight: 500;
 }
 
-.ifs-live-stake {
-  position: absolute;
-  top: 8px;
-  right: 14px;
+.ifs-bonus i {
+  width: 10px;
+  height: 10px;
+  border-radius: 99px;
+  background: #7dcea0;
+  flex-shrink: 0;
 }
 
-.ifs-live-stake input {
+.ifs-totals {
+  padding: 4px 0 8px;
+}
+
+.ifs-stake-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ifs-ink);
+}
+
+.ifs-ghs {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.ifs-ghs input {
   width: 88px;
   height: 34px;
   border: 1px solid #d8dde6;
@@ -450,101 +509,138 @@
   outline: none;
 }
 
-.ifs-sheet-shot .ifs-chip-total-odds,
-.ifs-sheet-shot .ifs-chip-bonus,
-.ifs-sheet-shot .ifs-chip-pot {
-  position: absolute;
-  right: 14px;
-  width: 28%;
-  height: 22px;
-  justify-content: flex-end;
+.ifs-insure {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.ifs-insure strong {
+  color: var(--ifs-green);
+  font-weight: 700;
+}
+
+.ifs-insure label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ifs-line,
+.ifs-pot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  padding: 0 14px;
+  font-size: 14px;
+  color: var(--ifs-ink);
+}
+
+.ifs-line strong,
+.ifs-pot strong {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
-.ifs-sheet-shot .ifs-chip-total-odds {
-  top: 92px;
-}
-
-.ifs-sheet-shot .ifs-chip-bonus {
-  top: 118px;
-}
-
-.ifs-sheet-shot .ifs-chip-pot {
-  top: 148px;
+.ifs-pot {
+  margin-top: 6px;
+  min-height: 40px;
   background: #eef8f1;
+  font-weight: 500;
 }
 
-.ifs-sheet-shot .ifs-hit-place {
-  top: 87%;
-  left: 0;
-  width: 100%;
-  height: 13%;
-}
-
-.ifs-sheet-shot .ifs-chip-pay {
-  top: 46%;
-}
-
-.ifs-confirm-hits {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 61%;
-  bottom: 0;
-}
-
-.ifs-chip-amount {
-  top: 22%;
-  left: 16%;
-  width: 68%;
-  height: 16%;
+.ifs-sheet-place {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  font-size: 28px;
-  font-weight: 700;
+  height: calc(56px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  border: 0;
+  background: var(--ifs-green-btn);
+  color: #fff;
 }
 
-.ifs-hit-cancel,
-.ifs-hit-ok {
-  top: 72%;
-  height: 22%;
-  color: transparent;
+.ifs-sheet-place b {
+  font-size: 18px;
+  font-weight: 600;
 }
 
-.ifs-hit-cancel {
-  left: 0;
-  width: 46%;
+.ifs-sheet-place small {
+  font-size: 12px;
+  font-weight: 400;
 }
 
-.ifs-hit-ok {
-  left: 46%;
-  width: 54%;
+.ifs-sheet-place:disabled {
+  opacity: 0.85;
 }
 
-.ifs-hit-flexi {
-  top: 68%;
-  left: 42%;
-  width: 18%;
-  height: 4%;
-}
-
-.ifs-hit-onecut {
-  top: 68%;
-  left: 64%;
-  width: 24%;
-  height: 4%;
-}
-
-.ifs-spin-cover {
-  position: absolute;
-  top: 88.5%;
-  left: 46%;
-  width: 18px;
-  height: 18px;
+.ifs-spin {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
   border: 2px solid rgb(255 255 255 / 0.35);
   border-top-color: #fff;
   border-radius: 99px;
   animation: ifs-spin 0.7s linear infinite;
+  vertical-align: -2px;
+}
+
+.ifs-confirm-sheet {
+  flex-shrink: 0;
+  background: #fff;
+  padding-top: 28px;
+}
+
+.ifs-confirm-sheet .label,
+.ifs-confirm-sheet .amount {
+  margin: 0;
+  text-align: center;
+  color: var(--ifs-ink);
+}
+
+.ifs-confirm-sheet .label {
+  font-size: 15px;
+}
+
+.ifs-confirm-sheet .amount {
+  margin-top: 8px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.ifs-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  margin-top: 28px;
+  height: calc(52px + env(safe-area-inset-bottom));
+}
+
+.ifs-confirm-actions button {
+  border: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.ifs-cancel {
+  background: var(--ifs-dark);
+}
+
+.ifs-ok {
+  background: var(--ifs-green-btn);
+}
+
+.ifs-sheet[data-if-state="confirm"] .ifs-sheet-body {
+  filter: brightness(0.72);
 }
 
 .ifs-empty {

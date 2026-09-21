@@ -130,10 +130,9 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
 
   const wallet = user?.wallet?.balancePesewas ?? 0;
   const payLabel = toGhs(stakePesewas || 0);
-  const sheetSrc = mode === "submitting" ? IF_STATES.submitting : mode === "confirm" ? IF_STATES.confirm : IF_STATES.sheet;
 
   return (
-    <div className="ifs-root" data-testid="if-slip" data-if-build="if-states-v5" data-if-phase={phase} data-if-mode={mode}>
+    <div className="ifs-root" data-testid="if-slip" data-if-build="if-sheet-v6" data-if-phase={phase} data-if-mode={mode}>
       {phase === "sheet" ? (
         <button type="button" className="ifs-backdrop" aria-label="Close betslip" onClick={closeSheet} />
       ) : null}
@@ -173,65 +172,69 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
       ) : null}
 
       {phase === "sheet" ? (
-        <section
-          className="ifs-shot ifs-sheet-shot"
-          data-testid="if-slip-sheet"
-          data-if-state={mode}
-          aria-label="Betslip"
-        >
-          <img className="ifs-photo" src={sheetSrc} alt="" draggable={false} />
-          <div className="ifs-overlay">
-            <span className="ifs-chip ifs-chip-count">{items.length}</span>
-            <span className="ifs-chip ifs-chip-balance">{formatWallet(wallet)}</span>
-            <button type="button" className="ifs-hit ifs-hit-collapse" aria-label="Collapse betslip" onClick={closeSheet} />
-            <button
-              type="button"
-              className="ifs-hit ifs-hit-clear"
-              aria-label="Remove all selections"
-              disabled={items.length === 0 || busy}
-              onClick={clear}
-            />
-            <button
-              type="button"
-              className="ifs-hit ifs-hit-settings"
-              aria-label="Bet settings"
-              onClick={() => toast.message("Demo bet settings · simulated only")}
-            />
-            <div className="ifs-tab-hits">
-              {(["SINGLE", "MULTI", "SYSTEM"] as const).map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  className="ifs-hit"
-                  aria-current={viewTab === item ? "true" : undefined}
-                  aria-label={item === "SINGLE" ? "Single" : item === "MULTI" ? "Multiple" : "System"}
-                  disabled={busy}
-                  onClick={() => changeTab(item)}
-                />
-              ))}
+        <section className="ifs-sheet" data-testid="if-slip-sheet" data-if-state={mode} aria-label="Betslip">
+          <header className="ifs-sheet-head">
+            <div className="ifs-sheet-top">
+              <span className="ifs-count">{items.length}</span>
+              <button type="button" className="ifs-sheet-name" onClick={closeSheet}>
+                Betslip
+              </button>
+              <button type="button" className="ifs-chevron" aria-label="Collapse betslip" onClick={closeSheet}>
+                ▾
+              </button>
+              <span className="ifs-balance">{formatWallet(wallet)}</span>
             </div>
-
-            <div className={`ifs-live-body${mode === "confirm" ? " is-dim" : ""}`}>
-              {items.length === 0 ? (
-                <p className="ifs-empty">Tap a 1, X or 2 odd to add a demo selection.</p>
-              ) : (
-                items.map((item) => (
-                  <LivePick key={item.outcomeId} item={item} onRemove={() => remove(item.outcomeId)} disabled={busy} />
-                ))
-              )}
-              {invalid && items.length > 0 ? (
-                <p className="ifs-warn">
-                  {viewTab === "SYSTEM"
-                    ? "System bets need more selections."
-                    : tab === "SINGLE"
-                      ? "Single bets need one selection."
-                      : "Add at least two selections for a multiple."}
-                </p>
-              ) : null}
-              {error ? <p className="ifs-warn">{error}</p> : null}
-              <div className="ifs-live-totals">
-                <label className="ifs-live-stake">
-                  <span className="sr-only">Total stake</span>
+            <div className="ifs-sheet-tools">
+              <button type="button" onClick={clear} disabled={items.length === 0 || busy}>
+                ✕ Remove All
+              </button>
+              <button type="button" onClick={() => toast.message("Demo bet settings · simulated only")}>
+                Bet Settings ⚙
+              </button>
+            </div>
+          </header>
+          <div className="ifs-tabs">
+            {(["SINGLE", "MULTI", "SYSTEM"] as const).map((item) => (
+              <button
+                key={item}
+                type="button"
+                aria-current={viewTab === item ? "true" : undefined}
+                disabled={busy}
+                onClick={() => changeTab(item)}
+              >
+                {item === "SINGLE" ? "Single" : item === "MULTI" ? "Multiple" : "System"}
+              </button>
+            ))}
+          </div>
+          <div className="ifs-sheet-body">
+            {items.length === 0 ? (
+              <p className="ifs-empty">Tap a 1, X or 2 odd to add a demo selection.</p>
+            ) : (
+              items.map((item) => (
+                <LivePick key={item.outcomeId} item={item} onRemove={() => remove(item.outcomeId)} disabled={busy} />
+              ))
+            )}
+            {items.length > 0 ? (
+              <p className="ifs-bonus">
+                <i />
+                Add more qualifying selections to boost your bonus
+              </p>
+            ) : null}
+            {invalid && items.length > 0 ? (
+              <p className="ifs-warn">
+                {viewTab === "SYSTEM"
+                  ? "System bets need more selections."
+                  : tab === "SINGLE"
+                    ? "Single bets need one selection."
+                    : "Add at least two selections for a multiple."}
+              </p>
+            ) : null}
+            {error ? <p className="ifs-warn">{error}</p> : null}
+            <div className="ifs-totals">
+              <div className="ifs-stake-row">
+                <span>Total Stake</span>
+                <label className="ifs-ghs">
+                  GHS
                   <input
                     value={stake}
                     inputMode="decimal"
@@ -240,53 +243,67 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
                     onChange={(event) => setStake(event.target.value)}
                   />
                 </label>
-                <span className="ifs-chip ifs-chip-total-odds">{items.length ? formatOdds(summary.totalOdds) : "0.00"}</span>
-                <span className="ifs-chip ifs-chip-bonus">{toGhs(summary.maxBonus)}</span>
-                <span className="ifs-chip ifs-chip-pot">{toGhs(summary.potentialWithBonus)}</span>
+              </div>
+              <div className="ifs-insure">
+                <strong>SportyInsure</strong>
+                <label>
+                  <input type="checkbox" checked={flexi} disabled={busy} onChange={() => setFlexi((value) => !value)} />
+                  Flexi
+                </label>
+                <label>
+                  <input type="checkbox" checked={oneCut} disabled={busy} onChange={() => setOneCut((value) => !value)} />
+                  One Cut
+                </label>
+              </div>
+              <div className="ifs-line">
+                <span>Total Odds</span>
+                <strong>{items.length ? formatOdds(summary.totalOdds) : "0.00"}</strong>
+              </div>
+              <div className="ifs-line">
+                <span>Max Bonus</span>
+                <strong>{toGhs(summary.maxBonus)}</strong>
+              </div>
+              <div className="ifs-pot">
+                <span>Potential Win</span>
+                <strong>{toGhs(summary.potentialWithBonus)}</strong>
               </div>
             </div>
-
-            {mode === "edit" ? (
-              <button
-                type="button"
-                className="ifs-hit ifs-hit-place"
-                data-testid="if-place-bet"
-                disabled={busy || items.length === 0 || invalid}
-                onClick={askConfirm}
-              >
-                <span className="ifs-chip ifs-chip-green ifs-chip-pay">About to pay {payLabel}</span>
-              </button>
-            ) : null}
-
-            {mode === "confirm" ? (
-              <div className="ifs-confirm-hits" data-testid="if-confirm">
-                <span className="ifs-chip ifs-chip-amount">GHS{payLabel}</span>
-                <button type="button" className="ifs-hit ifs-hit-cancel" onClick={cancelConfirm}>
+          </div>
+          {mode !== "confirm" ? (
+            <button
+              type="button"
+              className="ifs-sheet-place"
+              data-testid={busy ? "if-submitting" : "if-place-bet"}
+              disabled={busy || items.length === 0 || invalid}
+              onClick={askConfirm}
+            >
+              {busy ? (
+                <b>
+                  <span className="ifs-spin" />
+                  Submitting
+                </b>
+              ) : (
+                <>
+                  <b>Place Bet</b>
+                  <small>About to pay {payLabel}</small>
+                </>
+              )}
+            </button>
+          ) : null}
+          {mode === "confirm" ? (
+            <div className="ifs-confirm-sheet" data-testid="if-confirm">
+              <p className="label">Confirm to Pay</p>
+              <p className="amount">GHS{payLabel}</p>
+              <div className="ifs-confirm-actions">
+                <button type="button" className="ifs-cancel" onClick={cancelConfirm}>
                   Cancel
                 </button>
-                <button type="button" className="ifs-hit ifs-hit-ok" data-testid="if-confirm-pay" onClick={() => void confirmPlace()}>
+                <button type="button" className="ifs-ok" data-testid="if-confirm-pay" onClick={() => void confirmPlace()}>
                   Confirm
                 </button>
               </div>
-            ) : null}
-
-            {mode === "submitting" ? <span className="ifs-spin-cover" data-testid="if-submitting" /> : null}
-
-            <button
-              type="button"
-              className="ifs-hit ifs-hit-flexi"
-              aria-pressed={flexi}
-              disabled={busy}
-              onClick={() => setFlexi((value) => !value)}
-            />
-            <button
-              type="button"
-              className="ifs-hit ifs-hit-onecut"
-              aria-pressed={oneCut}
-              disabled={busy}
-              onClick={() => setOneCut((value) => !value)}
-            />
-          </div>
+            </div>
+          ) : null}
         </section>
       ) : null}
     </div>
