@@ -1,0 +1,54 @@
+.gl {
+  max-width: 430px;
+  margin: 0 auto;
+  background: #f4f5f7;
+  min-height: 100dvh;
+  padding-bottom: calc(64px + env(safe-area-inset-bottom));
+}
+
+.gl-shot {
+  position: relative;
+  width: 100%;
+}
+
+.gl-shot > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.gl-hit {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  border-radius: 16px;
+}
+
+.gl-hit-home {
+  left: 64.2%;
+  top: 7.2%;
+  width: 32.2%;
+  height: 4.8%;
+  border-radius: 99px;
+}
+
+.gl-heart {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.gl-heart.is-on {
+  color: #e31837;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
+}
