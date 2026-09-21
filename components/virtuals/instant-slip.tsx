@@ -15,7 +15,7 @@ import {
 } from "@/store/virtual-slip";
 import "./instant-slip.css";
 
-export const IF_ASSET_V = "4";
+export const IF_ASSET_V = "5";
 
 export const IF_STATES = {
   single: `/virtuals/if-states/1-single.jpg?v=${IF_ASSET_V}`,
@@ -36,6 +36,13 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const [flexi, setFlexi] = useState(false);
   const [oneCut, setOneCut] = useState(false);
   const placing = useRef(false);
+
+  useEffect(() => {
+    for (const src of Object.values(IF_STATES)) {
+      const image = new window.Image();
+      image.src = src;
+    }
+  }, []);
 
   const stakePesewas = parseGhsToPesewas(stake) ?? 0;
   const summary = virtualSlipSummary(items, stakePesewas);
@@ -126,7 +133,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const sheetSrc = mode === "submitting" ? IF_STATES.submitting : mode === "confirm" ? IF_STATES.confirm : IF_STATES.sheet;
 
   return (
-    <div className="ifs-root" data-testid="if-slip" data-if-build="if-states-v4" data-if-phase={phase} data-if-mode={mode}>
+    <div className="ifs-root" data-testid="if-slip" data-if-build="if-states-v5" data-if-phase={phase} data-if-mode={mode}>
       {phase === "sheet" ? (
         <button type="button" className="ifs-backdrop" aria-label="Close betslip" onClick={closeSheet} />
       ) : null}
@@ -312,23 +319,29 @@ function SingleMini({
       <img className="ifs-photo" src={IF_STATES.single} alt="" draggable={false} />
       <div className="ifs-overlay">
         <button type="button" className="ifs-hit ifs-hit-close" aria-label="Close betslip" onClick={onClose} />
-        <button type="button" className="ifs-hit ifs-hit-expand" aria-label="Expand betslip" onClick={onExpand} />
-        <button type="button" className="ifs-hit ifs-hit-remove" aria-label="Remove selection" onClick={onRemove} />
-        <span className="ifs-chip ifs-chip-pick">
-          {selectionLabel(item.selection)}
-          <em> | {item.marketName}</em>
-        </span>
-        <span className="ifs-chip ifs-chip-odds">{formatOdds(item.odds)}</span>
-        <button type="button" className="ifs-chip ifs-chip-match" onClick={onExpand}>
-          {item.matchLabel.replace(" vs ", " VS ")}
-        </button>
-        <input
-          className="ifs-chip ifs-chip-stake"
-          value={stake}
-          inputMode="decimal"
-          aria-label="Stake"
-          onChange={(event) => onStake(event.target.value)}
-        />
+        <div className="ifs-single-cover">
+          <button type="button" className="ifs-single-pick" onClick={onExpand}>
+            <span>
+              {selectionLabel(item.selection)}
+              <em> | {item.marketName}</em>
+            </span>
+            <strong>{formatOdds(item.odds)}</strong>
+          </button>
+          <div className="ifs-single-meta">
+            <button type="button" className="ifs-single-remove" aria-label="Remove selection" onClick={onRemove}>
+              ×
+            </button>
+            <button type="button" className="ifs-single-match" onClick={onExpand}>
+              {item.matchLabel.replace(" vs ", " VS ")}
+            </button>
+            <input
+              value={stake}
+              inputMode="decimal"
+              aria-label="Stake"
+              onChange={(event) => onStake(event.target.value)}
+            />
+          </div>
+        </div>
         <span className="ifs-chip ifs-chip-dark ifs-chip-win">{odds}</span>
         <button type="button" className="ifs-hit ifs-hit-mini-place" data-testid="if-place-bet-mini" onClick={onPlace}>
           <span className="ifs-chip ifs-chip-green ifs-chip-pay">About to pay {payLabel}</span>

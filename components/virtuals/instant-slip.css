@@ -32,9 +32,12 @@
 }
 
 .ifs-photo {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: fill;
   pointer-events: none;
   user-select: none;
 }
@@ -71,6 +74,20 @@
 .ifs-shot {
   background: #fff;
   line-height: 0;
+}
+
+.ifs-single-shot {
+  aspect-ratio: 1080 / 532;
+  min-height: 176px;
+}
+
+.ifs-multi-shot {
+  aspect-ratio: 1080 / 386;
+  min-height: 132px;
+}
+
+.ifs-sheet-shot {
+  aspect-ratio: 684 / 1080;
 }
 
 .ifs-chip,
@@ -124,13 +141,12 @@
 
 .ifs-single-shot .ifs-hit-close,
 .ifs-multi-shot .ifs-hit-close {
-  top: 6%;
+  top: 4%;
   right: 1%;
   width: 12%;
-  height: 16%;
+  height: 14%;
 }
 
-.ifs-single-shot .ifs-hit-expand,
 .ifs-multi-shot .ifs-hit-expand {
   top: 18%;
   left: 0;
@@ -138,53 +154,88 @@
   height: 36%;
 }
 
-.ifs-single-shot .ifs-hit-remove {
-  top: 36%;
+.ifs-single-cover {
+  position: absolute;
+  top: 16%;
   left: 0;
-  width: 10%;
-  height: 16%;
-  z-index: 2;
+  right: 0;
+  height: 38%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px 0 14px;
+  background: #fff;
+  line-height: 1.2;
 }
 
-.ifs-single-shot .ifs-chip-pick {
-  top: 22%;
-  left: 11%;
-  width: 62%;
-  height: 12%;
+.ifs-single-pick {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  border: 0;
+  background: #fff;
+  color: var(--ifs-ink);
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
 }
 
-.ifs-single-shot .ifs-chip-odds {
-  top: 22%;
-  right: 4%;
-  width: 18%;
-  height: 12%;
-  justify-content: flex-end;
+.ifs-single-pick em {
+  font-style: normal;
+  color: #9aa1ad;
+  font-weight: 400;
+}
+
+.ifs-single-pick strong {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
-.ifs-single-shot .ifs-chip-match {
-  top: 38%;
-  left: 11%;
-  width: 52%;
-  height: 14%;
+.ifs-single-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ifs-single-remove {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 0;
+  background: #fff;
+  color: #9aa1ad;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.ifs-single-match {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: #fff;
+  color: var(--ifs-ink);
   font-size: 13px;
+  font-weight: 500;
   letter-spacing: 0.02em;
   text-align: left;
 }
 
-.ifs-single-shot .ifs-chip-stake {
-  top: 38%;
-  right: 4%;
-  width: 22%;
-  height: 14%;
+.ifs-single-meta input {
+  width: 88px;
+  height: 34px;
   border: 1px solid #d8dde6;
   border-radius: 2px;
-  padding: 0 8px;
+  background: #fff;
+  color: var(--ifs-ink);
   font-size: 16px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   text-align: right;
+  padding: 0 10px;
   outline: none;
 }
 
@@ -374,7 +425,8 @@
 
 .ifs-live-totals {
   position: relative;
-  min-height: 168px;
+  min-height: 220px;
+  background: #fff;
 }
 
 .ifs-live-stake {
@@ -443,10 +495,10 @@
 }
 
 .ifs-chip-amount {
-  top: 18%;
-  left: 18%;
-  width: 64%;
-  height: 14%;
+  top: 22%;
+  left: 16%;
+  width: 68%;
+  height: 16%;
   justify-content: center;
   font-size: 28px;
   font-weight: 700;
