@@ -1,0 +1,266 @@
+.ift {
+  min-height: 100dvh;
+  max-width: 430px;
+  margin: 0 auto;
+  background: #14161a;
+  color: #fff;
+  font-family: var(--font-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.ift-top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 6px 0 2px;
+  background: #e31837;
+}
+
+.ift-back {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  color: #fff;
+}
+
+.ift-top h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.ift-wallet {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  text-decoration: none;
+  text-align: right;
+  line-height: 1.15;
+}
+
+.ift-wallet small {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.ift-wallet strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ift-open {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  background: #fff;
+  color: #1a1d24;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.ift-open b {
+  display: grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  padding: 0 5px;
+  border-radius: 99px;
+  background: #12a150;
+  color: #fff;
+  font-size: 11px;
+}
+
+.ift-card {
+  background: #fff;
+  color: #1a1d24;
+  padding: 12px 14px 10px;
+}
+
+.ift-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ift-card-head p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.ift-reload {
+  border: 0;
+  background: transparent;
+  color: #12a150;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.ift-pick {
+  padding: 12px 0 4px;
+}
+
+.ift-pick-line {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ift-pick-line strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.ift-pick-market,
+.ift-pick-match,
+.ift-pick-league {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.ift-details {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  margin: 8px 0 10px;
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.ift-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 4px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.ift-foot strong {
+  color: #1a1d24;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ift-play {
+  padding: 12px 12px 120px;
+}
+
+.ift-speed-bar {
+  position: fixed;
+  left: 50%;
+  bottom: calc(48px + env(safe-area-inset-bottom));
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 430px;
+  height: 40px;
+  padding: 0 12px;
+  background: #1b1e24;
+  transform: translateX(-50%);
+  color: #d7dde6;
+  font-size: 13px;
+}
+
+.ift-speeds {
+  display: flex;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.ift-speeds button {
+  min-width: 42px;
+  height: 26px;
+  border: 0;
+  background: #2a2d36;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ift-speeds button[aria-current="true"] {
+  background: #12a150;
+}
+
+.ift-dock {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 31;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  max-width: 430px;
+  height: calc(48px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  transform: translateX(-50%);
+}
+
+.ift-dock a,
+.ift-dock button {
+  display: grid;
+  place-items: center;
+  border: 0;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ift-keep {
+  background: #2a2d36;
+}
+
+.ift-kick {
+  background: #12a150;
+}
+
+.ift-kick:disabled {
+  opacity: 0.7;
+}
+
+.ift-result {
+  margin-top: 12px;
+  border-radius: 8px;
+  background: #1f232b;
+  padding: 14px;
+  text-align: center;
+}
+
+.ift-events {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ift-events li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #23262e;
+  font-size: 12px;
+}
+
+.ift-events .goal {
+  background: #12a150;
+  font-weight: 700;
+}
