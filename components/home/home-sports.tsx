@@ -40,7 +40,7 @@ export function HomeSportsBoard({ matches }: { matches: ClientMatch[] }) {
 
   return (
     <section className="mt-0 bg-white">
-      <div className="flex items-end gap-1.5 border-b border-line px-2.5 pt-1.5 min-[412px]:px-3 min-[412px]:pt-2">
+      <div className="flex items-end gap-1.5 px-2.5 pt-1.5 min-[412px]:px-3 min-[412px]:pt-2">
         <p className="shrink-0 pb-1 text-[13px] font-semibold leading-none tracking-[0.01em] text-ink min-[412px]:text-[14px]">Sports</p>
         <span className="mb-1.5 shrink-0 text-[#d1d5db]">|</span>
         <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto text-[11px] font-medium tracking-[0.01em] min-[412px]:gap-2.5 min-[412px]:text-[12px]">
