@@ -15,12 +15,14 @@ import {
 } from "@/store/virtual-slip";
 import "./instant-slip.css";
 
-const IF_STATES = {
-  single: "/virtuals/if-states/1-single.jpg",
-  multi: "/virtuals/if-states/2-multi.jpg",
-  sheet: "/virtuals/if-states/3-sheet.jpg",
-  confirm: "/virtuals/if-states/4-confirm.jpg",
-  submitting: "/virtuals/if-states/5-submitting.jpg",
+export const IF_ASSET_V = "4";
+
+export const IF_STATES = {
+  single: `/virtuals/if-states/1-single.jpg?v=${IF_ASSET_V}`,
+  multi: `/virtuals/if-states/2-multi.jpg?v=${IF_ASSET_V}`,
+  sheet: `/virtuals/if-states/3-sheet.jpg?v=${IF_ASSET_V}`,
+  confirm: `/virtuals/if-states/4-confirm.jpg?v=${IF_ASSET_V}`,
+  submitting: `/virtuals/if-states/5-submitting.jpg?v=${IF_ASSET_V}`,
 } as const;
 
 export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }) {
@@ -33,7 +35,6 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const [error, setError] = useState<string | null>(null);
   const [flexi, setFlexi] = useState(false);
   const [oneCut, setOneCut] = useState(false);
-  const prevCount = useRef(0);
   const placing = useRef(false);
 
   const stakePesewas = parseGhsToPesewas(stake) ?? 0;
@@ -43,7 +44,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const busy = mode === "submitting";
 
   useEffect(() => {
-    if (prevCount.current === 0 && items.length > 0 && phase === "dock") {
+    if (items.length > 0 && phase === "dock") {
       setPhase("mini");
       setMode("edit");
     }
@@ -54,7 +55,6 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
     if (items.length === 0 && phase === "sheet" && mode !== "submitting") {
       setMode("edit");
     }
-    prevCount.current = items.length;
   }, [items.length, phase, mode]);
 
   useEffect(() => {
@@ -123,9 +123,10 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
 
   const wallet = user?.wallet?.balancePesewas ?? 0;
   const payLabel = toGhs(stakePesewas || 0);
+  const sheetSrc = mode === "submitting" ? IF_STATES.submitting : mode === "confirm" ? IF_STATES.confirm : IF_STATES.sheet;
 
   return (
-    <div className="ifs-root" data-testid="if-slip">
+    <div className="ifs-root" data-testid="if-slip" data-if-build="if-states-v4" data-if-phase={phase} data-if-mode={mode}>
       {phase === "sheet" ? (
         <button type="button" className="ifs-backdrop" aria-label="Close betslip" onClick={closeSheet} />
       ) : null}
@@ -165,74 +166,66 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
       ) : null}
 
       {phase === "sheet" ? (
-        <section className="ifs-sheet" data-testid="if-slip-sheet" aria-label="Betslip">
-          <img
-            className="ifs-state-img"
-            src={mode === "submitting" ? IF_STATES.submitting : mode === "confirm" ? IF_STATES.confirm : IF_STATES.sheet}
-            alt=""
-            draggable={false}
-          />
-          <div className="ifs-state-ui">
-          <header className="ifs-sheet-head">
-            <div className="ifs-sheet-top">
-              <span className="ifs-count">{items.length}</span>
-              <span className="ifs-sheet-name">Betslip</span>
-              <button type="button" className="ifs-chevron" aria-label="Collapse betslip" onClick={closeSheet}>
-                <ChevronDown />
-              </button>
-              <span className="ifs-balance">{formatWallet(wallet)}</span>
+        <section
+          className="ifs-shot ifs-sheet-shot"
+          data-testid="if-slip-sheet"
+          data-if-state={mode}
+          aria-label="Betslip"
+        >
+          <img className="ifs-photo" src={sheetSrc} alt="" draggable={false} />
+          <div className="ifs-overlay">
+            <span className="ifs-chip ifs-chip-count">{items.length}</span>
+            <span className="ifs-chip ifs-chip-balance">{formatWallet(wallet)}</span>
+            <button type="button" className="ifs-hit ifs-hit-collapse" aria-label="Collapse betslip" onClick={closeSheet} />
+            <button
+              type="button"
+              className="ifs-hit ifs-hit-clear"
+              aria-label="Remove all selections"
+              disabled={items.length === 0 || busy}
+              onClick={clear}
+            />
+            <button
+              type="button"
+              className="ifs-hit ifs-hit-settings"
+              aria-label="Bet settings"
+              onClick={() => toast.message("Demo bet settings · simulated only")}
+            />
+            <div className="ifs-tab-hits">
+              {(["SINGLE", "MULTI", "SYSTEM"] as const).map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  className="ifs-hit"
+                  aria-current={viewTab === item ? "true" : undefined}
+                  aria-label={item === "SINGLE" ? "Single" : item === "MULTI" ? "Multiple" : "System"}
+                  disabled={busy}
+                  onClick={() => changeTab(item)}
+                />
+              ))}
             </div>
-            <div className="ifs-sheet-tools">
-              <button type="button" onClick={clear} disabled={items.length === 0 || busy}>
-                <TrashTiny /> Remove All
-              </button>
-              <button
-                type="button"
-                className="ifs-settings"
-                onClick={() => toast.message("Demo bet settings · simulated only")}
-              >
-                Bet Settings <GearTiny />
-                <span className="dot" />
-              </button>
-            </div>
-          </header>
 
-          <div className="ifs-tabs">
-            {(["SINGLE", "MULTI", "SYSTEM"] as const).map((item) => (
-              <button
-                key={item}
-                type="button"
-                aria-current={viewTab === item ? "true" : undefined}
-                onClick={() => changeTab(item)}
-                disabled={busy}
-              >
-                {item === "SINGLE" ? "Single" : item === "MULTI" ? "Multiple" : "System"}
-              </button>
-            ))}
-          </div>
-
-          <div className="ifs-body">
-            {items.length === 0 ? (
-              <p className="ifs-empty">Tap a 1, X or 2 odd to add a demo selection.</p>
-            ) : (
-              items.map((item) => (
-                <SelectionRow key={item.outcomeId} item={item} onRemove={() => remove(item.outcomeId)} disabled={busy} />
-              ))
-            )}
-            {items.length > 0 ? (
-              <p className="ifs-bonus">
-                <i />
-                Add more qualifying selections to boost your bonus
-              </p>
-            ) : null}
-
-            <div className="ifs-totals">
-              <div className="ifs-stake-row">
-                <span>Total Stake</span>
-                <label className="ifs-stake-wrap">
-                  GHS
+            <div className={`ifs-live-body${mode === "confirm" ? " is-dim" : ""}`}>
+              {items.length === 0 ? (
+                <p className="ifs-empty">Tap a 1, X or 2 odd to add a demo selection.</p>
+              ) : (
+                items.map((item) => (
+                  <LivePick key={item.outcomeId} item={item} onRemove={() => remove(item.outcomeId)} disabled={busy} />
+                ))
+              )}
+              {invalid && items.length > 0 ? (
+                <p className="ifs-warn">
+                  {viewTab === "SYSTEM"
+                    ? "System bets need more selections."
+                    : tab === "SINGLE"
+                      ? "Single bets need one selection."
+                      : "Add at least two selections for a multiple."}
+                </p>
+              ) : null}
+              {error ? <p className="ifs-warn">{error}</p> : null}
+              <div className="ifs-live-totals">
+                <label className="ifs-live-stake">
+                  <span className="sr-only">Total stake</span>
                   <input
-                    className="ifs-stake-box"
                     value={stake}
                     inputMode="decimal"
                     disabled={busy}
@@ -240,81 +233,52 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
                     onChange={(event) => setStake(event.target.value)}
                   />
                 </label>
-              </div>
-              <div className="ifs-insure">
-                <strong>SportyInsure</strong>
-                <span aria-hidden>i</span>
-                <label>
-                  <input type="checkbox" checked={flexi} disabled={busy} onChange={() => setFlexi((value) => !value)} />
-                  Flexi
-                </label>
-                <label>
-                  <input type="checkbox" checked={oneCut} disabled={busy} onChange={() => setOneCut((value) => !value)} />
-                  One Cut
-                </label>
-              </div>
-              <div className="ifs-line">
-                <span>Total Odds</span>
-                <strong>{items.length ? formatOdds(summary.totalOdds) : "0.00"}</strong>
-              </div>
-              <div className="ifs-line">
-                <span>Max Bonus</span>
-                <strong>{toGhs(summary.maxBonus)}</strong>
-              </div>
-              <div className="ifs-pot">
-                <span>Potential Win</span>
-                <strong>{toGhs(summary.potentialWithBonus)}</strong>
+                <span className="ifs-chip ifs-chip-total-odds">{items.length ? formatOdds(summary.totalOdds) : "0.00"}</span>
+                <span className="ifs-chip ifs-chip-bonus">{toGhs(summary.maxBonus)}</span>
+                <span className="ifs-chip ifs-chip-pot">{toGhs(summary.potentialWithBonus)}</span>
               </div>
             </div>
-            {invalid && items.length > 0 ? (
-              <p className="ifs-warn">
-                {viewTab === "SYSTEM"
-                  ? "System bets need more selections."
-                  : tab === "SINGLE"
-                    ? "Single bets need one selection."
-                    : "Add at least two selections for a multiple."}
-              </p>
+
+            {mode === "edit" ? (
+              <button
+                type="button"
+                className="ifs-hit ifs-hit-place"
+                data-testid="if-place-bet"
+                disabled={busy || items.length === 0 || invalid}
+                onClick={askConfirm}
+              >
+                <span className="ifs-chip ifs-chip-green ifs-chip-pay">About to pay {payLabel}</span>
+              </button>
             ) : null}
-            {error ? <p className="ifs-warn">{error}</p> : null}
-          </div>
 
-          <button
-            type="button"
-            className="ifs-sheet-place"
-            data-testid={busy ? "if-submitting" : "if-place-bet"}
-            disabled={busy || items.length === 0 || invalid}
-            onClick={askConfirm}
-          >
-            {busy ? (
-              <b>
-                <span className="ifs-spin" />
-                Submitting
-              </b>
-            ) : (
-              <>
-                <b>Place Bet</b>
-                <small>About to pay {payLabel}</small>
-              </>
-            )}
-          </button>
-
-          {mode === "confirm" ? (
-            <div className="ifs-confirm-layer" data-testid="if-confirm">
-              <button type="button" className="ifs-confirm-dim" aria-label="Dismiss confirmation" onClick={cancelConfirm} />
-              <div className="ifs-confirm">
-                <p className="label">Confirm to Pay</p>
-                <p className="amount">GHS{payLabel}</p>
-                <div className="ifs-confirm-actions">
-                  <button type="button" className="ifs-cancel" onClick={cancelConfirm}>
-                    Cancel
-                  </button>
-                  <button type="button" className="ifs-ok" data-testid="if-confirm-pay" onClick={() => void confirmPlace()}>
-                    Confirm
-                  </button>
-                </div>
+            {mode === "confirm" ? (
+              <div className="ifs-confirm-hits" data-testid="if-confirm">
+                <span className="ifs-chip ifs-chip-amount">GHS{payLabel}</span>
+                <button type="button" className="ifs-hit ifs-hit-cancel" onClick={cancelConfirm}>
+                  Cancel
+                </button>
+                <button type="button" className="ifs-hit ifs-hit-ok" data-testid="if-confirm-pay" onClick={() => void confirmPlace()}>
+                  Confirm
+                </button>
               </div>
-            </div>
-          ) : null}
+            ) : null}
+
+            {mode === "submitting" ? <span className="ifs-spin-cover" data-testid="if-submitting" /> : null}
+
+            <button
+              type="button"
+              className="ifs-hit ifs-hit-flexi"
+              aria-pressed={flexi}
+              disabled={busy}
+              onClick={() => setFlexi((value) => !value)}
+            />
+            <button
+              type="button"
+              className="ifs-hit ifs-hit-onecut"
+              aria-pressed={oneCut}
+              disabled={busy}
+              onClick={() => setOneCut((value) => !value)}
+            />
           </div>
         </section>
       ) : null}
@@ -344,47 +308,31 @@ function SingleMini({
   onPlace: () => void;
 }) {
   return (
-    <section className="ifs-mini" data-testid="if-slip-single">
-      <img className="ifs-state-img" src={IF_STATES.single} alt="" draggable={false} />
-      <div className="ifs-state-ui">
-      <div className="ifs-handle">
-        <button type="button" className="ifs-close" aria-label="Close betslip" onClick={onClose}>
-          ×
-        </button>
-      </div>
-      <button type="button" className="ifs-single-row" onClick={onExpand}>
-        <BallIcon />
-        <span className="ifs-pick-title">
+    <section className="ifs-shot ifs-single-shot" data-testid="if-slip-single" data-if-state="single">
+      <img className="ifs-photo" src={IF_STATES.single} alt="" draggable={false} />
+      <div className="ifs-overlay">
+        <button type="button" className="ifs-hit ifs-hit-close" aria-label="Close betslip" onClick={onClose} />
+        <button type="button" className="ifs-hit ifs-hit-expand" aria-label="Expand betslip" onClick={onExpand} />
+        <button type="button" className="ifs-hit ifs-hit-remove" aria-label="Remove selection" onClick={onRemove} />
+        <span className="ifs-chip ifs-chip-pick">
           {selectionLabel(item.selection)}
           <em> | {item.marketName}</em>
         </span>
-        <span className="ifs-pick-odds">{formatOdds(item.odds)}</span>
-      </button>
-      <div className="ifs-single-match">
-        <button type="button" className="ifs-remove" aria-label="Remove selection" onClick={onRemove}>
-          ×
-        </button>
-        <button type="button" className="ifs-match" onClick={onExpand}>
+        <span className="ifs-chip ifs-chip-odds">{formatOdds(item.odds)}</span>
+        <button type="button" className="ifs-chip ifs-chip-match" onClick={onExpand}>
           {item.matchLabel.replace(" vs ", " VS ")}
         </button>
         <input
-          className="ifs-stake-box"
+          className="ifs-chip ifs-chip-stake"
           value={stake}
           inputMode="decimal"
           aria-label="Stake"
           onChange={(event) => onStake(event.target.value)}
         />
-      </div>
-      <div className="ifs-actions">
-        <div className="ifs-win">
-          <span>To Win</span>
-          <strong>{odds}</strong>
-        </div>
-        <button type="button" className="ifs-place" data-testid="if-place-bet-mini" onClick={onPlace}>
-          <b>Place Bet</b>
-          <small>About to pay {payLabel}</small>
+        <span className="ifs-chip ifs-chip-dark ifs-chip-win">{odds}</span>
+        <button type="button" className="ifs-hit ifs-hit-mini-place" data-testid="if-place-bet-mini" onClick={onPlace}>
+          <span className="ifs-chip ifs-chip-green ifs-chip-pay">About to pay {payLabel}</span>
         </button>
-      </div>
       </div>
     </section>
   );
@@ -402,32 +350,21 @@ function MultipleMini({
   onExpand: () => void;
 }) {
   return (
-    <section className="ifs-mini" data-testid="if-slip-multi">
-      <img className="ifs-state-img" src={IF_STATES.multi} alt="" draggable={false} />
-      <div className="ifs-state-ui">
-      <div className="ifs-handle">
-        <button type="button" className="ifs-close" aria-label="Close betslip" onClick={onClose}>
-          ×
-        </button>
-      </div>
-      <button type="button" className="ifs-multi-bar" onClick={onExpand}>
-        <span className="ifs-count">{count}</span>
-        <span className="ifs-multi-title">Betslip</span>
-        <span className="ifs-multi-meta">
-          {multipleLabel(count)}
-          <strong>{odds}</strong>
+    <section className="ifs-shot ifs-multi-shot" data-testid="if-slip-multi" data-if-state="multi">
+      <img className="ifs-photo" src={IF_STATES.multi} alt="" draggable={false} />
+      <div className="ifs-overlay">
+        <button type="button" className="ifs-hit ifs-hit-close" aria-label="Close betslip" onClick={onClose} />
+        <button type="button" className="ifs-hit ifs-hit-expand" aria-label="Expand betslip" onClick={onExpand} />
+        <span className="ifs-chip ifs-chip-count">{count}</span>
+        <span className="ifs-chip ifs-chip-multi-meta">
+          {multipleLabel(count)} <strong>{odds}</strong>
         </span>
-      </button>
-      <p className="ifs-bonus">
-        <i />
-        Add more qualifying selections to boost your bonus
-      </p>
       </div>
     </section>
   );
 }
 
-function SelectionRow({
+function LivePick({
   item,
   onRemove,
   disabled,
@@ -437,19 +374,16 @@ function SelectionRow({
   disabled: boolean;
 }) {
   return (
-    <article className="ifs-sel">
-      <span className="ifs-sel-icon">
-        <BallIcon />
-      </span>
-      <span className="ifs-sel-name">{selectionLabel(item.selection)}</span>
-      <span className="ifs-sel-odds">{formatOdds(item.odds)}</span>
-      <div className="ifs-sel-match">
-        <button type="button" className="ifs-remove" aria-label="Remove selection" disabled={disabled} onClick={onRemove}>
+    <article className="ifs-live-pick">
+      <span className="ifs-live-name">{selectionLabel(item.selection)}</span>
+      <span className="ifs-live-odds">{formatOdds(item.odds)}</span>
+      <div className="ifs-live-match">
+        <button type="button" aria-label="Remove selection" disabled={disabled} onClick={onRemove}>
           ×
         </button>
         <span>{item.matchLabel.replace(" vs ", " VS ")}</span>
       </div>
-      <span className="ifs-sel-market">{item.marketName}</span>
+      <span className="ifs-live-market">{item.marketName}</span>
     </article>
   );
 }
@@ -459,38 +393,4 @@ function formatWallet(pesewas: number) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
-}
-
-function BallIcon() {
-  return (
-    <svg className="ifs-ball" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <circle cx="8" cy="8" r="6.2" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M8 1.8 9.6 5.2 13.4 5.6 10.6 8.2l.9 3.8L8 10.4 4.5 12l.9-3.8L2.6 5.6l3.8-.4Z" stroke="currentColor" strokeWidth="1.1" />
-    </svg>
-  );
-}
-
-function ChevronDown() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
-      <path d="M4 7.2 9 12l5-4.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function TrashTiny() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-      <path d="M2 3h8M4.5 3V2h3v1M3.2 3l.5 7h4.6l.5-7" stroke="currentColor" strokeWidth="1.1" />
-    </svg>
-  );
-}
-
-function GearTiny() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
-      <circle cx="6.5" cy="6.5" r="2" stroke="currentColor" strokeWidth="1.2" />
-      <path d="M6.5 1.4v1.4M6.5 10.2v1.4M1.4 6.5h1.4M10.2 6.5h1.4M2.8 2.8l1 1M9.2 9.2l1 1M10.2 2.8l-1 1M3.8 9.2l-1 1" stroke="currentColor" strokeWidth="1.2" />
-    </svg>
-  );
 }

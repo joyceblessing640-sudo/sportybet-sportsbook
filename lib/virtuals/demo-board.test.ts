@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   DEMO_MATCHES,
@@ -84,6 +85,18 @@ describe("Instant Football demo tickets", () => {
     const potentialWin = potentialWinPesewas(100, totalOdds);
     expect(totalOdds).toBe(911);
     expect(potentialWin + Math.round(potentialWin * 0.04)).toBe(947);
+  });
+
+  it("keeps the six Instant Football state screenshots for the live slip", () => {
+    const files = [
+      "public/virtuals/if-states/1-single.jpg",
+      "public/virtuals/if-states/2-multi.jpg",
+      "public/virtuals/if-states/3-sheet.jpg",
+      "public/virtuals/if-states/4-confirm.jpg",
+      "public/virtuals/if-states/5-submitting.jpg",
+      "public/virtuals/if-states/6-ticket.jpg",
+    ];
+    for (const file of files) expect(existsSync(file), file).toBe(true);
   });
 
   it("places a demo ticket from the current slip instead of screenshot data", () => {

@@ -1,14 +1,13 @@
-/* Instant Football betslip — states match the reference screenshots. */
+/* Instant Football slip — the provided screenshots are the chrome. */
 
 .ifs-root {
   --ifs-green: #12a150;
   --ifs-green-btn: #1bb05c;
   --ifs-dark: #2a2d36;
   --ifs-ink: #1a1d24;
-  --ifs-muted: #8b93a0;
-  --ifs-line: #eef0f4;
   max-width: 430px;
   margin: 0 auto;
+  font-family: var(--font-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .ifs-backdrop {
@@ -22,8 +21,7 @@
 }
 
 .ifs-dock,
-.ifs-mini,
-.ifs-sheet {
+.ifs-shot {
   position: fixed;
   left: 50%;
   bottom: 0;
@@ -31,25 +29,20 @@
   width: 100%;
   max-width: 430px;
   transform: translateX(-50%);
-  isolation: isolate;
 }
 
-.ifs-state-img {
+.ifs-photo {
   display: block;
   width: 100%;
   height: auto;
-  object-fit: contain;
-  object-position: bottom center;
   pointer-events: none;
   user-select: none;
 }
 
-.ifs-state-ui {
+.ifs-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 .ifs-dock {
@@ -65,7 +58,6 @@
   color: #fff;
   font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.01em;
 }
 
 .ifs-dock .next {
@@ -76,86 +68,297 @@
   background: var(--ifs-green);
 }
 
-.ifs-mini {
+.ifs-shot {
   background: #fff;
-  box-shadow: 0 -4px 18px rgb(16 24 20 / 0.12);
-  padding-bottom: 0;
-  min-height: 160px;
+  line-height: 0;
 }
 
-.ifs-handle {
-  position: relative;
-  height: 18px;
-  background: transparent;
+.ifs-chip,
+.ifs-hit,
+.ifs-live-stake input {
+  font-family: inherit;
+  line-height: 1.15;
 }
 
-.ifs-handle::before {
-  content: none;
-}
-
-.ifs-close {
+.ifs-chip {
   position: absolute;
-  top: 2px;
-  right: 6px;
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border: 0;
-  background: transparent;
-  color: #9aa1ad;
-  font-size: 22px;
-  line-height: 1;
-}
-
-.ifs-single-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 2px 14px 0;
+  margin: 0;
+  border: 0;
   background: #fff;
-}
-
-.ifs-ball {
-  flex-shrink: 0;
   color: var(--ifs-ink);
-}
-
-.ifs-pick-title {
-  flex: 1;
-  min-width: 0;
   font-size: 15px;
   font-weight: 500;
-  color: var(--ifs-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.ifs-pick-title em {
+.ifs-chip em {
   font-style: normal;
   color: #9aa1ad;
   font-weight: 400;
 }
 
-.ifs-pick-odds {
-  font-size: 16px;
+.ifs-chip-dark {
+  background: #2a2d36;
+  color: #fff;
+  font-weight: 600;
+  justify-content: flex-end;
+}
+
+.ifs-chip-green {
+  background: #1bb05c;
+  color: #fff;
+  justify-content: center;
+}
+
+.ifs-hit {
+  position: absolute;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: transparent;
+}
+
+.ifs-single-shot .ifs-hit-close,
+.ifs-multi-shot .ifs-hit-close {
+  top: 6%;
+  right: 1%;
+  width: 12%;
+  height: 16%;
+}
+
+.ifs-single-shot .ifs-hit-expand,
+.ifs-multi-shot .ifs-hit-expand {
+  top: 18%;
+  left: 0;
+  width: 100%;
+  height: 36%;
+}
+
+.ifs-single-shot .ifs-hit-remove {
+  top: 36%;
+  left: 0;
+  width: 10%;
+  height: 16%;
+  z-index: 2;
+}
+
+.ifs-single-shot .ifs-chip-pick {
+  top: 22%;
+  left: 11%;
+  width: 62%;
+  height: 12%;
+}
+
+.ifs-single-shot .ifs-chip-odds {
+  top: 22%;
+  right: 4%;
+  width: 18%;
+  height: 12%;
+  justify-content: flex-end;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+
+.ifs-single-shot .ifs-chip-match {
+  top: 38%;
+  left: 11%;
+  width: 52%;
+  height: 14%;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+.ifs-single-shot .ifs-chip-stake {
+  top: 38%;
+  right: 4%;
+  width: 22%;
+  height: 14%;
+  border: 1px solid #d8dde6;
+  border-radius: 2px;
+  padding: 0 8px;
+  font-size: 16px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  outline: none;
+}
+
+.ifs-single-shot .ifs-chip-win {
+  top: 58%;
+  left: 34%;
+  width: 14%;
+  height: 16%;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ifs-single-shot .ifs-hit-mini-place {
+  top: 54%;
+  left: 50%;
+  width: 50%;
+  height: 24%;
+}
+
+.ifs-single-shot .ifs-chip-pay,
+.ifs-sheet-shot .ifs-chip-pay {
+  left: 8%;
+  right: 8%;
+  top: 58%;
+  height: 28%;
+  width: auto;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.ifs-multi-shot .ifs-chip-count {
+  top: 28%;
+  left: 4.2%;
+  width: 7.2%;
+  height: 18%;
+  justify-content: center;
+  border-radius: 99px;
+  background: var(--ifs-green);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ifs-multi-shot .ifs-chip-multi-meta {
+  top: 28%;
+  right: 4%;
+  width: 38%;
+  height: 18%;
+  justify-content: flex-end;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.ifs-multi-shot .ifs-chip-multi-meta strong {
+  margin-left: 6px;
+  color: var(--ifs-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.ifs-sheet-shot {
+  z-index: 90;
+  max-height: 92dvh;
+  overflow: hidden;
+  box-shadow: 0 -8px 32px rgb(16 24 20 / 0.28);
+}
+
+.ifs-sheet-shot .ifs-chip-count {
+  top: 2.6%;
+  left: 4.2%;
+  width: 6.4%;
+  height: 3.6%;
+  justify-content: center;
+  border-radius: 99px;
+  background: var(--ifs-green);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.ifs-sheet-shot .ifs-chip-balance {
+  top: 2.8%;
+  right: 3%;
+  width: 28%;
+  height: 3.4%;
+  justify-content: flex-end;
+  background: #2a2d36;
+  color: #f5c518;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ifs-hit-collapse {
+  top: 1.8%;
+  left: 38%;
+  width: 24%;
+  height: 5.2%;
+}
+
+.ifs-hit-clear {
+  top: 7.6%;
+  left: 2%;
+  width: 28%;
+  height: 4.4%;
+}
+
+.ifs-hit-settings {
+  top: 7.6%;
+  right: 2%;
+  width: 28%;
+  height: 4.4%;
+}
+
+.ifs-tab-hits {
+  position: absolute;
+  top: 13.2%;
+  left: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  height: 6.2%;
+}
+
+.ifs-tab-hits .ifs-hit {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.ifs-live-body {
+  position: absolute;
+  top: 20.4%;
+  left: 0;
+  right: 0;
+  height: 62%;
+  overflow-y: auto;
+  background: #fff;
+  line-height: 1.2;
+}
+
+.ifs-live-body.is-dim {
+  height: 40%;
+  background: #d8d8d8;
+}
+
+.ifs-live-pick {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 8px;
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid #f3f4f7;
+}
+
+.ifs-live-name,
+.ifs-live-odds {
+  font-size: 15px;
+  font-weight: 500;
   color: var(--ifs-ink);
 }
 
-.ifs-single-match {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px 12px;
-  background: #fff;
+.ifs-live-odds {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
-.ifs-remove {
-  display: grid;
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  place-items: center;
+.ifs-live-match {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ifs-ink);
+}
+
+.ifs-live-match button {
   border: 0;
   background: transparent;
   color: #9aa1ad;
@@ -163,18 +366,26 @@
   line-height: 1;
 }
 
-.ifs-match {
-  flex: 1;
-  min-width: 0;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ifs-ink);
-  letter-spacing: 0.02em;
+.ifs-live-market {
+  grid-column: 1;
+  font-size: 12px;
+  color: #9aa1ad;
 }
 
-.ifs-stake-box {
+.ifs-live-totals {
+  position: relative;
+  min-height: 168px;
+}
+
+.ifs-live-stake {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+}
+
+.ifs-live-stake input {
   width: 88px;
-  height: 36px;
+  height: 34px;
   border: 1px solid #d8dde6;
   border-radius: 2px;
   background: #fff;
@@ -187,470 +398,113 @@
   outline: none;
 }
 
-.ifs-stake-box:focus {
-  border-color: var(--ifs-green);
-}
-
-.ifs-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: 56px;
-}
-
-.ifs-win {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  background: transparent;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.ifs-win strong {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.ifs-place {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background: transparent;
-  color: #fff;
-  line-height: 1.15;
-}
-
-.ifs-place b {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.ifs-place small {
-  font-size: 12px;
-  font-weight: 400;
-  opacity: 0.95;
-}
-
-.ifs-place:disabled {
-  opacity: 0.7;
-}
-
-.ifs-multi-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 4px 16px 10px;
-  border: 0;
-  background: #fff;
-  text-align: left;
-  color: inherit;
-}
-
-.ifs-count {
-  display: grid;
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  place-items: center;
-  border-radius: 99px;
-  background: var(--ifs-green);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.ifs-multi-title {
-  flex: 1;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--ifs-ink);
-}
-
-.ifs-multi-meta {
-  font-size: 14px;
-  font-weight: 500;
-  color: #6b7280;
-}
-
-.ifs-multi-meta strong {
-  margin-left: 6px;
-  color: var(--ifs-ink);
-  font-variant-numeric: tabular-nums;
-}
-
-.ifs-bonus {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 12px 12px;
-  padding: 8px 10px;
-  border-radius: 99px;
-  background: #e8f7ee;
-  color: var(--ifs-green);
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.ifs-bonus i {
-  width: 10px;
-  height: 10px;
-  border-radius: 99px;
-  background: #7dcea0;
-  flex-shrink: 0;
-}
-
-.ifs-sheet {
-  z-index: 90;
-  display: block;
-  height: auto;
-  max-height: 92dvh;
-  background: #2a2d36;
-  overflow: hidden;
-  box-shadow: 0 -8px 32px rgb(16 24 20 / 0.28);
-}
-
-.ifs-sheet-head {
-  background: transparent;
-  color: #fff;
-  padding: 10px 12px 8px;
-  flex-shrink: 0;
-}
-
-.ifs-sheet-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.ifs-sheet-top .ifs-count {
-  width: 20px;
-  height: 20px;
-  font-size: 11px;
-}
-
-.ifs-sheet-name {
-  flex: 1;
-  font-size: 17px;
-  font-weight: 600;
-}
-
-.ifs-chevron {
-  display: grid;
-  width: 36px;
-  height: 28px;
-  place-items: center;
-  border: 0;
-  background: transparent;
-  color: #fff;
-}
-
-.ifs-balance {
-  font-size: 13px;
-  font-weight: 500;
-  color: #f5c518;
-  font-variant-numeric: tabular-nums;
-}
-
-.ifs-sheet-tools {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 10px;
-  font-size: 12px;
-  color: #c5cad3;
-}
-
-.ifs-sheet-tools button {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font-size: 12px;
-}
-
-.ifs-settings {
-  position: relative;
-}
-
-.ifs-settings .dot {
+.ifs-sheet-shot .ifs-chip-total-odds,
+.ifs-sheet-shot .ifs-chip-bonus,
+.ifs-sheet-shot .ifs-chip-pot {
   position: absolute;
-  top: -2px;
-  right: -4px;
-  width: 6px;
-  height: 6px;
-  border-radius: 99px;
-  background: #e31837;
-}
-
-.ifs-tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  background: transparent;
-  flex-shrink: 0;
-}
-
-.ifs-tabs button {
-  height: 40px;
-  border: 0;
-  background: transparent;
-  color: #6b7280;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.ifs-tabs button[aria-current="true"] {
-  background: #fff;
-  color: var(--ifs-ink);
-}
-
-.ifs-body {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  background: #fff;
-}
-
-.ifs-sel {
-  display: grid;
-  grid-template-columns: 22px 1fr auto;
-  gap: 6px 8px;
-  padding: 12px 14px 10px;
-  border-bottom: 1px solid #f3f4f7;
-}
-
-.ifs-sel-icon {
-  grid-row: 1;
-  color: var(--ifs-ink);
-  padding-top: 2px;
-}
-
-.ifs-sel-name {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ifs-ink);
-}
-
-.ifs-sel-odds {
-  font-size: 15px;
+  right: 14px;
+  width: 28%;
+  height: 22px;
+  justify-content: flex-end;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
-.ifs-sel-match {
-  grid-column: 1 / 3;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--ifs-ink);
+.ifs-sheet-shot .ifs-chip-total-odds {
+  top: 92px;
 }
 
-.ifs-sel-market {
-  grid-column: 2;
-  font-size: 12px;
-  color: #9aa1ad;
+.ifs-sheet-shot .ifs-chip-bonus {
+  top: 118px;
 }
 
-.ifs-totals {
-  padding: 4px 14px 0;
-}
-
-.ifs-stake-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 46px;
-  font-size: 14px;
-  color: var(--ifs-ink);
-}
-
-.ifs-stake-row > span:first-child {
-  font-weight: 500;
-}
-
-.ifs-stake-wrap {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #6b7280;
-  font-size: 13px;
-}
-
-.ifs-insure {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 40px;
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.ifs-insure strong {
-  color: var(--ifs-green);
-  font-size: 14px;
-  font-weight: 700;
-  margin-right: 2px;
-}
-
-.ifs-insure label {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.ifs-insure input {
-  accent-color: var(--ifs-green);
-}
-
-.ifs-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 30px;
-  font-size: 14px;
-  color: var(--ifs-ink);
-}
-
-.ifs-line strong {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.ifs-pot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 8px -14px 0;
-  padding: 10px 14px;
+.ifs-sheet-shot .ifs-chip-pot {
+  top: 148px;
   background: #eef8f1;
-  font-size: 15px;
-  font-weight: 500;
 }
 
-.ifs-pot strong {
-  font-size: 16px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+.ifs-sheet-shot .ifs-hit-place {
+  top: 87%;
+  left: 0;
+  width: 100%;
+  height: 13%;
 }
 
-.ifs-sheet-place {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.ifs-sheet-shot .ifs-chip-pay {
+  top: 46%;
+}
+
+.ifs-confirm-hits {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 61%;
+  bottom: 0;
+}
+
+.ifs-chip-amount {
+  top: 18%;
+  left: 18%;
+  width: 64%;
+  height: 14%;
   justify-content: center;
-  height: 56px;
-  border: 0;
-  background: transparent;
-  color: #fff;
-  padding-bottom: env(safe-area-inset-bottom);
+  font-size: 28px;
+  font-weight: 700;
 }
 
-.ifs-sheet-place b {
-  font-size: 18px;
-  font-weight: 600;
+.ifs-hit-cancel,
+.ifs-hit-ok {
+  top: 72%;
+  height: 22%;
+  color: transparent;
 }
 
-.ifs-sheet-place small {
-  font-size: 12px;
-  font-weight: 400;
+.ifs-hit-cancel {
+  left: 0;
+  width: 46%;
 }
 
-.ifs-sheet-place:disabled {
-  opacity: 0.85;
+.ifs-hit-ok {
+  left: 46%;
+  width: 54%;
 }
 
-.ifs-spin {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
+.ifs-hit-flexi {
+  top: 68%;
+  left: 42%;
+  width: 18%;
+  height: 4%;
+}
+
+.ifs-hit-onecut {
+  top: 68%;
+  left: 64%;
+  width: 24%;
+  height: 4%;
+}
+
+.ifs-spin-cover {
+  position: absolute;
+  top: 88.5%;
+  left: 46%;
+  width: 18px;
+  height: 18px;
   border: 2px solid rgb(255 255 255 / 0.35);
   border-top-color: #fff;
   border-radius: 99px;
   animation: ifs-spin 0.7s linear infinite;
-  vertical-align: -2px;
-}
-
-.ifs-confirm-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.ifs-confirm-dim {
-  flex: 1;
-  border: 0;
-  background: rgb(0 0 0 / 0.42);
-}
-
-.ifs-confirm {
-  background: #fff;
-  padding: 28px 16px 0;
-}
-
-.ifs-confirm p {
-  margin: 0;
-  text-align: center;
-  color: var(--ifs-ink);
-}
-
-.ifs-confirm .label {
-  font-size: 15px;
-  font-weight: 400;
-}
-
-.ifs-confirm .amount {
-  margin-top: 8px;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.ifs-confirm-actions {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  margin-top: 28px;
-  height: 52px;
-}
-
-.ifs-confirm-actions button {
-  border: 0;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.ifs-cancel {
-  background: var(--ifs-dark);
-}
-
-.ifs-ok {
-  background: var(--ifs-green-btn);
-}
-
-.ifs-ok:disabled {
-  opacity: 0.8;
 }
 
 .ifs-empty {
-  padding: 36px 20px;
+  margin: 0;
+  padding: 28px 20px;
   text-align: center;
   color: #8b93a0;
   font-size: 13px;
 }
 
 .ifs-warn {
+  margin: 0;
   padding: 8px 14px 0;
   font-size: 12px;
   color: #e31837;
@@ -671,55 +525,18 @@
   }
 }
 
-.ifs-mini,
-.ifs-sheet {
+.ifs-shot {
   animation: ifs-up 180ms ease both;
 }
 
-.ifs-mini .ifs-ball,
-.ifs-mini .ifs-win span,
-.ifs-mini .ifs-place b,
-.ifs-mini .ifs-bonus,
-.ifs-mini .ifs-multi-title {
-  visibility: hidden;
-}
-
-.ifs-pick-title,
-.ifs-pick-odds,
-.ifs-match,
-.ifs-sel,
-.ifs-stake-box,
-.ifs-confirm .amount {
-  background: #fff;
-}
-
-.ifs-win strong {
-  background: #2a2d36;
-  padding: 2px 8px;
-}
-
-.ifs-place small,
-.ifs-sheet-place small,
-.ifs-sheet-place b {
-  background: #1bb05c;
-  padding: 0 6px;
-}
-
-.ifs-count,
-.ifs-multi-meta,
-.ifs-sheet-name,
-.ifs-balance {
-  background: transparent;
-}
-
-.ifs-confirm {
-  background: transparent;
-}
-
-.ifs-confirm-dim {
-  background: transparent;
-}
-
-.ifs-confirm-actions button {
-  background: transparent;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
