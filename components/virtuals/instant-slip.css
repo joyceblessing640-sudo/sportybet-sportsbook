@@ -34,8 +34,7 @@
   isolation: isolate;
 }
 
-.ifs-mini .ifs-state-img {
-  position: static;
+.ifs-state-img {
   display: block;
   width: 100%;
   height: auto;
@@ -43,17 +42,6 @@
   object-position: bottom center;
   pointer-events: none;
   user-select: none;
-}
-
-.ifs-sheet .ifs-state-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: bottom center;
-  opacity: 0;
-  pointer-events: none;
 }
 
 .ifs-state-ui {
@@ -91,25 +79,17 @@
 .ifs-mini {
   background: #fff;
   box-shadow: 0 -4px 18px rgb(16 24 20 / 0.12);
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: 0;
 }
 
 .ifs-handle {
   position: relative;
   height: 18px;
-  background: #fff;
+  background: transparent;
 }
 
 .ifs-handle::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 7px;
-  width: 36px;
-  height: 4px;
-  border-radius: 99px;
-  background: #d8dde6;
-  transform: translateX(-50%);
+  content: none;
 }
 
 .ifs-close {
@@ -221,7 +201,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  background: var(--ifs-dark);
+  background: transparent;
   color: #fff;
   font-size: 16px;
   font-weight: 500;
@@ -238,7 +218,7 @@
   align-items: center;
   justify-content: center;
   border: 0;
-  background: var(--ifs-green-btn);
+  background: transparent;
   color: #fff;
   line-height: 1.15;
 }
@@ -325,22 +305,16 @@
 
 .ifs-sheet {
   z-index: 90;
-  display: flex;
-  flex-direction: column;
-  height: min(92dvh, 780px);
-  background: #fff;
+  display: block;
+  height: auto;
+  max-height: 92dvh;
+  background: #2a2d36;
   overflow: hidden;
   box-shadow: 0 -8px 32px rgb(16 24 20 / 0.28);
 }
 
-.ifs-sheet .ifs-state-ui {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-}
-
 .ifs-sheet-head {
-  background: var(--ifs-dark);
+  background: transparent;
   color: #fff;
   padding: 10px 12px 8px;
   flex-shrink: 0;
@@ -417,7 +391,7 @@
 .ifs-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  background: #eceff3;
+  background: transparent;
   flex-shrink: 0;
 }
 
@@ -573,7 +547,7 @@
   justify-content: center;
   height: 56px;
   border: 0;
-  background: var(--ifs-green-btn);
+  background: transparent;
   color: #fff;
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -699,6 +673,54 @@
 .ifs-mini,
 .ifs-sheet {
   animation: ifs-up 180ms ease both;
+}
+
+.ifs-mini .ifs-ball,
+.ifs-mini .ifs-win span,
+.ifs-mini .ifs-place b,
+.ifs-mini .ifs-bonus,
+.ifs-mini .ifs-multi-title {
+  visibility: hidden;
+}
+
+.ifs-pick-title,
+.ifs-pick-odds,
+.ifs-match,
+.ifs-sel,
+.ifs-stake-box,
+.ifs-confirm .amount {
+  background: #fff;
+}
+
+.ifs-win strong {
+  background: #2a2d36;
+  padding: 2px 8px;
+}
+
+.ifs-place small,
+.ifs-sheet-place small,
+.ifs-sheet-place b {
+  background: #1bb05c;
+  padding: 0 6px;
+}
+
+.ifs-count,
+.ifs-multi-meta,
+.ifs-sheet-name,
+.ifs-balance {
+  background: transparent;
+}
+
+.ifs-confirm {
+  background: transparent;
+}
+
+.ifs-confirm-dim {
+  background: transparent;
+}
+
+.ifs-confirm-actions button {
+  background: transparent;
 }
 
 .ifs-state-img {
