@@ -1,42 +1,21 @@
 import type { DemoTeam } from "@/lib/virtuals/demo-board";
 
-/** Small square slot; the crest itself keeps its native ratio via object-fit: contain. */
-export function DemoCrest({ team, size = 18 }: { team: DemoTeam; size?: number }) {
+/** Circular virtual crest. White PNG padding is knocked out so the mark stays visible. */
+export function DemoCrest({ team, size = 16 }: { team: DemoTeam; size?: number }) {
   return (
     <span
       className="if-crest"
       aria-hidden
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
         width: size,
         height: size,
         minWidth: size,
         minHeight: size,
-        maxWidth: size,
-        maxHeight: size,
-        flexShrink: 0,
-        overflow: "hidden",
-        lineHeight: 0,
+        background: team.color,
       }}
     >
-      {/* Screenshot crest from the Instant Football board. Never stretch. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={team.logo}
-        alt=""
-        draggable={false}
-        style={{
-          display: "block",
-          width: "100%",
-          height: "100%",
-          maxWidth: "100%",
-          maxHeight: "100%",
-          objectFit: "contain",
-          objectPosition: "center",
-        }}
-      />
+      <img src={team.logo} alt="" draggable={false} />
     </span>
   );
 }

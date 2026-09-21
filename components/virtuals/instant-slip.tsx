@@ -15,16 +15,6 @@ import {
 } from "@/store/virtual-slip";
 import "./instant-slip.css";
 
-export const IF_ASSET_V = "5";
-
-export const IF_STATES = {
-  single: `/virtuals/if-states/1-single.jpg?v=${IF_ASSET_V}`,
-  multi: `/virtuals/if-states/2-multi.jpg?v=${IF_ASSET_V}`,
-  sheet: `/virtuals/if-states/3-sheet.jpg?v=${IF_ASSET_V}`,
-  confirm: `/virtuals/if-states/4-confirm.jpg?v=${IF_ASSET_V}`,
-  submitting: `/virtuals/if-states/5-submitting.jpg?v=${IF_ASSET_V}`,
-} as const;
-
 export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }) {
   const router = useRouter();
   const { user } = useAuth();
@@ -36,13 +26,6 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const [flexi, setFlexi] = useState(false);
   const [oneCut, setOneCut] = useState(false);
   const placing = useRef(false);
-
-  useEffect(() => {
-    for (const src of Object.values(IF_STATES)) {
-      const image = new window.Image();
-      image.src = src;
-    }
-  }, []);
 
   const stakePesewas = parseGhsToPesewas(stake) ?? 0;
   const summary = virtualSlipSummary(items, stakePesewas);
@@ -132,7 +115,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const payLabel = toGhs(stakePesewas || 0);
 
   return (
-    <div className="ifs-root" data-testid="if-slip" data-if-build="if-sheet-v6" data-if-phase={phase} data-if-mode={mode}>
+    <div className="ifs-root" data-testid="if-slip" data-if-build="if-logos-v7" data-if-phase={phase} data-if-mode={mode}>
       {phase === "sheet" ? (
         <button type="button" className="ifs-backdrop" aria-label="Close betslip" onClick={closeSheet} />
       ) : null}
@@ -332,36 +315,34 @@ function SingleMini({
   onPlace: () => void;
 }) {
   return (
-    <section className="ifs-shot ifs-single-shot" data-testid="if-slip-single" data-if-state="single">
-      <img className="ifs-photo" src={IF_STATES.single} alt="" draggable={false} />
-      <div className="ifs-overlay">
-        <button type="button" className="ifs-hit ifs-hit-close" aria-label="Close betslip" onClick={onClose} />
-        <div className="ifs-single-cover">
-          <button type="button" className="ifs-single-pick" onClick={onExpand}>
-            <span>
-              {selectionLabel(item.selection)}
-              <em> | {item.marketName}</em>
-            </span>
-            <strong>{formatOdds(item.odds)}</strong>
-          </button>
-          <div className="ifs-single-meta">
-            <button type="button" className="ifs-single-remove" aria-label="Remove selection" onClick={onRemove}>
-              ×
-            </button>
-            <button type="button" className="ifs-single-match" onClick={onExpand}>
-              {item.matchLabel.replace(" vs ", " VS ")}
-            </button>
-            <input
-              value={stake}
-              inputMode="decimal"
-              aria-label="Stake"
-              onChange={(event) => onStake(event.target.value)}
-            />
-          </div>
+    <section className="ifs-mini ifs-mini-single" data-testid="if-slip-single" data-if-state="single">
+      <button type="button" className="ifs-mini-close" aria-label="Close betslip" onClick={onClose}>
+        ×
+      </button>
+      <button type="button" className="ifs-mini-pick" onClick={onExpand}>
+        <span>
+          {selectionLabel(item.selection)}
+          <em> | {item.marketName}</em>
+        </span>
+        <strong>{formatOdds(item.odds)}</strong>
+      </button>
+      <div className="ifs-mini-meta">
+        <button type="button" className="ifs-mini-remove" aria-label="Remove selection" onClick={onRemove}>
+          ×
+        </button>
+        <button type="button" className="ifs-mini-match" onClick={onExpand}>
+          {item.matchLabel.replace(" vs ", " VS ")}
+        </button>
+        <input value={stake} inputMode="decimal" aria-label="Stake" onChange={(event) => onStake(event.target.value)} />
+      </div>
+      <div className="ifs-mini-actions">
+        <div className="ifs-mini-win">
+          <span>To Win</span>
+          <strong>{odds}</strong>
         </div>
-        <span className="ifs-chip ifs-chip-dark ifs-chip-win">{odds}</span>
-        <button type="button" className="ifs-hit ifs-hit-mini-place" data-testid="if-place-bet-mini" onClick={onPlace}>
-          <span className="ifs-chip ifs-chip-green ifs-chip-pay">About to pay {payLabel}</span>
+        <button type="button" className="ifs-mini-place" data-testid="if-place-bet-mini" onClick={onPlace}>
+          <b>Place Bet</b>
+          <small>About to pay {payLabel}</small>
         </button>
       </div>
     </section>
@@ -380,16 +361,21 @@ function MultipleMini({
   onExpand: () => void;
 }) {
   return (
-    <section className="ifs-shot ifs-multi-shot" data-testid="if-slip-multi" data-if-state="multi">
-      <img className="ifs-photo" src={IF_STATES.multi} alt="" draggable={false} />
-      <div className="ifs-overlay">
-        <button type="button" className="ifs-hit ifs-hit-close" aria-label="Close betslip" onClick={onClose} />
-        <button type="button" className="ifs-hit ifs-hit-expand" aria-label="Expand betslip" onClick={onExpand} />
-        <span className="ifs-chip ifs-chip-count">{count}</span>
-        <span className="ifs-chip ifs-chip-multi-meta">
+    <section className="ifs-mini ifs-mini-multi" data-testid="if-slip-multi" data-if-state="multi">
+      <button type="button" className="ifs-mini-close" aria-label="Close betslip" onClick={onClose}>
+        ×
+      </button>
+      <button type="button" className="ifs-mini-bar" onClick={onExpand}>
+        <span className="ifs-count">{count}</span>
+        <span className="ifs-mini-title">Betslip</span>
+        <span className="ifs-mini-kind">
           {multipleLabel(count)} <strong>{odds}</strong>
         </span>
-      </div>
+      </button>
+      <p className="ifs-bonus">
+        <i />
+        Add more qualifying selections to boost your bonus
+      </p>
     </section>
   );
 }

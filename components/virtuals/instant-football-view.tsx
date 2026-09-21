@@ -101,7 +101,7 @@ export function InstantFootballView() {
   }
 
   return (
-    <div className="if" data-testid="if-board" data-if-build="if-sheet-v6">
+    <div className="if" data-testid="if-board" data-if-build="if-logos-v7">
       <div className="if-chrome">
         <header className="if-top">
           <Link href="/virtuals" aria-label="Back to Virtuals" className="if-back">
@@ -243,7 +243,7 @@ function MatchRow({
       <div className="if-teams">
         <div className="if-pair">
           <div className="if-side">
-            <DemoCrest team={match.home} size={22} />
+            <DemoCrest team={match.home} size={16} />
             <span className="if-meta">
               <span className="if-abbr">{match.home.abbreviation}</span>
               <Stars value={match.home.stars} />
@@ -255,7 +255,7 @@ function MatchRow({
               <span className="if-abbr">{match.away.abbreviation}</span>
               <Stars value={match.away.stars} />
             </span>
-            <DemoCrest team={match.away} size={22} />
+            <DemoCrest team={match.away} size={16} />
           </div>
         </div>
         <p className="if-more">+71 &gt;</p>

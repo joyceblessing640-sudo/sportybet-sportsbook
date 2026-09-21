@@ -24,7 +24,8 @@
 }
 
 .ifs-dock,
-.ifs-shot {
+.ifs-mini,
+.ifs-sheet {
   position: fixed;
   left: 50%;
   bottom: 0;
@@ -72,6 +73,152 @@
 
 .ifs-dock .slip {
   background: var(--ifs-green);
+}
+
+.ifs-mini {
+  background: #fff;
+  box-shadow: 0 -4px 18px rgb(16 24 20 / 0.12);
+  padding-top: 6px;
+  animation: ifs-up 180ms ease both;
+}
+
+.ifs-mini-close {
+  display: grid;
+  width: 36px;
+  height: 28px;
+  margin-left: auto;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #9aa1ad;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.ifs-mini-pick,
+.ifs-mini-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 2px 14px 0;
+  border: 0;
+  background: #fff;
+  color: var(--ifs-ink);
+  text-align: left;
+}
+
+.ifs-mini-pick span {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.ifs-mini-pick em {
+  font-style: normal;
+  color: #9aa1ad;
+  font-weight: 400;
+}
+
+.ifs-mini-pick strong,
+.ifs-mini-kind strong {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ifs-mini-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 12px;
+}
+
+.ifs-mini-remove {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #9aa1ad;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.ifs-mini-match {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ifs-ink);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+.ifs-mini-meta input {
+  width: 88px;
+  height: 34px;
+  border: 1px solid #d8dde6;
+  border-radius: 2px;
+  background: #fff;
+  color: var(--ifs-ink);
+  font-size: 16px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding: 0 10px;
+  outline: none;
+}
+
+.ifs-mini-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: calc(56px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.ifs-mini-win {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: #2a2d36;
+  color: #fff;
+  font-size: 16px;
+}
+
+.ifs-mini-place {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: var(--ifs-green-btn);
+  color: #fff;
+  line-height: 1.15;
+}
+
+.ifs-mini-place b {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ifs-mini-place small {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.ifs-mini-title {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ifs-mini-kind {
+  font-size: 14px;
+  color: #6b7280;
 }
 
 .ifs-shot {

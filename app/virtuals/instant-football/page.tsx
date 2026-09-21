@@ -9,11 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function InstantFootballPage() {
-  return (
-    <>
-      <link rel="preload" as="image" href="/virtuals/if-states/1-single.jpg?v=5" />
-      <link rel="preload" as="image" href="/virtuals/if-states/2-multi.jpg?v=5" />
-      <InstantFootballView />
-    </>
-  );
+  return <InstantFootballView />;
 }
