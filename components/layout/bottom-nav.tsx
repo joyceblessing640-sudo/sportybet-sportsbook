@@ -37,7 +37,16 @@ export function BottomNav({ onOpenMenu }: { onOpenMenu: () => void }) {
                   />
                 ) : null}
                 {item.icon === "az" ? <IconAzMenu className="bn-menu" /> : null}
-                {item.icon === "games" ? <IconGames className="bn-games" /> : null}
+                {item.icon === "games" ? (
+                  <img
+                    src="/nav/games-icon.jpg"
+                    alt=""
+                    width={26}
+                    height={18}
+                    className="bn-games bn-games-img"
+                    draggable={false}
+                  />
+                ) : null}
                 {item.icon === "bets" ? (
                   <>
                     <IconOpenBets className="bn-bets" />
@@ -93,26 +102,6 @@ function IconAzMenu({ className }: { className?: string }) {
       <rect x="1" y="0.4" width="22" height="3.2" rx="1.15" />
       <rect x="1" y="6.4" width="22" height="3.2" rx="1.15" />
       <rect x="1" y="12.4" width="22" height="3.2" rx="1.15" />
-    </svg>
-  );
-}
-
-function IconGames({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 36 24" className={className} aria-hidden>
-      <path
-        fill="#efe7ff"
-        d="M8.4 2.35h19.2c5.05 0 8.05 3.55 8.05 8.15 0 3.85-2.35 7.25-6.45 8.2-1.45.35-3.15.25-4.45-1.05-1.05-1.05-2.35-2.35-4.15-2.35s-3.1 1.3-4.15 2.35c-1.3 1.3-3 1.4-4.45 1.05C8.1 17.75 0.35 14.55 0.35 10.5c0-4.6 3-8.15 8.05-8.15Z"
-      />
-      <path
-        fill="#a56bff"
-        d="M8.7 4.05h18.6c3.7 0 6.15 2.7 6.15 6.2 0 3.05-1.85 5.7-5.05 6.45-1.1.25-2.3.15-3.25-.8-.95-.95-2.2-2.15-3.85-2.15s-2.9 1.2-3.85 2.15c-.95.95-2.15 1.05-3.25.8-3.2-.75-5.05-3.4-5.05-6.45 0-3.5 2.45-6.2 6.15-6.2Z"
-      />
-      <path fill="#f4eeff" d="M8.35 8.15h2.35V5.85h2.55v2.3h2.35v2.5h-2.35v2.3H10.7v-2.3H8.35z" />
-      <circle cx="23.15" cy="8.55" r="1.55" fill="#f4eeff" />
-      <circle cx="26.05" cy="11.35" r="1.55" fill="#f4eeff" />
-      <circle cx="23.15" cy="14.15" r="1.55" fill="#f4eeff" />
-      <circle cx="20.25" cy="11.35" r="1.55" fill="#f4eeff" />
     </svg>
   );
 }
