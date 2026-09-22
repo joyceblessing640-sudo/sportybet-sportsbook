@@ -115,7 +115,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const payLabel = toGhs(stakePesewas || 0);
 
   return (
-    <div className="ifs-root" data-testid="if-slip" data-if-build="if-iphone-v10" data-if-phase={phase} data-if-mode={mode}>
+    <div className="ifs-root" data-testid="if-slip" data-if-build="if-place-v12" data-if-phase={phase} data-if-mode={mode}>
       {phase === "sheet" ? (
         <button type="button" className="ifs-backdrop" aria-label="Close betslip" onClick={closeSheet} />
       ) : null}
@@ -254,37 +254,41 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
             </div>
           </div>
           {mode !== "confirm" ? (
-            <button
-              type="button"
-              className="ifs-sheet-place"
-              data-testid={busy ? "if-submitting" : "if-place-bet"}
-              disabled={busy || items.length === 0 || invalid}
-              onClick={askConfirm}
-            >
-              {busy ? (
-                <b>
-                  <span className="ifs-spin" />
-                  Submitting
-                </b>
-              ) : (
-                <>
-                  <b>Place Bet</b>
-                  <small>About to pay {payLabel}</small>
-                </>
-              )}
-            </button>
+            <div className="ifs-sheet-place-safe">
+              <button
+                type="button"
+                className="ifs-sheet-place"
+                data-testid={busy ? "if-submitting" : "if-place-bet"}
+                disabled={busy || items.length === 0 || invalid}
+                onClick={askConfirm}
+              >
+                {busy ? (
+                  <b>
+                    <span className="ifs-spin" />
+                    Submitting
+                  </b>
+                ) : (
+                  <>
+                    <b>Place Bet</b>
+                    <small>About to pay {payLabel}</small>
+                  </>
+                )}
+              </button>
+            </div>
           ) : null}
           {mode === "confirm" ? (
             <div className="ifs-confirm-sheet" data-testid="if-confirm">
               <p className="label">Confirm to Pay</p>
               <p className="amount">GHS{payLabel}</p>
-              <div className="ifs-confirm-actions">
-                <button type="button" className="ifs-cancel" onClick={cancelConfirm}>
-                  Cancel
-                </button>
-                <button type="button" className="ifs-ok" data-testid="if-confirm-pay" onClick={() => void confirmPlace()}>
-                  Confirm
-                </button>
+              <div className="ifs-confirm-actions-safe">
+                <div className="ifs-confirm-actions">
+                  <button type="button" className="ifs-cancel" onClick={cancelConfirm}>
+                    Cancel
+                  </button>
+                  <button type="button" className="ifs-ok" data-testid="if-confirm-pay" onClick={() => void confirmPlace()}>
+                    Confirm
+                  </button>
+                </div>
               </div>
             </div>
           ) : null}
@@ -337,15 +341,17 @@ function SingleMini({
         </button>
         <input value={stake} inputMode="decimal" aria-label="Stake" onChange={(event) => onStake(event.target.value)} />
       </div>
-      <div className="ifs-mini-actions">
-        <div className="ifs-mini-win">
-          <span>To Win</span>
-          <strong>{odds}</strong>
+      <div className="ifs-mini-actions-safe">
+        <div className="ifs-mini-actions">
+          <div className="ifs-mini-win">
+            <span>To Win</span>
+            <strong>{odds}</strong>
+          </div>
+          <button type="button" className="ifs-mini-place" data-testid="if-place-bet-mini" onClick={onPlace}>
+            <b>Place Bet</b>
+            <small>About to pay {payLabel}</small>
+          </button>
         </div>
-        <button type="button" className="ifs-mini-place" data-testid="if-place-bet-mini" onClick={onPlace}>
-          <b>Place Bet</b>
-          <small>About to pay {payLabel}</small>
-        </button>
       </div>
     </section>
   );

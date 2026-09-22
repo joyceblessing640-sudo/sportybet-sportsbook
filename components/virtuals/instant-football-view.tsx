@@ -213,7 +213,7 @@ export function InstantFootballView() {
   }
 
   return (
-    <div className="if" data-testid="if-board" data-if-build="if-board-v11" data-if-league={boardId}>
+    <div className="if" data-testid="if-board" data-if-build="if-place-v12" data-if-league={boardId}>
       <header className="if-top">
         <Link href="/virtuals" aria-label="Back to Virtuals" className="if-back">
           <ChevronLeft size={24} strokeWidth={2.2} />
