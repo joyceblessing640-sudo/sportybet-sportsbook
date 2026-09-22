@@ -1,0 +1,360 @@
+/* Open Bets is a real page: red header, then dark, then a white ticket card. */
+
+.ift {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 430px;
+  margin: 0 auto;
+  background: #363a46;
+  color: #fff;
+  font-family: var(--font-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.ift-top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 6px 0 2px;
+  background: #e31837;
+  color: #fff;
+}
+
+.ift-back {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  color: #fff;
+}
+
+.ift-top h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.ift-wallet {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  text-decoration: none;
+  text-align: right;
+  line-height: 1.15;
+}
+
+.ift-wallet small {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.ift-wallet strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ift-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 14px;
+  background: #363a46;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.ift-open b {
+  display: grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  padding: 0 5px;
+  border-radius: 99px;
+  background: #4e505d;
+  color: #fff;
+  font-size: 11px;
+}
+
+.ift-card {
+  margin: 1px 7px 0;
+  background: #fff;
+  color: #1a1d24;
+  padding: 12px 11px 10px;
+}
+
+.ift-card-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ift-card-head p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.32;
+}
+
+.ift-card-head p span {
+  display: block;
+  color: #9aa1ad;
+  font-size: 11.5px;
+}
+
+.ift-reload {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  background: #fff;
+  color: #089837;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.ift-pick {
+  padding: 23px 0 0;
+}
+
+.ift-pick-line {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.ift-pick-line strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.ift-pick-market,
+.ift-pick-match,
+.ift-pick-league {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1;
+  color: #4b5563;
+}
+
+.ift-pick-match {
+  color: #1a1d24;
+}
+
+.ift-pick-league {
+  font-size: 13px;
+}
+
+.ift-pick-match em {
+  font-style: normal;
+  font-size: 11px;
+  color: #9aa1ad;
+}
+
+.ift-pick + .ift-pick {
+  border-top: 1px solid #eef0f4;
+}
+
+.ift-details {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  margin: 23px 0 11px;
+  border: 0;
+  background: #fff;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.ift-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 4px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.ift-foot strong {
+  color: #1a1d24;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ift-play {
+  padding: 12px 12px 120px;
+}
+
+.ift-speed-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(50px + min(env(safe-area-inset-bottom, 0px), 34px));
+  z-index: 30;
+  border-top: 1px solid #454a55;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 430px;
+  height: 48px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 7px 0 14px;
+  background: #3d434f;
+  color: #e4e8ee;
+  font-size: 14px;
+}
+
+.ift-speed-bar > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.ift-speeds {
+  display: flex;
+  gap: 4px;
+}
+
+.ift-speeds button {
+  min-width: 56px;
+  height: 28px;
+  border: 1px solid #454a55;
+  border-radius: 3px;
+  background: transparent;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.ift-speeds button[aria-current="true"] {
+  border-color: #089837;
+  background: #089837;
+  color: #fff;
+}
+
+.ift-dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 31;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  max-width: 430px;
+  height: 50px;
+  box-sizing: content-box;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: min(env(safe-area-inset-bottom, 0px), 34px);
+  background: #363a46;
+}
+
+.ift-dock a,
+.ift-dock button {
+  display: grid;
+  place-items: center;
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  box-sizing: border-box;
+  border: 0;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ift-keep {
+  background: #363a46;
+}
+
+.ift-kick {
+  background: #089837;
+}
+
+.ift-kick:disabled {
+  opacity: 0.7;
+}
+
+.ift-toast {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(108px + min(env(safe-area-inset-bottom, 0px), 34px));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: calc(100% - 48px);
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: #1a1d24;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.35;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+}
+
+.ift-toast-ok {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 99px;
+  background: #089837;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ift-result {
+  margin-top: 8px;
+  border-radius: 8px;
+  background: #1f232b;
+  padding: 14px;
+  text-align: center;
+}
+
+.ift-events {
+  margin: 10px 0 0;
+  padding: 0 0 120px;
+  list-style: none;
+}
+
+.ift-events li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #23262e;
+  font-size: 12px;
+}
+
+.ift-events .goal {
+  background: #12a150;
+  font-weight: 700;
+}

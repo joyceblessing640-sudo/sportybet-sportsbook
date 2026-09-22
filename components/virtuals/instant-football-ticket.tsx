@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ChevronLeft, Wallet } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/components/providers";
 import { DemoCrest } from "@/components/virtuals/demo-crest";
-import { formatGhs, formatOdds } from "@/lib/money";
+import { formatOdds, toGhs } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { getDemoMatch } from "@/lib/virtuals/demo-board";
 import {
   getDemoTicket,
   markDemoTicketPlaying,
+  readDemoTickets,
   saveSettledDemoTicket,
   simulateDemoPick,
   subscribeDemoTickets,
@@ -18,6 +21,9 @@ import {
   type DemoTicketPick,
 } from "@/lib/virtuals/demo-tickets";
 import { type SimEvent } from "@/lib/virtuals/engine";
+import { BUILD_ID } from "@/lib/build-id";
+import { selectionLabel, useVirtualSlip } from "@/store/virtual-slip";
+import "./instant-ticket.css";
 
 const SPEED_MS = { "1x": 700, "2x": 320 } as const;
 
@@ -29,20 +35,30 @@ export function InstantFootballTicket({ ticketId }: { ticketId: string }) {
     const load = () => setTicket(getDemoTicket(ticketId));
     load();
     setReady(true);
-    toast.dismiss();
     return subscribeDemoTickets(load);
   }, [ticketId]);
 
-  if (!ready) {
-    return <div className="min-h-dvh bg-[#14161a] px-4 py-10 text-center text-white/70">Loading demo ticket…</div>;
-  }
-  if (!ticket) {
+  if (!ready || !ticket) {
     return (
-      <div className="min-h-dvh bg-[#14161a] px-4 py-10 text-center text-white">
-        <p className="text-[14px] font-semibold">Demo ticket not found</p>
-        <Link href="/bets" className="mt-3 inline-block text-[13px] text-[#7dffb1]">
-          Back to Open Bets
-        </Link>
+      <div className="ift" data-testid="if-open-bets" data-if-build={BUILD_ID}>
+        <header className="ift-top">
+          <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
+            <ChevronLeft size={24} strokeWidth={2.2} />
+          </Link>
+          <h1>Instant Football</h1>
+        </header>
+        <div className="ift-open">
+          <BallIcon />
+          Open Bets
+        </div>
+        {ready && !ticket ? (
+          <article className="ift-card">
+            <p>Demo ticket not found</p>
+            <Link href="/virtuals/instant-football" className="ift-reload">
+              Back to Instant Football
+            </Link>
+          </article>
+        ) : null}
       </div>
     );
   }
@@ -51,20 +67,40 @@ export function InstantFootballTicket({ ticketId }: { ticketId: string }) {
 }
 
 function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticket: DemoTicket) => void }) {
+  const router = useRouter();
+  const { user } = useAuth();
+  const hydrate = useVirtualSlip((state) => state.hydrate);
   const [index, setIndex] = useState(0);
   const [started, setStarted] = useState(Boolean(ticket.playing || ticket.status === "SETTLED"));
   const [speed, setSpeed] = useState<"1x" | "2x">("1x");
   const [cursor, setCursor] = useState(ticket.status === "SETTLED" ? 999 : 0);
+  const [showDetails, setShowDetails] = useState(true);
+  const [openCount, setOpenCount] = useState(1);
+  const [showToast, setShowToast] = useState(false);
+  const toasted = useRef(false);
 
   const pick = ticket.picks[index];
-  const sim = useMemo(
-    () => (pick ? simulateDemoPick(pick) : null),
-    [pick],
-  );
+  const sim = useMemo(() => (pick ? simulateDemoPick(pick) : null), [pick]);
   const events = sim?.events ?? [];
   const shown = ticket.status === "SETTLED" ? events : events.slice(0, Math.max(started ? 1 : 0, Math.min(cursor, events.length)));
   const latest = shown.at(-1);
   const finished = Boolean(sim && started && cursor >= events.length);
+  const settled = ticket.status === "SETTLED";
+
+  useEffect(() => {
+    const load = () => setOpenCount(readDemoTickets().filter((item) => item.status === "OPEN").length);
+    load();
+    return subscribeDemoTickets(load);
+  }, []);
+
+  useEffect(() => {
+    if (toasted.current || ticket.status !== "OPEN") return;
+    toasted.current = true;
+    toast.dismiss();
+    setShowToast(true);
+    const timer = window.setTimeout(() => setShowToast(false), 2600);
+    return () => window.clearTimeout(timer);
+  }, [ticket]);
 
   useEffect(() => {
     if (!started || !sim || cursor >= events.length) return;
@@ -98,103 +134,121 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
     onTicket(saveSettledDemoTicket(ticket));
   }
 
-  const settled = ticket.status === "SETTLED";
+  function reloadSelections() {
+    hydrate(
+      ticket.picks.map((row) => ({
+        matchId: row.matchId,
+        matchLabel: row.matchLabel,
+        league: row.league,
+        marketId: row.marketId,
+        marketName: row.marketName,
+        outcomeId: `${row.matchId}:${row.marketId}:${row.selection}`,
+        selection: row.selection,
+        odds: row.odds,
+      })),
+    );
+    router.push("/virtuals/instant-football");
+  }
 
   return (
-    <div className="min-h-dvh bg-[#14161a] text-white">
-      <header className="sticky top-0 z-20 flex h-11 items-center bg-[#e31837] px-1">
-        <Link href="/bets" aria-label="Back to Open Bets" className="grid h-9 w-9 place-items-center">
-          <ChevronLeft className="h-6 w-6" />
+    <div className="ift" data-testid="if-open-bets" data-if-build={BUILD_ID}>
+      <header className="ift-top">
+        <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
+          <ChevronLeft size={24} strokeWidth={2.2} />
         </Link>
-        <div className="min-w-0 flex-1">
-          <h1 className="truncate text-[15px] font-semibold">Instant Football</h1>
-          <p className="text-[10px] text-white/80">DEMO ticket {ticket.publicId}</p>
-        </div>
+        <h1>Instant Football</h1>
+        <Link href={user ? "/me" : "/login"} className="ift-wallet">
+          <span>
+            <small>GHS</small>
+            <strong>{toGhs(user?.wallet?.balancePesewas ?? 0)}</strong>
+          </span>
+          <Wallet size={18} strokeWidth={2} aria-hidden />
+        </Link>
       </header>
 
-      <div className="px-3 pb-8 pt-3">
-        <p className="mb-3 rounded-md bg-[#12a150]/15 px-2 py-1.5 text-center text-[11px] font-bold uppercase tracking-wide text-[#7dffb1]">
-          Simulated match · no real-money transaction
-        </p>
+      <div className="ift-open">
+        <BallIcon />
+        Open Bets
+        <b>{Math.max(openCount, ticket.status === "OPEN" ? 1 : openCount)}</b>
+      </div>
 
-        <article className="rounded-xl bg-[#1f232b] px-3 py-3">
-          {ticket.picks.map((row) => (
-            <PickLine key={row.matchId + row.selection} pick={row} />
-          ))}
-          <div className="mt-3 grid grid-cols-3 text-[11px] text-white/55">
-            <div>
-              Odds
-              <p className="font-bold text-white">{formatOdds(ticket.totalOdds)}</p>
-            </div>
-            <div>
-              Stake
-              <p className="font-bold text-white">{formatGhs(ticket.stakePesewas)}</p>
-            </div>
-            <div>
-              To win
-              <p className="font-bold text-white">{formatGhs(ticket.potentialWinPesewas)}</p>
-            </div>
+      <article className="ift-card">
+        <div className="ift-card-head">
+          <div>
+            <p>
+              <span>Ticket ID: {ticket.ticketNo || ticket.publicId}</span>
+              {ticket.type === "MULTI" ? "Multiple" : "Single"}
+            </p>
           </div>
-        </article>
-
-        {!started ? (
-          <button
-            type="button"
-            className="mt-4 h-12 w-full rounded-md bg-[#12a150] text-[16px] font-bold"
-            onClick={kickOff}
-          >
-            Kick Off
+          <button type="button" className="ift-reload" onClick={reloadSelections}>
+            <ReloadArrow />
+            Reload Selections
           </button>
-        ) : settled ? null : (
-          <div className="mt-3 flex gap-2">
-            {(["1x", "2x"] as const).map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => setSpeed(item)}
-                className={cn(
-                  "h-9 flex-1 rounded-md text-[13px] font-bold",
-                  speed === item ? "bg-[#12a150]" : "bg-[#2a2d36]",
-                )}
-              >
-                {item}
-              </button>
-            ))}
-            <button type="button" className="h-9 flex-1 rounded-md bg-white text-[13px] font-bold text-ink" onClick={skipToResult}>
-              Skip to Result
-            </button>
-          </div>
-        )}
-
-        {started && pick && sim ? (
-          <div className="mt-4 rounded-2xl bg-[#1f232b] px-3 py-5">
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-              <TeamSide pick={pick} side="home" />
-              <div className="text-center">
-                <p className="text-[11px] font-semibold text-white/45">VS</p>
-                <p className={cn("mt-1 text-[32px] font-black tabular-nums leading-none", latest?.type === "GOAL" ? "text-[#7dffb1]" : "text-white")}>
-                  {latest?.homeScore ?? 0} - {latest?.awayScore ?? 0}
+        </div>
+        {showDetails ? (
+          ticket.picks.map((row) => {
+            const [home, away] = row.matchLabel.replace(/ VS /i, " vs ").split(" vs ");
+            return (
+              <div key={row.matchId + row.selection} className="ift-pick">
+                <p className="ift-pick-line">
+                  {selectionLabel(row.selection)} @<strong>{formatOdds(row.odds)}</strong>
                 </p>
-                <p className="mt-1 text-[11px] font-semibold text-white/50">{latest ? `${latest.minute}'` : "0'"}</p>
+                <p className="ift-pick-market">{row.marketName}</p>
+                <p className="ift-pick-match">
+                  {home} <em>vs</em> {away ?? ""}
+                </p>
+                <p className="ift-pick-league">League: {row.league}</p>
               </div>
-              <TeamSide pick={pick} side="away" />
-            </div>
-            {ticket.picks.length > 1 ? (
-              <p className="mt-2 text-center text-[11px] text-white/45">
-                Match {index + 1}/{ticket.picks.length}
-              </p>
-            ) : null}
-          </div>
-        ) : null}
+            );
+          })
+        ) : (
+          <p className="ift-pick-match" style={{ margin: "12px 0 4px" }}>
+            {ticket.picks.map((row) => row.matchLabel.replace(" VS ", " vs ")).join(", ")}
+          </p>
+        )}
+        <button type="button" className="ift-details" onClick={() => setShowDetails((value) => !value)}>
+          {showDetails ? "Hide Match Details ▴" : "Match Details ▾"}
+        </button>
+        <div className="ift-foot">
+          <span>
+            Stake <strong>{toGhs(ticket.stakePesewas)}</strong>
+          </span>
+          <span>
+            Pot. Win <strong>{toGhs(ticket.potentialWinPesewas)}</strong>
+          </span>
+        </div>
+      </article>
 
-        {settled ? (
-          <div className="mt-4 rounded-xl bg-[#1f232b] px-3 py-4 text-center" data-testid="demo-result">
+      {started && pick && sim ? (
+        <div className="ift-play">
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-xl bg-[#1f232b] px-3 py-5">
+            <TeamSide pick={pick} side="home" />
+            <div className="text-center">
+              <p className="text-[11px] font-semibold text-white/45">VS</p>
+              <p className={cn("mt-1 text-[32px] font-black tabular-nums leading-none", latest?.type === "GOAL" ? "text-[#7dffb1]" : "text-white")}>
+                {latest?.homeScore ?? 0} - {latest?.awayScore ?? 0}
+              </p>
+              <p className="mt-1 text-[11px] font-semibold text-white/50">{latest ? `${latest.minute}'` : "0'"}</p>
+            </div>
+            <TeamSide pick={pick} side="away" />
+          </div>
+          {ticket.picks.length > 1 ? (
+            <p className="mt-2 text-center text-[11px] text-white/45">
+              Match {index + 1}/{ticket.picks.length}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
+      {settled ? (
+        <div className="ift-play">
+          <div className="ift-result" data-testid="demo-result">
             <p className="text-[11px] font-bold uppercase tracking-wide text-white/50">Final result · demo</p>
             <p className={cn("mt-1 text-[22px] font-black", ticket.won ? "text-[#7dffb1]" : "text-[#ff8b8b]")}>
               {ticket.won ? "WON" : "LOST"}
             </p>
             <p className="mt-1 text-[13px] text-white/80">
-              {ticket.won ? `Demo return ${formatGhs(ticket.payoutPesewas ?? 0)}` : "Demo stake is not paid out"}
+              {ticket.won ? `Demo return ${toGhs(ticket.payoutPesewas ?? 0)}` : "Demo stake is not paid out"}
             </p>
             {(ticket.results ?? []).map((result) => {
               const row = ticket.picks.find((item) => item.matchId === result.matchId);
@@ -204,54 +258,60 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
                 </p>
               );
             })}
-            <Link
-              href="/virtuals/instant-football"
-              className="mt-3 inline-flex h-9 w-full items-center justify-center rounded-md bg-white text-[13px] font-bold text-ink"
-            >
-              Back to matches
-            </Link>
           </div>
-        ) : null}
+        </div>
+      ) : null}
 
-        {shown.length > 0 ? (
-          <ol className="mt-4 space-y-1.5">
-            {(settled ? shown.filter((event) => event.type === "GOAL" || event.type === "KICK_OFF" || event.type === "FT") : shown).map((event: SimEvent, i) => (
-              <li
-                key={`${event.minute}-${event.type}-${i}`}
-                className={cn(
-                  "flex items-center justify-between rounded-lg px-3 py-2 text-[12px]",
-                  event.type === "GOAL" ? "bg-[#12a150] font-bold" : "bg-[#23262e] text-white/85",
-                )}
-              >
+      {shown.length > 0 ? (
+        <ol className="ift-events" style={{ padding: "0 12px 120px" }}>
+          {(settled ? shown.filter((event) => event.type === "GOAL" || event.type === "KICK_OFF" || event.type === "FT") : shown).map(
+            (event: SimEvent, i) => (
+              <li key={`${event.minute}-${event.type}-${i}`} className={event.type === "GOAL" ? "goal" : undefined}>
                 <span>
                   {event.minute}' {event.label}
                 </span>
-                <span className="tabular-nums">
+                <span>
                   {event.homeScore}-{event.awayScore}
                 </span>
               </li>
-            ))}
-          </ol>
-        ) : null}
-      </div>
-    </div>
-  );
-}
+            ),
+          )}
+        </ol>
+      ) : null}
 
-function PickLine({ pick }: { pick: DemoTicketPick }) {
-  const match = getDemoMatch(pick.matchId);
-  return (
-    <div className="flex items-center justify-between gap-2 border-b border-white/5 py-2 last:border-0">
-      <div className="min-w-0">
-        <p className="text-[10px] text-white/45">{pick.league}</p>
-        <p className="truncate text-[13px] font-semibold">
-          {match?.home.abbreviation ?? pick.homeName} vs {match?.away.abbreviation ?? pick.awayName}
-        </p>
-        <p className="text-[11px] text-white/55">
-          {pick.marketName} · {pick.selection}
-        </p>
+      {showToast ? (
+        <div className="ift-toast" role="status">
+          <span>Ticket #{ticket.ticketNo || ticket.publicId} has been created successfully.</span>
+          <span className="ift-toast-ok" aria-hidden>
+            ✓
+          </span>
+        </div>
+      ) : null}
+
+      <div className="ift-speed-bar">
+        <span>
+          <ClockIcon /> Simulation Speed
+        </span>
+        <div className="ift-speeds">
+          {(["1x", "2x"] as const).map((item) => (
+            <button key={item} type="button" aria-current={speed === item ? "true" : undefined} onClick={() => setSpeed(item)}>
+              {item}
+            </button>
+          ))}
+          <button type="button" onClick={skipToResult}>
+            Skip
+          </button>
+        </div>
       </div>
-      <span className="text-[13px] font-bold text-[#7dffb1]">{formatOdds(pick.odds)}</span>
+
+      <div className="ift-dock">
+        <button type="button" className="ift-keep" data-testid="if-keep-betting" onClick={() => router.push("/virtuals/instant-football")}>
+          Keep Betting
+        </button>
+        <button type="button" className="ift-kick" data-testid="if-kick-off" disabled={started && !settled} onClick={kickOff}>
+          Kick Off
+        </button>
+      </div>
     </div>
   );
 }
@@ -266,5 +326,32 @@ function TeamSide({ pick, side }: { pick: DemoTicketPick; side: "home" | "away" 
       <p className="truncate text-[13px] font-bold text-white">{name}</p>
       <p className="text-[11px] font-semibold text-white/55">{team?.abbreviation ?? name.slice(0, 3).toUpperCase()}</p>
     </div>
+  );
+}
+
+function ReloadArrow() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path d="M2 12.4c1.5-4.6 5-6.9 10.4-6.9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M9.6 2.6 13.4 5.5 9.6 8.4z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <circle cx="8" cy="9" r="5.6" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M8 6.2V9l2 1.4M6.2 1.8h3.6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function BallIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <circle cx="8" cy="8" r="6.2" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M8 1.8 9.6 5.2 13.4 5.6 10.6 8.2l.9 3.8L8 10.4 4.5 12l.9-3.8L2.6 5.6l3.8-.4Z" stroke="currentColor" strokeWidth="1.1" />
+    </svg>
   );
 }

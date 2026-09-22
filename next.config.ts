@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
+import { BUILD_ID } from "./lib/build-id";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   outputFileTracingIncludes: {
     "/*": ["./data/baseline.sqlite"],
   },
@@ -11,7 +13,7 @@ const nextConfig: NextConfig = {
       { key: "Cache-Control", value: "private, no-cache, no-store, max-age=0, must-revalidate" },
       { key: "CDN-Cache-Control", value: "no-store" },
       { key: "Vercel-CDN-Cache-Control", value: "no-store" },
-          { key: "x-if-build", value: "virtual-board" },
+          { key: "x-if-build", value: BUILD_ID },
     ];
     return [
       { source: "/virtuals/instant-football", headers: instantFootballHeaders },

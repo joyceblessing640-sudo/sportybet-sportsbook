@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   DEMO_MATCHES,
@@ -7,23 +8,27 @@ import {
   handicapForMarket,
   marketOdds,
 } from "./demo-board";
-import { settleDemoTicket, type DemoTicket } from "./demo-tickets";
+import { combineOddsHundredths, potentialWinPesewas } from "../money";
+import { placeDemoBet, settleDemoTicket, type DemoTicket } from "./demo-tickets";
 import { selectionWon, simulateMatch } from "./engine";
 
 describe("Instant Football demo board", () => {
-  it("recreates the seven reference boards with clickable 1X2 prices", () => {
+  it("builds seven clickable Instant Football boards from demo match data", () => {
     expect(DEMO_MATCHES).toHaveLength(56);
     expect(boardMatches("england")).toHaveLength(8);
     expect(boardMatches("cwc")).toHaveLength(8);
-    const cov = getDemoMatch("if-england-cov-cry");
-    expect(cov?.odds).toEqual([256, 371, 256]);
-    expect(getDemoMatch("if-spain-fcb-lev")?.odds).toEqual([136, 541, 754]);
-    expect(getDemoMatch("if-germany-bmu-koe")?.odds).toEqual([129, 664, 810]);
-    expect(getDemoMatch("if-italy-juv-lec")?.odds).toEqual([168, 389, 502]);
-    expect(getDemoMatch("if-champions-liv-psg")?.odds).toEqual([215, 442, 278]);
-    expect(getDemoMatch("if-euros-eng-fra")?.odds).toEqual([214, 319, 373]);
-    expect(getDemoMatch("if-cwc-rma-che")?.odds).toEqual([185, 405, 382]);
+    const mun = getDemoMatch("if-england-mun-lee");
+    expect(mun?.home.abbreviation).toBe("MUN");
+    expect(mun?.away.abbreviation).toBe("LEE");
+    expect(getDemoMatch("if-spain-fcb-lev")?.odds[0]).toBeGreaterThan(100);
     expect(DEMO_MATCHES.every((match) => match.home.logo.includes("/virtuals/crests/") && match.away.logo.includes("/virtuals/crests/"))).toBe(true);
+  });
+
+  it("builds a new round of fixtures without freezing screenshot teams", () => {
+    const first = boardMatches("england", 1)[0];
+    const next = boardMatches("england", 2)[0];
+    expect(next.id).not.toBe(first.id);
+    expect(getDemoMatch(next.id)?.id).toBe(next.id);
   });
 
   it("builds 1UP and 2UP markets from the 1X2 board", () => {
@@ -43,6 +48,7 @@ describe("Instant Football demo tickets", () => {
       kind: "instant-football-demo",
       id: "DEMOTEST",
       publicId: "IFTEST",
+      ticketNo: "1000001",
       createdAt: "2026-09-20T12:00:00.000Z",
       type: "SINGLE",
       stakePesewas: 1000,
@@ -75,5 +81,57 @@ describe("Instant Football demo tickets", () => {
     expect(settled.results?.[0]?.homeScore).toBe(sim.homeScore);
     expect(settled.won).toBe(selectionWon("1", sim.homeScore, sim.awayScore, 0));
     expect(settled.payoutPesewas).toBe(settled.won ? 2560 : 0);
+  });
+
+  it("computes multiple odds and a 4% max bonus from the live selections", () => {
+    const totalOdds = combineOddsHundredths([438, 208]);
+    const potentialWin = potentialWinPesewas(100, totalOdds);
+    expect(totalOdds).toBe(911);
+    expect(potentialWin + Math.round(potentialWin * 0.04)).toBe(947);
+  });
+
+  it("keeps the six Instant Football reference states in the repo", () => {
+    const files = [
+      "public/virtuals/if-ref/1-single.jpg",
+      "public/virtuals/if-ref/2-multiple.jpg",
+      "public/virtuals/if-ref/3-betslip.jpg",
+      "public/virtuals/if-ref/4-confirm.jpg",
+      "public/virtuals/if-ref/5-submitting.jpg",
+      "public/virtuals/if-ref/6-open-bets.jpg",
+    ];
+    for (const file of files) expect(existsSync(file), file).toBe(true);
+  });
+
+  it("places a demo ticket from the current slip instead of screenshot data", () => {
+    const ticket = placeDemoBet({
+      type: "MULTI",
+      stakePesewas: 100,
+      items: [
+        {
+          matchId: "if-england-mun-lee",
+          matchLabel: "MUN vs LEE",
+          league: "England",
+          marketId: "1X2",
+          marketName: "1X2",
+          outcomeId: "if-england-mun-lee:1X2:1",
+          selection: "1",
+          odds: 174,
+        },
+        {
+          matchId: "if-england-ast-nfo",
+          matchLabel: "AST vs NFO",
+          league: "England",
+          marketId: "1X2",
+          marketName: "1X2",
+          outcomeId: "if-england-ast-nfo:1X2:1",
+          selection: "1",
+          odds: 220,
+        },
+      ],
+    });
+    expect(ticket.ticketNo).toMatch(/^\d{7}$/);
+    expect(ticket.picks.map((pick) => pick.matchLabel)).toEqual(["MUN vs LEE", "AST vs NFO"]);
+    expect(ticket.totalOdds).toBe(Math.round(1.74 * 2.2 * 100));
+    expect(ticket.type).toBe("MULTI");
   });
 });

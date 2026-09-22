@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Toaster } from "sonner";
 import { AuthProvider, type AuthUser } from "@/components/providers";
 import { AppShell } from "@/components/layout/app-shell";
+import { BuildRefresh } from "@/components/build-refresh";
 import { SlipProvider } from "@/components/slip-context";
 import type { SlipItem } from "@/lib/slip";
 
@@ -20,6 +21,7 @@ export function ClientRoot({
     <AuthProvider key={initialUser?.id ?? "guest"} initialUser={initialUser}>
       <SlipProvider items={slipItems}>
         <AppShell slipItems={slipItems}>{children}</AppShell>
+        <BuildRefresh />
         <Toaster position="top-center" richColors />
       </SlipProvider>
     </AuthProvider>

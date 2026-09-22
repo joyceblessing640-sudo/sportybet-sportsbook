@@ -34,6 +34,7 @@ export type DemoTicket = {
   kind: "instant-football-demo";
   id: string;
   publicId: string;
+  ticketNo: string;
   createdAt: string;
   type: "SINGLE" | "MULTI";
   stakePesewas: number;
@@ -119,15 +120,18 @@ export function placeDemoBet(input: {
   });
 
   const totalOdds = combineOddsHundredths(picks.map((pick) => pick.odds));
+  const potentialWin = potentialWinPesewas(input.stakePesewas, totalOdds);
+  const maxBonus = Math.round(potentialWin * 0.04);
   const ticket: DemoTicket = {
     kind: "instant-football-demo",
     id: publicId("DEMO"),
     publicId: publicId("IF"),
+    ticketNo: String(1_000_000 + (Date.now() % 9_000_000)),
     createdAt: new Date().toISOString(),
     type: input.type,
     stakePesewas: input.stakePesewas,
     totalOdds,
-    potentialWinPesewas: potentialWinPesewas(input.stakePesewas, totalOdds),
+    potentialWinPesewas: potentialWin + maxBonus,
     picks,
     status: "OPEN",
     demo: true,

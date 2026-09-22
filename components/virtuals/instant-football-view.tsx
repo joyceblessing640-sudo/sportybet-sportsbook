@@ -6,7 +6,7 @@ import { ChevronLeft, Wallet } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/components/providers";
 import { DemoCrest } from "@/components/virtuals/demo-crest";
-import { InstantSlipPanel, openInstantSlip } from "@/components/virtuals/instant-slip";
+import { InstantFootballSlip } from "@/components/virtuals/instant-slip";
 import { formatGhs, formatOdds, toGhs } from "@/lib/money";
 import {
   DEMO_BOARDS,
@@ -19,7 +19,8 @@ import {
   type DemoMatch,
 } from "@/lib/virtuals/demo-board";
 import type { VirtualMarketId } from "@/lib/virtuals/engine";
-import { useVirtualSlip } from "@/store/virtual-slip";
+import { BUILD_ID } from "@/lib/build-id";
+import { readPersistedSlip, useVirtualSlip } from "@/store/virtual-slip";
 import "./instant-football.css";
 
 export function InstantFootballView() {
@@ -30,10 +31,20 @@ export function InstantFootballView() {
   const [round, setRound] = useState(1);
   const items = useVirtualSlip((state) => state.items);
   const togglePick = useVirtualSlip((state) => state.togglePick);
+  const clear = useVirtualSlip((state) => state.clear);
   const sections = useMemo(
-    () => DEMO_BOARDS.map((board) => ({ ...board, matches: boardMatches(board.id) })),
-    [],
+    () => DEMO_BOARDS.map((board) => ({ ...board, matches: boardMatches(board.id, round) })),
+    [round],
   );
+
+  useEffect(() => {
+    toast.dismiss();
+  }, []);
+
+  useEffect(() => {
+    const saved = readPersistedSlip();
+    if (saved?.items.length) useVirtualSlip.setState(saved);
+  }, []);
 
   useEffect(() => {
     const nodes = DEMO_BOARDS.map((board) => document.getElementById(`if-section-${board.id}`)).filter(
@@ -92,7 +103,7 @@ export function InstantFootballView() {
   }
 
   return (
-    <div className="if" data-testid="if-board">
+    <div className="if" data-testid="if-board" data-if-build={BUILD_ID}>
       <div className="if-chrome">
         <header className="if-top">
           <Link href="/virtuals" aria-label="Back to Virtuals" className="if-back">
@@ -206,26 +217,13 @@ export function InstantFootballView() {
         ))}
       </div>
 
-      <div className="if-dock">
-        <button
-          type="button"
-          className="next"
-          onClick={() => {
-            const next = round + 1;
-            setRound(next);
-            toast.message(`Demo round ${next} ready`);
-          }}
-        >
-          Next Round
-        </button>
-        <button type="button" className="slip" onClick={openInstantSlip}>
-          Betslip
-        </button>
-      </div>
-
-      <div id="instant-football-betslip" popover="auto" className="betslip-popover">
-        <InstantSlipPanel />
-      </div>
+      <InstantFootballSlip
+        onNextRound={() => {
+          const next = round + 1;
+          clear();
+          setRound(next);
+        }}
+      />
     </div>
   );
 }
@@ -253,7 +251,7 @@ function MatchRow({
               <Stars value={match.home.stars} />
             </span>
           </div>
-          <span className="if-vs">VS</span>
+          <span className="if-vs">vs</span>
           <div className="if-side if-side-away">
             <span className="if-meta">
               <span className="if-abbr">{match.away.abbreviation}</span>
@@ -262,7 +260,12 @@ function MatchRow({
             <DemoCrest team={match.away} size={18} />
           </div>
         </div>
-        <p className="if-more">+71 &gt;</p>
+        <div className="if-more-row">
+          <p className="if-more">+{extraMarkets(match)} &gt;</p>
+          <span className="if-graph" aria-hidden>
+            <GraphIcon />
+          </span>
+        </div>
       </div>
       <div className="if-odds">
         {outcomes.map((outcome) => {
@@ -285,11 +288,16 @@ function MatchRow({
   );
 }
 
+function extraMarkets(match: DemoMatch) {
+  const seed = [...match.id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  return 15 + (seed % 19);
+}
+
 function Stars({ value }: { value: number }) {
   return (
     <span className="if-stars" aria-hidden>
-      {[1, 2, 3].map((star) => (
-        <span key={star} className={star <= value ? "on" : undefined}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span key={star} className={star <= Math.min(5, value + 2) ? "on" : undefined}>
           ★
         </span>
       ))}
@@ -313,6 +321,15 @@ function SparkIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
       <path d="M1.5 11.5 5 7.5 8 9.5 14.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
       <path d="M1.5 13.5h13" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+function GraphIcon() {
+  return (
+    <svg width="14" height="12" viewBox="0 0 14 12" fill="none" aria-hidden>
+      <path d="M1 9.2 4.2 5.8 7 7.4 13 2.2" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+      <path d="M1 11h12" stroke="currentColor" strokeWidth="1.2" />
     </svg>
   );
 }

@@ -176,12 +176,41 @@ export const DEMO_MATCHES: DemoMatch[] = [
   ...CWC,
 ];
 
-export function boardMatches(boardId: DemoBoardId) {
-  return DEMO_MATCHES.filter((match) => match.boardId === boardId);
+const generated = new Map<string, DemoMatch>();
+
+function perturbOdds(odds: [number, number, number], salt: number): [number, number, number] {
+  const shift = ((salt % 7) - 3) * 4;
+  return [
+    Math.max(110, odds[0] + shift),
+    Math.max(180, odds[1] - Math.round(shift / 2)),
+    Math.max(110, odds[2] - shift),
+  ];
+}
+
+function matchesForRound(round: number): DemoMatch[] {
+  if (round <= 1) return DEMO_MATCHES;
+  return DEMO_MATCHES.map((match, index) => {
+    const swap = round % 2 === 0;
+    const home = swap ? match.away : match.home;
+    const away = swap ? match.home : match.away;
+    const next: DemoMatch = {
+      ...match,
+      id: `if-${match.boardId}-r${round}-${home.abbreviation}-${away.abbreviation}`.toLowerCase(),
+      home,
+      away,
+      odds: perturbOdds(match.odds, round * 17 + index),
+    };
+    generated.set(next.id, next);
+    return next;
+  });
+}
+
+export function boardMatches(boardId: DemoBoardId, round = 1) {
+  return matchesForRound(round).filter((match) => match.boardId === boardId);
 }
 
 export function getDemoMatch(id: string) {
-  return DEMO_MATCHES.find((match) => match.id === id) ?? null;
+  return DEMO_MATCHES.find((match) => match.id === id) ?? generated.get(id) ?? null;
 }
 
 export function getDemoBoard(id: DemoBoardId) {
