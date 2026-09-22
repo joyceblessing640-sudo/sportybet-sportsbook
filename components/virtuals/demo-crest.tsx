@@ -21,12 +21,14 @@ export function DemoCrest({ team, size = 18 }: { team: DemoTeam; size?: number }
         lineHeight: 0,
       }}
     >
-      {/* Screenshot crest from the Instant Football board. Never stretch. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={team.logo}
         alt=""
         draggable={false}
+        onError={(event) => {
+          event.currentTarget.style.visibility = "hidden";
+        }}
         style={{
           display: "block",
           width: "100%",
