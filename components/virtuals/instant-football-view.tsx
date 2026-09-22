@@ -19,6 +19,7 @@ import {
   type DemoMatch,
 } from "@/lib/virtuals/demo-board";
 import type { VirtualMarketId } from "@/lib/virtuals/engine";
+import { BUILD_ID } from "@/lib/build-id";
 import { readPersistedSlip, useVirtualSlip } from "@/store/virtual-slip";
 import "./instant-football.css";
 
@@ -102,7 +103,7 @@ export function InstantFootballView() {
   }
 
   return (
-    <div className="if" data-testid="if-board" data-if-build="if-safe-v17">
+    <div className="if" data-testid="if-board" data-if-build={BUILD_ID}>
       <div className="if-chrome">
         <header className="if-top">
           <Link href="/virtuals" aria-label="Back to Virtuals" className="if-back">

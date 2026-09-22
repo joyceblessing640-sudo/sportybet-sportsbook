@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/components/providers";
+import { BUILD_ID } from "@/lib/build-id";
 import { formatOdds, parseGhsToPesewas, toGhs } from "@/lib/money";
 import { placeDemoBet } from "@/lib/virtuals/demo-tickets";
 import {
@@ -115,7 +116,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const payLabel = toGhs(stakePesewas || 0);
 
   return (
-    <div className="ifs-root" data-testid="if-slip" data-if-build="if-safe-v17" data-if-phase={phase} data-if-mode={mode}>
+    <div className="ifs-root" data-testid="if-slip" data-if-build={BUILD_ID} data-if-phase={phase} data-if-mode={mode}>
       {phase === "sheet" ? (
         <button type="button" className="ifs-backdrop" aria-label="Close betslip" onClick={closeSheet} />
       ) : null}

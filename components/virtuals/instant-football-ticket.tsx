@@ -21,6 +21,7 @@ import {
   type DemoTicketPick,
 } from "@/lib/virtuals/demo-tickets";
 import { type SimEvent } from "@/lib/virtuals/engine";
+import { BUILD_ID } from "@/lib/build-id";
 import { selectionLabel, useVirtualSlip } from "@/store/virtual-slip";
 import "./instant-ticket.css";
 
@@ -39,7 +40,7 @@ export function InstantFootballTicket({ ticketId }: { ticketId: string }) {
 
   if (!ready || !ticket) {
     return (
-      <div className="ift" data-testid="if-open-bets" data-if-build="if-safe-v17">
+      <div className="ift" data-testid="if-open-bets" data-if-build={BUILD_ID}>
         <header className="ift-top">
           <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
             <ChevronLeft size={24} strokeWidth={2.2} />
@@ -150,7 +151,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   }
 
   return (
-    <div className="ift" data-testid="if-open-bets" data-if-build="if-safe-v17">
+    <div className="ift" data-testid="if-open-bets" data-if-build={BUILD_ID}>
       <header className="ift-top">
         <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
           <ChevronLeft size={24} strokeWidth={2.2} />
