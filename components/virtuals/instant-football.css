@@ -17,7 +17,7 @@
   color: var(--if-ink);
   overflow: visible;
   touch-action: pan-y;
-  padding-bottom: calc(230px + env(safe-area-inset-bottom));
+  padding-bottom: calc(230px + min(env(safe-area-inset-bottom, 0px), 34px));
   font-family: var(--font-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
   letter-spacing: 0.01em;
@@ -559,7 +559,9 @@
   grid-template-columns: 1fr 1fr;
   max-width: 430px;
   margin: 0 auto;
-  height: calc(48px + env(safe-area-inset-bottom));
+  height: 48px;
+  box-sizing: content-box;
+  padding-bottom: min(env(safe-area-inset-bottom, 0px), 34px);
   background: #2a2d36;
 }
 
@@ -571,7 +573,10 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   touch-action: manipulation;
-  padding-bottom: env(safe-area-inset-bottom);
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  box-sizing: border-box;
 }
 
 .if-dock .next {

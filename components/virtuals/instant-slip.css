@@ -50,17 +50,21 @@
   z-index: 40;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: calc(48px + env(safe-area-inset-bottom));
+  height: 48px;
+  box-sizing: content-box;
   background: var(--ifs-dark);
+  padding-bottom: min(env(safe-area-inset-bottom, 0px), 34px);
 }
 
 .ifs-dock button {
-  height: 100%;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  box-sizing: border-box;
   border: 0;
   color: #fff;
   font-size: 15px;
   font-weight: 600;
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .ifs-dock .next {
@@ -218,8 +222,8 @@
 .ifs-mini-actions-safe {
   flex-shrink: 0;
   margin-top: 24px;
-  background: linear-gradient(to right, var(--ifs-bar-dark) 50%, var(--ifs-green) 50%);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--ifs-dark);
+  padding-bottom: min(env(safe-area-inset-bottom, 0px), 34px);
 }
 
 .ifs-mini-actions {
@@ -652,8 +656,8 @@
 
 .ifs-sheet-place-safe {
   flex-shrink: 0;
-  background: var(--ifs-green-btn);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--ifs-dark);
+  padding-bottom: min(env(safe-area-inset-bottom, 0px), 34px);
 }
 
 .ifs-sheet-place {
@@ -686,7 +690,7 @@
 }
 
 .ifs-sheet[data-if-state="submitting"] .ifs-sheet-place-safe {
-  background: #25d060;
+  background: var(--ifs-dark);
 }
 
 .ifs-submitting {
@@ -772,8 +776,8 @@
 
 .ifs-confirm-actions-safe {
   margin-top: 50px;
-  background: linear-gradient(to right, var(--ifs-dark) 28.7%, var(--ifs-green) 28.7%);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--ifs-dark);
+  padding-bottom: min(env(safe-area-inset-bottom, 0px), 34px);
 }
 
 .ifs-confirm-actions {

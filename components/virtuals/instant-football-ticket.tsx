@@ -39,7 +39,7 @@ export function InstantFootballTicket({ ticketId }: { ticketId: string }) {
 
   if (!ready || !ticket) {
     return (
-      <div className="ift" data-testid="if-open-bets" data-if-build="if-pixel-v15">
+      <div className="ift" data-testid="if-open-bets" data-if-build="if-safe-v16">
         <header className="ift-top">
           <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
             <ChevronLeft size={24} strokeWidth={2.2} />
@@ -150,7 +150,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   }
 
   return (
-    <div className="ift" data-testid="if-open-bets" data-if-build="if-pixel-v15">
+    <div className="ift" data-testid="if-open-bets" data-if-build="if-safe-v16">
       <header className="ift-top">
         <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
           <ChevronLeft size={24} strokeWidth={2.2} />
