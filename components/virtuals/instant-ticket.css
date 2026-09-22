@@ -6,7 +6,7 @@
   min-height: 100dvh;
   max-width: 430px;
   margin: 0 auto;
-  background: #2b2e37;
+  background: #363a46;
   color: #fff;
   font-family: var(--font-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-text-size-adjust: 100%;
@@ -71,9 +71,9 @@
   gap: 8px;
   height: 42px;
   padding: 0 14px;
-  background: #2b2e37;
+  background: #363a46;
   color: #fff;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
 }
 
@@ -84,47 +84,59 @@
   place-items: center;
   padding: 0 5px;
   border-radius: 99px;
-  background: #12a150;
+  background: #4e505d;
   color: #fff;
   font-size: 11px;
 }
 
 .ift-card {
+  margin: 1px 7px 0;
   background: #fff;
   color: #1a1d24;
-  padding: 12px 14px 10px;
+  padding: 12px 11px 10px;
 }
 
 .ift-card-head {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
 }
 
 .ift-card-head p {
   margin: 0;
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 13.5px;
+  line-height: 1.32;
+}
+
+.ift-card-head p span {
+  display: block;
+  color: #9aa1ad;
+  font-size: 11.5px;
 }
 
 .ift-reload {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
   border: 0;
   background: #fff;
-  color: #12a150;
+  color: #089837;
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
 }
 
 .ift-pick {
-  padding: 10px 0 4px;
+  padding: 23px 0 0;
 }
 
 .ift-pick-line {
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+  line-height: 1;
 }
 
 .ift-pick-line strong {
@@ -134,13 +146,18 @@
 .ift-pick-market,
 .ift-pick-match,
 .ift-pick-league {
-  margin: 2px 0 0;
-  font-size: 13px;
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1;
   color: #4b5563;
 }
 
 .ift-pick-match {
   color: #1a1d24;
+}
+
+.ift-pick-league {
+  font-size: 13px;
 }
 
 .ift-pick-match em {
@@ -157,20 +174,20 @@
   display: flex;
   width: 100%;
   justify-content: flex-end;
-  margin: 8px 0 10px;
+  margin: 23px 0 11px;
   border: 0;
   background: #fff;
   color: #6b7280;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .ift-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 0 4px;
-  font-size: 13px;
-  color: #4b5563;
+  padding: 12px 0 4px;
+  font-size: 14px;
+  color: #6b7280;
 }
 
 .ift-foot strong {
@@ -187,21 +204,21 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(48px + env(safe-area-inset-bottom));
+  bottom: calc(50px + env(safe-area-inset-bottom));
   z-index: 30;
-  border-top: 1px solid #383c46;
+  border-top: 1px solid #454a55;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   max-width: 430px;
-  height: 40px;
+  height: 48px;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 12px;
-  background: #1b1e24;
-  color: #d7dde6;
-  font-size: 13px;
+  padding: 0 7px 0 14px;
+  background: #3d434f;
+  color: #e4e8ee;
+  font-size: 14px;
 }
 
 .ift-speed-bar > span {
@@ -212,11 +229,11 @@
 
 .ift-speeds {
   display: flex;
-  gap: 6px;
+  gap: 4px;
 }
 
 .ift-speeds button {
-  min-width: 48px;
+  min-width: 56px;
   height: 28px;
   border: 1px solid #454a55;
   border-radius: 3px;
@@ -227,8 +244,8 @@
 }
 
 .ift-speeds button[aria-current="true"] {
-  border-color: #12a150;
-  background: #12a150;
+  border-color: #089837;
+  background: #089837;
   color: #fff;
 }
 
@@ -242,10 +259,10 @@
   grid-template-columns: 1fr 1fr;
   width: 100%;
   max-width: 430px;
-  height: calc(48px + env(safe-area-inset-bottom));
+  height: calc(50px + env(safe-area-inset-bottom));
   margin-left: auto;
   margin-right: auto;
-  background: #2a2d36;
+  background: #363a46;
 }
 
 .ift-dock a,
@@ -255,18 +272,18 @@
   height: 100%;
   border: 0;
   color: #fff;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   text-decoration: none;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
 .ift-keep {
-  background: #2a2d36;
+  background: #363a46;
 }
 
 .ift-kick {
-  background: #12a150;
+  background: #089837;
 }
 
 .ift-kick:disabled {
@@ -277,7 +294,7 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(96px + env(safe-area-inset-bottom));
+  bottom: calc(108px + env(safe-area-inset-bottom));
   z-index: 40;
   display: flex;
   align-items: center;
@@ -303,7 +320,7 @@
   flex-shrink: 0;
   place-items: center;
   border-radius: 99px;
-  background: #12a150;
+  background: #089837;
   color: #fff;
   font-size: 12px;
   font-weight: 700;

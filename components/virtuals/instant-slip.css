@@ -1,10 +1,17 @@
-/* Instant Football slip — the provided screenshots are the chrome. */
+/* Instant Football slip. Geometry is measured from the reference screens at 390px wide. */
 
 .ifs-root {
-  --ifs-green: #12a150;
-  --ifs-green-btn: #1bb05c;
-  --ifs-dark: #2a2d36;
+  --ifs-green: #089837;
+  --ifs-green-btn: #079937;
+  --ifs-ribbon: #0d8933;
+  --ifs-dark: #363a46;
+  --ifs-bar-dark: #393b47;
   --ifs-ink: #1a1d24;
+  --ifs-grey: #9aa1ad;
+  --ifs-pick: #fafafa;
+  --ifs-rule: #eeeef0;
+  --ifs-pill: #d8f1dc;
+  --ifs-pot: #daeadf;
   max-width: 430px;
   margin: 0 auto;
   font-family: var(--font-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -25,10 +32,6 @@
   background: rgb(0 0 0 / 0.45);
 }
 
-.ifs-mini {
-  overflow: visible;
-}
-
 .ifs-dock,
 .ifs-mini,
 .ifs-sheet {
@@ -43,29 +46,12 @@
   margin-right: auto;
 }
 
-.ifs-photo {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  pointer-events: none;
-  user-select: none;
-}
-
-.ifs-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
 .ifs-dock {
   z-index: 40;
   display: grid;
   grid-template-columns: 1fr 1fr;
   height: calc(48px + env(safe-area-inset-bottom));
-  background: #2a2d36;
+  background: var(--ifs-dark);
 }
 
 .ifs-dock button {
@@ -78,79 +64,61 @@
 }
 
 .ifs-dock .next {
-  background: #2a2d36;
+  background: var(--ifs-dark);
 }
 
 .ifs-dock .slip {
   background: var(--ifs-green);
 }
 
+/* ---------- mini slip ---------- */
+
 .ifs-mini {
   background: #fff;
-  box-shadow: 0 -4px 18px rgb(16 24 20 / 0.12);
-  padding-top: 10px;
+  box-shadow: 0 -4px 18px rgb(16 24 20 / 0.1);
+  overflow: visible;
   animation: ifs-up 180ms ease both;
 }
 
-/* Close sits in a rounded tab that pokes above the white sheet, like Sporty. */
-.ifs-mini-tab {
+/* The close control sits on a hill that rises out of the sheet. */
+.ifs-tab {
   position: absolute;
-  top: -21px;
-  right: 14px;
+  right: 20px;
+  bottom: 100%;
+  width: 84px;
+  height: 16px;
+}
+
+.ifs-tab-hill {
   display: block;
-  width: 56px;
-  height: 22px;
-  border-radius: 12px 12px 0 0;
-  background: #fff;
-  box-shadow: 0 -3px 10px rgb(16 24 20 / 0.08);
-}
-
-.ifs-mini-tab::before,
-.ifs-mini-tab::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  width: 12px;
-  height: 12px;
-  background: radial-gradient(circle at 0 0, transparent 12px, #fff 12px);
-}
-
-.ifs-mini-tab::before {
-  left: -12px;
-  background: radial-gradient(circle at 0 0, transparent 12px, #fff 12px);
-}
-
-.ifs-mini-tab::after {
-  right: -12px;
-  background: radial-gradient(circle at 100% 0, transparent 12px, #fff 12px);
+  width: 84px;
+  height: 16px;
+  filter: drop-shadow(0 -2px 3px rgb(16 24 20 / 0.06));
 }
 
 .ifs-mini-close {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   display: grid;
-  width: 100%;
-  height: 100%;
+  width: 34px;
+  height: 18px;
   place-items: center;
+  padding: 0;
   border: 0;
   background: transparent;
-  color: #6b7280;
-  font-size: 15px;
+  color: #3a3f4a;
+  font-size: 13px;
   line-height: 1;
 }
 
-.ifs-div {
-  width: 1px;
-  height: 14px;
-  margin: 0 2px;
-  background: #d8dde6;
-}
-
-.ifs-mini-pick,
-.ifs-mini-bar {
+.ifs-mini-pick {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
-  padding: 2px 14px 0;
+  padding: 10px 19px 0 30px;
   border: 0;
   background: #fff;
   color: var(--ifs-ink);
@@ -160,25 +128,34 @@
 .ifs-mini-pick span {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   flex: 1;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .ifs-ball {
   flex-shrink: 0;
-  color: #1a1d24;
+  color: var(--ifs-ink);
+}
+
+.ifs-div {
+  width: 1px;
+  height: 13px;
+  margin: 0 1px;
+  background: #aeb4be;
 }
 
 .ifs-mini-pick em {
   font-style: normal;
-  color: #9aa1ad;
+  color: var(--ifs-grey);
+  font-size: 12.5px;
   font-weight: 400;
 }
 
 .ifs-mini-pick strong,
 .ifs-mini-kind strong {
+  font-size: 13px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -186,21 +163,22 @@
 .ifs-mini-meta {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px 12px;
+  gap: 3px;
+  height: 32px;
+  margin-top: 7px;
+  padding: 0 18px 0 3px;
 }
 
 .ifs-mini-remove {
   display: grid;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   place-items: center;
+  padding: 0;
   border: 0;
   background: transparent;
-  color: #1a1d24;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1;
+  color: var(--ifs-ink);
+  line-height: 0;
 }
 
 .ifs-mini-match {
@@ -211,25 +189,25 @@
   color: var(--ifs-ink);
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.01em;
   text-align: left;
 }
 
-.ifs-mini-match em {
+.ifs-mini-match em,
+.ifs-live-match em {
   font-style: normal;
   font-size: 11px;
   font-weight: 400;
-  color: #9aa1ad;
+  color: var(--ifs-grey);
 }
 
 .ifs-mini-meta input {
-  width: 88px;
-  height: 34px;
-  border: 1px solid #d8dde6;
-  border-radius: 2px;
+  width: 98px;
+  height: 32px;
+  border: 1px solid #cdd2da;
+  border-radius: 3px;
   background: #fff;
   color: var(--ifs-ink);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   text-align: right;
@@ -239,26 +217,33 @@
 
 .ifs-mini-actions-safe {
   flex-shrink: 0;
-  background: linear-gradient(to right, #2a2d36 50%, var(--ifs-green-btn) 50%);
+  margin-top: 24px;
+  background: linear-gradient(to right, var(--ifs-bar-dark) 50%, var(--ifs-green) 50%);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .ifs-mini-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: 56px;
-  min-height: 56px;
-  max-height: 56px;
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
 }
 
 .ifs-mini-win {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
-  background: #2a2d36;
+  padding: 0 16px 0 14px;
+  background: var(--ifs-bar-dark);
   color: #fff;
-  font-size: 16px;
+  font-size: 13.5px;
+}
+
+.ifs-mini-win strong {
+  font-size: 13.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .ifs-mini-place {
@@ -266,25 +251,42 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 56px;
-  min-height: 56px;
-  max-height: 56px;
-  padding: 0;
+  gap: 2px;
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  padding: 10px 0 0;
   border: 0;
-  background: var(--ifs-green-btn);
+  background: var(--ifs-green);
   color: #fff;
-  line-height: 1.15;
+  line-height: 1.1;
   box-sizing: border-box;
 }
 
-.ifs-mini-place b {
-  font-size: 18px;
+.ifs-mini-place b,
+.ifs-sheet-place b {
+  font-size: 14.5px;
   font-weight: 600;
 }
 
-.ifs-mini-place small {
-  font-size: 12px;
+.ifs-mini-place small,
+.ifs-sheet-place small {
+  font-size: 10px;
   font-weight: 400;
+}
+
+.ifs-mini-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 24px;
+  margin-top: 12px;
+  padding: 0 15px 0 14px;
+  border: 0;
+  background: #fff;
+  color: var(--ifs-ink);
+  text-align: left;
 }
 
 .ifs-mini-title {
@@ -298,257 +300,49 @@
   color: #6b7280;
 }
 
-.ifs-shot {
-  background: #fff;
-  line-height: 0;
-}
-
-.ifs-single-shot {
-  aspect-ratio: 1080 / 532;
-  min-height: 176px;
-}
-
-.ifs-multi-shot {
-  aspect-ratio: 1080 / 386;
-  min-height: 132px;
-}
+/* ---------- expanded slip ---------- */
 
 .ifs-sheet {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 80;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 430px;
   max-height: calc(100vh - 44px);
   max-height: calc(100dvh - 44px);
-  margin-left: auto;
-  margin-right: auto;
   background: #fff;
   box-shadow: 0 -8px 32px rgb(16 24 20 / 0.28);
   animation: ifs-up 180ms ease both;
 }
 
-.ifs-chip,
-.ifs-hit,
-.ifs-live-stake input {
-  font-family: inherit;
-  line-height: 1.15;
-}
-
-.ifs-chip {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  margin: 0;
-  border: 0;
-  background: #fff;
-  color: var(--ifs-ink);
-  font-size: 15px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ifs-chip em {
-  font-style: normal;
-  color: #9aa1ad;
-  font-weight: 400;
-}
-
-.ifs-chip-dark {
-  background: #2a2d36;
-  color: #fff;
-  font-weight: 600;
-  justify-content: flex-end;
-}
-
-.ifs-chip-green {
-  background: #1bb05c;
-  color: #fff;
-  justify-content: center;
-}
-
-.ifs-hit {
-  position: absolute;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: transparent;
-}
-
-.ifs-single-shot .ifs-hit-close,
-.ifs-multi-shot .ifs-hit-close {
-  top: 4%;
-  right: 1%;
-  width: 12%;
-  height: 14%;
-}
-
-.ifs-multi-shot .ifs-hit-expand {
-  top: 18%;
-  left: 0;
-  width: 100%;
-  height: 36%;
-}
-
-.ifs-single-cover {
-  position: absolute;
-  top: 16%;
-  left: 0;
-  right: 0;
-  height: 38%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
-  padding: 0 16px 0 14px;
-  background: #fff;
-  line-height: 1.2;
-}
-
-.ifs-single-pick {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-  border: 0;
-  background: #fff;
-  color: var(--ifs-ink);
-  text-align: left;
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.ifs-single-pick em {
-  font-style: normal;
-  color: #9aa1ad;
-  font-weight: 400;
-}
-
-.ifs-single-pick strong {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.ifs-single-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.ifs-single-remove {
-  display: grid;
-  width: 22px;
-  height: 22px;
-  place-items: center;
-  border: 0;
-  background: #fff;
-  color: #9aa1ad;
-  font-size: 18px;
-  line-height: 1;
-}
-
-.ifs-single-match {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  background: #fff;
-  color: var(--ifs-ink);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  text-align: left;
-}
-
-.ifs-single-meta input {
-  width: 88px;
-  height: 34px;
-  border: 1px solid #d8dde6;
-  border-radius: 2px;
-  background: #fff;
-  color: var(--ifs-ink);
-  font-size: 16px;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-  padding: 0 10px;
-  outline: none;
-}
-
-.ifs-single-shot .ifs-chip-win {
-  top: 58%;
-  left: 34%;
-  width: 14%;
-  height: 16%;
-  font-size: 16px;
-  font-variant-numeric: tabular-nums;
-}
-
-.ifs-single-shot .ifs-hit-mini-place {
-  top: 54%;
-  left: 50%;
-  width: 50%;
-  height: 24%;
-}
-
-.ifs-single-shot .ifs-chip-pay,
-.ifs-sheet-shot .ifs-chip-pay {
-  left: 8%;
-  right: 8%;
-  top: 58%;
-  height: 28%;
-  width: auto;
-  font-size: 12px;
-  font-weight: 400;
-}
-
-.ifs-multi-shot .ifs-chip-count {
-  top: 28%;
-  left: 4.2%;
-  width: 7.2%;
-  height: 18%;
-  justify-content: center;
-  border-radius: 99px;
-  background: var(--ifs-green);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.ifs-multi-shot .ifs-chip-multi-meta {
-  top: 28%;
-  right: 4%;
-  width: 38%;
-  height: 18%;
-  justify-content: flex-end;
-  font-size: 14px;
-  color: #6b7280;
-}
-
-.ifs-multi-shot .ifs-chip-multi-meta strong {
-  margin-left: 6px;
-  color: var(--ifs-ink);
-  font-variant-numeric: tabular-nums;
-}
-
 .ifs-sheet-head {
   position: relative;
   flex-shrink: 0;
-  background: #2a2d36;
+  height: 87px;
+  box-sizing: border-box;
+  background: var(--ifs-dark);
   color: #fff;
-  padding: 14px 12px 10px;
+}
+
+.ifs-chevron {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  width: 56px;
+  height: 16px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
 }
 
 .ifs-sheet-top {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
+  height: 22px;
+  margin-top: 19px;
+  padding: 0 15px 0 16px;
 }
 
 .ifs-count {
@@ -559,8 +353,8 @@
   border-radius: 99px;
   background: var(--ifs-green);
   color: #fff;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .ifs-sheet-name {
@@ -568,29 +362,14 @@
   border: 0;
   background: transparent;
   color: #fff;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 600;
   text-align: left;
 }
 
-/* Collapse chevron is centred at the top of the dark header. */
-.ifs-chevron {
-  position: absolute;
-  top: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: grid;
-  width: 52px;
-  height: 22px;
-  place-items: center;
-  border: 0;
-  background: transparent;
-  color: #fff;
-}
-
 .ifs-balance {
   color: #f5c518;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
@@ -599,19 +378,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 10px;
-  font-size: 12.5px;
+  height: 16px;
+  margin-top: 16px;
+  padding: 0 16px 0 14px;
   color: #c5cad3;
 }
 
 .ifs-sheet-tools button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  padding: 0;
   border: 0;
   background: transparent;
   color: inherit;
-  font-size: 12.5px;
+  font-size: 12px;
 }
 
 .ifs-gear {
@@ -634,24 +415,27 @@
   flex-shrink: 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  background: #2a2d36;
+  gap: 4px;
+  height: 35px;
+  padding: 0 7px;
+  background: var(--ifs-dark);
 }
 
 .ifs-tabs button {
-  height: 42px;
+  height: 35px;
+  padding: 0;
   border: 0;
-  background: #3a3e48;
+  border-radius: 3px 3px 0 0;
+  background: #4e505d;
   color: #fff;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
-  margin: 0 1px;
 }
 
 .ifs-tabs button[aria-current="true"] {
   background: #fff;
   color: var(--ifs-ink);
   font-weight: 600;
-  border-radius: 4px 4px 0 0;
 }
 
 .ifs-sheet-body {
@@ -666,91 +450,96 @@
 .ifs-live-pick {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 4px 8px;
-  padding: 12px 14px 10px;
-  border-bottom: 1px solid #f3f4f7;
-}
-
-.ifs-live-name,
-.ifs-live-odds {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ifs-ink);
+  padding: 11px 24px 12px 7px;
+  border-bottom: 1px solid var(--ifs-rule);
+  background: var(--ifs-pick);
 }
 
 .ifs-live-name {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  padding-left: 31px;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ifs-ink);
 }
 
 .ifs-live-odds {
+  font-size: 15px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+  color: var(--ifs-ink);
 }
 
 .ifs-live-match {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  gap: 7px;
+  margin-top: 7px;
+  font-size: 15px;
+  font-weight: 600;
   color: var(--ifs-ink);
 }
 
 .ifs-live-match button {
+  display: grid;
+  width: 25px;
+  height: 20px;
+  place-items: center;
+  padding: 0;
   border: 0;
   background: transparent;
-  color: #1a1d24;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.ifs-live-match em {
-  font-style: normal;
-  color: #9aa1ad;
-  font-size: 12px;
+  color: var(--ifs-ink);
+  line-height: 0;
 }
 
 .ifs-live-market {
   grid-column: 1;
-  font-size: 12px;
-  color: #9aa1ad;
+  margin-top: 10px;
+  padding-left: 32px;
+  font-size: 15px;
+  color: #5b6270;
 }
 
 .ifs-bonus {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 12px;
-  padding: 8px 10px;
+  gap: 13px;
+  height: 18px;
+  margin: 10px 14px 2px;
+  padding: 0 8px;
   border-radius: 99px;
-  background: #e8f7ee;
-  color: var(--ifs-green);
-  font-size: 13px;
+  background: var(--ifs-pill);
+  color: #1d7d3c;
+  font-size: 11.8px;
   font-weight: 500;
 }
 
 .ifs-bonus i {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 99px;
-  background: #7dcea0;
+  background: #6ec287;
   flex-shrink: 0;
 }
 
+.ifs-mini .ifs-bonus {
+  margin-top: 13px;
+  margin-bottom: 14px;
+}
+
 .ifs-totals {
-  padding: 4px 0 8px;
+  padding-bottom: 0;
 }
 
 .ifs-stake-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 46px;
+  height: 44px;
   padding: 0 14px;
   font-size: 14px;
-  font-weight: 500;
   color: var(--ifs-ink);
 }
 
@@ -764,13 +553,13 @@
 }
 
 .ifs-ghs input {
-  width: 88px;
-  height: 34px;
+  width: 98px;
+  height: 32px;
   border: 1px solid #d8dde6;
-  border-radius: 2px;
+  border-radius: 3px;
   background: #fff;
   color: var(--ifs-ink);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   text-align: right;
@@ -781,24 +570,25 @@
 .ifs-insure {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 40px;
-  padding: 0 14px 0 0;
+  gap: 11px;
+  height: 25px;
+  margin: 10px 0 11px;
+  padding-right: 14px;
   font-size: 13px;
-  color: #b6bcc6;
+  color: #c3c8d0;
 }
 
-/* SportyInsure sits in a green ribbon with a notched right edge. */
+/* SportyInsure is a green ribbon with a notched right edge. */
 .ifs-insure-tag {
   display: inline-flex;
   align-items: center;
-  height: 24px;
-  padding: 0 16px 0 14px;
-  background: var(--ifs-green);
+  height: 25px;
+  padding: 0 18px 0 14px;
+  background: var(--ifs-ribbon);
   color: #fff;
   font-size: 13px;
   font-weight: 600;
-  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
 }
 
 .ifs-insure-i {
@@ -818,21 +608,25 @@
 .ifs-insure label {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
 }
 
 .ifs-insure input {
+  appearance: none;
+  -webkit-appearance: none;
   width: 15px;
   height: 15px;
-  accent-color: #c5cad3;
+  margin: 0;
+  border: 1.5px solid #d3d8df;
+  border-radius: 2px;
+  background: #fff;
 }
 
-.ifs-line,
-.ifs-pot {
+.ifs-line {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 32px;
+  height: 24px;
   padding: 0 14px;
   font-size: 14px;
   color: var(--ifs-ink);
@@ -845,10 +639,15 @@
 }
 
 .ifs-pot {
-  margin-top: 6px;
-  min-height: 40px;
-  background: #eef8f1;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  margin: 6px 7px 0;
+  padding: 0 7px;
+  background: var(--ifs-pot);
+  font-size: 15px;
+  color: var(--ifs-ink);
 }
 
 .ifs-sheet-place-safe {
@@ -862,11 +661,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex: 0 0 56px;
+  gap: 1px;
+  flex: 0 0 50px;
   width: 100%;
-  height: 56px;
-  min-height: 56px;
-  max-height: 56px;
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
   padding: 0;
   border: 0;
   background: var(--ifs-green-btn);
@@ -874,48 +674,34 @@
   box-sizing: border-box;
 }
 
-.ifs-sheet-place b {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.ifs-sheet-place small {
-  font-size: 12px;
-  font-weight: 400;
-}
-
 .ifs-sheet-place:disabled {
   opacity: 0.85;
 }
 
+/* ---------- submitting ---------- */
+
 .ifs-sheet-place[data-testid="if-submitting"] {
   opacity: 1;
+  background: #25d060;
 }
 
-.ifs-spin {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-  border: 2px solid rgb(255 255 255 / 0.35);
-  border-top-color: #fff;
-  border-radius: 99px;
-  animation: ifs-spin 0.7s linear infinite;
-  vertical-align: -2px;
+.ifs-sheet[data-if-state="submitting"] .ifs-sheet-place-safe {
+  background: #25d060;
 }
 
 .ifs-submitting {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 7px;
+  font-size: 14.5px;
+  font-weight: 600;
 }
 
-/* iOS-style spoke spinner, as in the reference submitting state. */
 .ifs-spokes {
   position: relative;
   display: inline-block;
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
   flex-shrink: 0;
 }
 
@@ -928,7 +714,7 @@
   margin-left: -1px;
   border-radius: 1px;
   background: #fff;
-  transform-origin: 1px 9px;
+  transform-origin: 1px 7.5px;
   animation: ifs-spoke 0.96s linear infinite;
 }
 
@@ -941,17 +727,24 @@
   }
 }
 
+.ifs-sheet[data-if-state="submitting"] .ifs-sheet-head,
+.ifs-sheet[data-if-state="submitting"] .ifs-tabs,
 .ifs-sheet[data-if-state="submitting"] .ifs-sheet-body {
   position: relative;
   pointer-events: none;
 }
 
+.ifs-sheet[data-if-state="submitting"] .ifs-sheet-head::after,
+.ifs-sheet[data-if-state="submitting"] .ifs-tabs::after,
 .ifs-sheet[data-if-state="submitting"] .ifs-sheet-body::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgb(120 126 136 / 0.35);
+  z-index: 5;
+  background: rgb(0 0 0 / 0.5);
 }
+
+/* ---------- confirm to pay ---------- */
 
 .ifs-confirm-sheet {
   flex-shrink: 0;
@@ -967,39 +760,39 @@
 }
 
 .ifs-confirm-sheet .label {
-  font-size: 15px;
+  font-size: 13px;
   color: #6b7280;
 }
 
 .ifs-confirm-sheet .amount {
-  margin-top: 8px;
-  font-size: 28px;
+  margin-top: 6px;
+  font-size: 21.5px;
   font-weight: 700;
 }
 
 .ifs-confirm-actions-safe {
-  margin-top: 26px;
-  background: linear-gradient(to right, var(--ifs-dark) 28.5%, var(--ifs-green) 28.5%);
+  margin-top: 50px;
+  background: linear-gradient(to right, var(--ifs-dark) 28.7%, var(--ifs-green) 28.7%);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .ifs-confirm-actions {
   display: grid;
-  grid-template-columns: 0.4fr 1fr;
-  height: 52px;
-  min-height: 52px;
-  max-height: 52px;
+  grid-template-columns: 28.7% 71.3%;
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
 }
 
 .ifs-confirm-actions button {
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  padding: 0;
   border: 0;
   color: #fff;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
-  padding: 0;
-  height: 52px;
-  min-height: 52px;
-  max-height: 52px;
   box-sizing: border-box;
 }
 
@@ -1011,8 +804,20 @@
   background: var(--ifs-green);
 }
 
+.ifs-sheet[data-if-state="confirm"] .ifs-sheet-head,
+.ifs-sheet[data-if-state="confirm"] .ifs-tabs,
 .ifs-sheet[data-if-state="confirm"] .ifs-sheet-body {
-  filter: brightness(0.72);
+  position: relative;
+}
+
+.ifs-sheet[data-if-state="confirm"] .ifs-sheet-head::after,
+.ifs-sheet[data-if-state="confirm"] .ifs-tabs::after,
+.ifs-sheet[data-if-state="confirm"] .ifs-sheet-body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: rgb(0 0 0 / 0.35);
 }
 
 .ifs-empty {
@@ -1030,12 +835,6 @@
   color: #e31837;
 }
 
-@keyframes ifs-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes ifs-up {
   from {
     transform: translateY(24px);
@@ -1043,10 +842,6 @@
   to {
     transform: translateY(0);
   }
-}
-
-.ifs-shot {
-  animation: ifs-up 180ms ease both;
 }
 
 .sr-only {
@@ -1059,4 +854,21 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.ifs-mini-bar .ifs-count {
+  width: 22px;
+  height: 22px;
+  font-size: 13px;
+}
+
+.ifs-mark {
+  display: inline-grid;
+  place-items: center;
+  margin-right: -2px;
+  font-size: 13px;
+  font-weight: 800;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.04em;
 }

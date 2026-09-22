@@ -115,7 +115,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const payLabel = toGhs(stakePesewas || 0);
 
   return (
-    <div className="ifs-root" data-testid="if-slip" data-if-build="if-states-v14" data-if-phase={phase} data-if-mode={mode}>
+    <div className="ifs-root" data-testid="if-slip" data-if-build="if-pixel-v15" data-if-phase={phase} data-if-mode={mode}>
       {phase === "sheet" ? (
         <button type="button" className="ifs-backdrop" aria-label="Close betslip" onClick={closeSheet} />
       ) : null}
@@ -238,10 +238,12 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
                 <span className="ifs-insure-i">i</span>
                 <label>
                   <input type="checkbox" checked={flexi} disabled={busy} onChange={() => setFlexi((value) => !value)} />
+                  <b className="ifs-mark">F</b>
                   Flexi
                 </label>
                 <label>
                   <input type="checkbox" checked={oneCut} disabled={busy} onChange={() => setOneCut((value) => !value)} />
+                  <b className="ifs-mark">17</b>
                   One Cut
                 </label>
               </div>
@@ -339,7 +341,7 @@ function SingleMini({
       </button>
       <div className="ifs-mini-meta">
         <button type="button" className="ifs-mini-remove" aria-label="Remove selection" onClick={onRemove}>
-          ✕
+          <CloseX />
         </button>
         <button type="button" className="ifs-mini-match" onClick={onExpand}>
           {matchParts(item.matchLabel)}
@@ -409,7 +411,7 @@ function LivePick({
       <span className="ifs-live-odds">{formatOdds(item.odds)}</span>
       <div className="ifs-live-match">
         <button type="button" aria-label="Remove selection" disabled={disabled} onClick={onRemove}>
-          ✕
+          <CloseX />
         </button>
         <span>{matchParts(item.matchLabel)}</span>
       </div>
@@ -428,10 +430,18 @@ function matchParts(label: string) {
   );
 }
 
+function CloseX() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <path d="M1.4 1.4 12.6 12.6M12.6 1.4 1.4 12.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function ChevronDown() {
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden>
-      <path d="M5.5 8.5 11 14l5.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="24" height="16" viewBox="0 0 24 16" fill="none" aria-hidden>
+      <path d="M3.5 4.5 12 12l8.5-7.5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -448,13 +458,17 @@ function TrashBox() {
 function GearIcon() {
   return (
     <span className="ifs-gear">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
-        <circle cx="8" cy="8" r="2.3" stroke="currentColor" strokeWidth="1.3" />
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
-          d="M8 1.6v1.7M8 12.7v1.7M14.4 8h-1.7M3.3 8H1.6M12.5 3.5l-1.2 1.2M4.7 11.3l-1.2 1.2M12.5 12.5l-1.2-1.2M4.7 4.7 3.5 3.5"
+          d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z"
           stroke="currentColor"
-          strokeWidth="1.3"
-          strokeLinecap="round"
+          strokeWidth="1.7"
+        />
+        <path
+          d="m19.4 14.4.9.5a1.2 1.2 0 0 1 .4 1.7l-1 1.7a1.2 1.2 0 0 1-1.6.4l-.9-.5a7.7 7.7 0 0 1-2 1.2v1a1.2 1.2 0 0 1-1.2 1.2h-2a1.2 1.2 0 0 1-1.2-1.2v-1a7.7 7.7 0 0 1-2-1.2l-.9.5a1.2 1.2 0 0 1-1.6-.4l-1-1.7a1.2 1.2 0 0 1 .4-1.7l.9-.5a7.4 7.4 0 0 1 0-2.4l-.9-.5a1.2 1.2 0 0 1-.4-1.7l1-1.7a1.2 1.2 0 0 1 1.6-.4l.9.5a7.7 7.7 0 0 1 2-1.2v-1A1.2 1.2 0 0 1 11 2.8h2a1.2 1.2 0 0 1 1.2 1.2v1c.7.3 1.4.7 2 1.2l.9-.5a1.2 1.2 0 0 1 1.6.4l1 1.7a1.2 1.2 0 0 1-.4 1.7l-.9.5a7.4 7.4 0 0 1 0 2.4Z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
         />
       </svg>
       <i className="ifs-gear-dot" />
@@ -474,19 +488,23 @@ function Spokes() {
 
 function MiniCloseTab({ onClose }: { onClose: () => void }) {
   return (
-    <span className="ifs-mini-tab" aria-hidden={false}>
+    <div className="ifs-tab">
+      <svg className="ifs-tab-hill" viewBox="0 0 84 16" fill="none" aria-hidden>
+        <path d="M0 16h10c10 0 10-16 32-16s22 16 32 16h10z" fill="#fff" />
+      </svg>
       <button type="button" className="ifs-mini-close" aria-label="Close betslip" onClick={onClose}>
         ✕
       </button>
-    </span>
+    </div>
   );
 }
 
 function SoccerBall() {
   return (
-    <svg className="ifs-ball" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <circle cx="8" cy="8" r="6.2" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M8 1.8 9.6 5.2 13.4 5.6 10.6 8.2l.9 3.8L8 10.4 4.5 12l.9-3.8L2.6 5.6l3.8-.4Z" stroke="currentColor" strokeWidth="1.1" />
+    <svg className="ifs-ball" width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <circle cx="8" cy="8" r="6.4" stroke="currentColor" strokeWidth="1.3" />
+      <path d="m8 4.2 2.7 2-1 3.2H6.3l-1-3.2 2.7-2Z" fill="currentColor" />
+      <path d="M8 4.2V1.6M10.7 6.2l2.5-.8M9.7 9.4l1.6 2.1M6.3 9.4l-1.6 2.1M5.3 6.2l-2.5-.8" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
     </svg>
   );
 }

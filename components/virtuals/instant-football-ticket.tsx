@@ -39,7 +39,7 @@ export function InstantFootballTicket({ ticketId }: { ticketId: string }) {
 
   if (!ready || !ticket) {
     return (
-      <div className="ift" data-testid="if-open-bets" data-if-build="if-states-v14">
+      <div className="ift" data-testid="if-open-bets" data-if-build="if-pixel-v15">
         <header className="ift-top">
           <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
             <ChevronLeft size={24} strokeWidth={2.2} />
@@ -97,7 +97,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
     toasted.current = true;
     toast.dismiss();
     setShowToast(true);
-    const timer = window.setTimeout(() => setShowToast(false), 4200);
+    const timer = window.setTimeout(() => setShowToast(false), 2600);
     return () => window.clearTimeout(timer);
   }, [ticket]);
 
@@ -150,7 +150,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   }
 
   return (
-    <div className="ift" data-testid="if-open-bets" data-if-build="if-states-v14">
+    <div className="ift" data-testid="if-open-bets" data-if-build="if-pixel-v15">
       <header className="ift-top">
         <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
           <ChevronLeft size={24} strokeWidth={2.2} />
@@ -174,11 +174,14 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
       <article className="ift-card">
         <div className="ift-card-head">
           <div>
-            <p>Ticket ID: {ticket.ticketNo || ticket.publicId}</p>
-            <p>{ticket.type === "MULTI" ? "Multiple" : "Single"}</p>
+            <p>
+              <span>Ticket ID: {ticket.ticketNo || ticket.publicId}</span>
+              {ticket.type === "MULTI" ? "Multiple" : "Single"}
+            </p>
           </div>
           <button type="button" className="ift-reload" onClick={reloadSelections}>
-            ↗ Reload Selections
+            <ReloadArrow />
+            Reload Selections
           </button>
         </div>
         {showDetails ? (
@@ -322,6 +325,15 @@ function TeamSide({ pick, side }: { pick: DemoTicketPick; side: "home" | "away" 
       <p className="truncate text-[13px] font-bold text-white">{name}</p>
       <p className="text-[11px] font-semibold text-white/55">{team?.abbreviation ?? name.slice(0, 3).toUpperCase()}</p>
     </div>
+  );
+}
+
+function ReloadArrow() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path d="M2 12.4c1.5-4.6 5-6.9 10.4-6.9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M9.6 2.6 13.4 5.5 9.6 8.4z" fill="currentColor" />
+    </svg>
   );
 }
 
