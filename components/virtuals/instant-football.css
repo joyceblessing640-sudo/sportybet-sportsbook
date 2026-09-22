@@ -24,6 +24,8 @@
   line-height: 1.2;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .if-chrome {
@@ -516,16 +518,18 @@
   max-width: 430px;
   margin: 0 auto;
   height: calc(48px + env(safe-area-inset-bottom));
-  padding-bottom: env(safe-area-inset-bottom);
+  background: #2a2d36;
 }
 
 .if-dock button {
+  height: 100%;
   border: 0;
   color: #fff;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.02em;
   touch-action: manipulation;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .if-dock .next {
