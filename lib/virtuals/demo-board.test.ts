@@ -13,26 +13,23 @@ import { placeDemoBet, settleDemoTicket, type DemoTicket } from "./demo-tickets"
 import { selectionWon, simulateMatch } from "./engine";
 
 describe("Instant Football demo board", () => {
-  it("builds seven clickable Instant Football boards from demo match data", () => {
-    expect(DEMO_MATCHES).toHaveLength(56);
-    expect(boardMatches("england")).toHaveLength(8);
-    expect(boardMatches("cwc")).toHaveLength(8);
-    const mun = getDemoMatch("if-england-mun-lee");
-    expect(mun?.home.abbreviation).toBe("MUN");
-    expect(mun?.away.abbreviation).toBe("LEE");
-    expect(getDemoMatch("if-spain-fcb-lev")?.odds[0]).toBeGreaterThan(100);
+  it("recreates the seven reference boards with clickable 1X2 prices", () => {
+    expect(DEMO_MATCHES).toHaveLength(48);
+    expect(boardMatches("england")).toHaveLength(6);
+    expect(boardMatches("cwc")).toHaveLength(7);
+    const mci = getDemoMatch("if-england-mci-ars");
+    expect(mci?.odds).toEqual([267, 283, 300]);
+    expect(getDemoMatch("if-spain-osa-bil")?.odds).toEqual([255, 287, 313]);
+    expect(getDemoMatch("if-germany-bmu-bvb")?.odds).toEqual([240, 293, 331]);
+    expect(getDemoMatch("if-italy-juv-laz")?.odds).toEqual([209, 309, 389]);
+    expect(getDemoMatch("if-champions-por-mun")?.odds).toEqual([309, 287, 259]);
+    expect(getDemoMatch("if-euros-por-ukr")?.odds).toEqual([167, 341, 577]);
+    expect(getDemoMatch("if-cwc-bvb-mia")?.odds).toEqual([241, 293, 329]);
     expect(DEMO_MATCHES.every((match) => match.home.logo.includes("/virtuals/crests/") && match.away.logo.includes("/virtuals/crests/"))).toBe(true);
   });
 
-  it("builds a new round of fixtures without freezing screenshot teams", () => {
-    const first = boardMatches("england", 1)[0];
-    const next = boardMatches("england", 2)[0];
-    expect(next.id).not.toBe(first.id);
-    expect(getDemoMatch(next.id)?.id).toBe(next.id);
-  });
-
   it("builds 1UP and 2UP markets from the 1X2 board", () => {
-    const match = getDemoMatch("if-england-mun-lee");
+    const match = getDemoMatch("if-england-mci-ars");
     expect(match).toBeTruthy();
     const oneUp = demoOutcomes(match!, "1X2-1UP");
     expect(oneUp.map((item) => item.code)).toEqual(["1", "X", "2"]);

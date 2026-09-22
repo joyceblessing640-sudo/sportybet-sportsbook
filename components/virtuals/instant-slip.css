@@ -787,10 +787,6 @@
   opacity: 0.85;
 }
 
-.ifs-sheet-place[data-testid="if-submitting"] {
-  opacity: 1;
-}
-
 .ifs-spin {
   display: inline-block;
   width: 16px;
