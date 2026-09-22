@@ -90,14 +90,14 @@ describe("Instant Football demo tickets", () => {
     expect(potentialWin + Math.round(potentialWin * 0.04)).toBe(947);
   });
 
-  it("keeps the six Instant Football state screenshots for the live slip", () => {
+  it("keeps the six Instant Football reference states in the repo", () => {
     const files = [
-      "public/virtuals/if-states/1-single.jpg",
-      "public/virtuals/if-states/2-multi.jpg",
-      "public/virtuals/if-states/3-sheet.jpg",
-      "public/virtuals/if-states/4-confirm.jpg",
-      "public/virtuals/if-states/5-submitting.jpg",
-      "public/virtuals/if-states/6-ticket.jpg",
+      "public/virtuals/if-ref/1-single.jpg",
+      "public/virtuals/if-ref/2-multiple.jpg",
+      "public/virtuals/if-ref/3-betslip.jpg",
+      "public/virtuals/if-ref/4-confirm.jpg",
+      "public/virtuals/if-ref/5-submitting.jpg",
+      "public/virtuals/if-ref/6-open-bets.jpg",
     ];
     for (const file of files) expect(existsSync(file), file).toBe(true);
   });

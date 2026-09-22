@@ -115,7 +115,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const payLabel = toGhs(stakePesewas || 0);
 
   return (
-    <div className="ifs-root" data-testid="if-slip" data-if-build="if-flow-v13" data-if-phase={phase} data-if-mode={mode}>
+    <div className="ifs-root" data-testid="if-slip" data-if-build="if-states-v14" data-if-phase={phase} data-if-mode={mode}>
       {phase === "sheet" ? (
         <button type="button" className="ifs-backdrop" aria-label="Close betslip" onClick={closeSheet} />
       ) : null}
@@ -135,13 +135,13 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
         <SingleMini
           item={items[0]}
           stake={stake}
-          odds={formatOdds(summary.totalOdds)}
           payLabel={payLabel}
           onStake={setStake}
           onRemove={() => remove(items[0].outcomeId)}
           onClose={closeMini}
           onExpand={openSheet}
           onPlace={askConfirm}
+          toWin={toGhs(summary.potentialWin)}
         />
       ) : null}
 
@@ -157,22 +157,28 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
       {phase === "sheet" ? (
         <section className="ifs-sheet" data-testid="if-slip-sheet" data-if-state={mode} aria-label="Betslip">
           <header className="ifs-sheet-head">
+            <button type="button" className="ifs-chevron" aria-label="Collapse betslip" onClick={closeSheet}>
+              <ChevronDown />
+            </button>
             <div className="ifs-sheet-top">
               <span className="ifs-count">{items.length}</span>
               <button type="button" className="ifs-sheet-name" onClick={closeSheet}>
                 Betslip
               </button>
-              <button type="button" className="ifs-chevron" aria-label="Collapse betslip" onClick={closeSheet}>
-                ▾
-              </button>
               <span className="ifs-balance">{formatWallet(wallet)}</span>
             </div>
             <div className="ifs-sheet-tools">
-              <button type="button" onClick={clear} disabled={items.length === 0 || busy}>
-                ✕ Remove All
+              <button type="button" className="ifs-remove-all" onClick={clear} disabled={items.length === 0 || busy}>
+                <TrashBox />
+                Remove All
               </button>
-              <button type="button" onClick={() => toast.message("Demo bet settings · simulated only")}>
-                Bet Settings ⚙
+              <button
+                type="button"
+                className="ifs-settings"
+                onClick={() => toast.message("Demo bet settings · simulated only")}
+              >
+                Bet Settings
+                <GearIcon />
               </button>
             </div>
           </header>
@@ -228,7 +234,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
                 </label>
               </div>
               <div className="ifs-insure">
-                <strong>SportyInsure</strong>
+                <strong className="ifs-insure-tag">SportyInsure</strong>
                 <span className="ifs-insure-i">i</span>
                 <label>
                   <input type="checkbox" checked={flexi} disabled={busy} onChange={() => setFlexi((value) => !value)} />
@@ -263,8 +269,8 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
                 onClick={askConfirm}
               >
                 {busy ? (
-                  <b>
-                    <span className="ifs-spin" />
+                  <b className="ifs-submitting">
+                    <Spokes />
                     Submitting
                   </b>
                 ) : (
@@ -301,7 +307,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
 function SingleMini({
   item,
   stake,
-  odds,
+  toWin,
   payLabel,
   onStake,
   onRemove,
@@ -311,7 +317,7 @@ function SingleMini({
 }: {
   item: VirtualSlipItem;
   stake: string;
-  odds: string;
+  toWin: string;
   payLabel: string;
   onStake: (value: string) => void;
   onRemove: () => void;
@@ -321,23 +327,22 @@ function SingleMini({
 }) {
   return (
     <section className="ifs-mini ifs-mini-single" data-testid="if-slip-single" data-if-state="single">
-      <button type="button" className="ifs-mini-close" aria-label="Close betslip" onClick={onClose}>
-        ×
-      </button>
+      <MiniCloseTab onClose={onClose} />
       <button type="button" className="ifs-mini-pick" onClick={onExpand}>
         <span>
           <SoccerBall />
           {selectionLabel(item.selection)}
-          <em> | {item.marketName}</em>
+          <i className="ifs-div" aria-hidden />
+          <em>{item.marketName}</em>
         </span>
         <strong>{formatOdds(item.odds)}</strong>
       </button>
       <div className="ifs-mini-meta">
         <button type="button" className="ifs-mini-remove" aria-label="Remove selection" onClick={onRemove}>
-          ×
+          ✕
         </button>
         <button type="button" className="ifs-mini-match" onClick={onExpand}>
-          {item.matchLabel.replace(" VS ", " vs ")}
+          {matchParts(item.matchLabel)}
         </button>
         <input value={stake} inputMode="decimal" aria-label="Stake" onChange={(event) => onStake(event.target.value)} />
       </div>
@@ -345,7 +350,7 @@ function SingleMini({
         <div className="ifs-mini-actions">
           <div className="ifs-mini-win">
             <span>To Win</span>
-            <strong>{odds}</strong>
+            <strong>{toWin}</strong>
           </div>
           <button type="button" className="ifs-mini-place" data-testid="if-place-bet-mini" onClick={onPlace}>
             <b>Place Bet</b>
@@ -370,9 +375,7 @@ function MultipleMini({
 }) {
   return (
     <section className="ifs-mini ifs-mini-multi" data-testid="if-slip-multi" data-if-state="multi">
-      <button type="button" className="ifs-mini-close" aria-label="Close betslip" onClick={onClose}>
-        ×
-      </button>
+      <MiniCloseTab onClose={onClose} />
       <button type="button" className="ifs-mini-bar" onClick={onExpand}>
         <span className="ifs-count">{count}</span>
         <span className="ifs-mini-title">Betslip</span>
@@ -406,12 +409,76 @@ function LivePick({
       <span className="ifs-live-odds">{formatOdds(item.odds)}</span>
       <div className="ifs-live-match">
         <button type="button" aria-label="Remove selection" disabled={disabled} onClick={onRemove}>
-          ×
+          ✕
         </button>
-        <span>{item.matchLabel.replace(" VS ", " vs ")}</span>
+        <span>{matchParts(item.matchLabel)}</span>
       </div>
       <span className="ifs-live-market">{item.marketName}</span>
     </article>
+  );
+}
+
+function matchParts(label: string) {
+  const [home, away] = label.replace(/ VS /i, " vs ").split(" vs ");
+  if (!away) return label;
+  return (
+    <>
+      {home} <em>vs</em> {away}
+    </>
+  );
+}
+
+function ChevronDown() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden>
+      <path d="M5.5 8.5 11 14l5.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function TrashBox() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <rect x="1.4" y="1.4" width="13.2" height="13.2" rx="1.6" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M5.6 5.6h4.8M6.9 5.6v4.6M9.1 5.6v4.6M5.2 5.6h5.6l-.5 5.1H5.7l-.5-5.1Z" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function GearIcon() {
+  return (
+    <span className="ifs-gear">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
+        <circle cx="8" cy="8" r="2.3" stroke="currentColor" strokeWidth="1.3" />
+        <path
+          d="M8 1.6v1.7M8 12.7v1.7M14.4 8h-1.7M3.3 8H1.6M12.5 3.5l-1.2 1.2M4.7 11.3l-1.2 1.2M12.5 12.5l-1.2-1.2M4.7 4.7 3.5 3.5"
+          stroke="currentColor"
+          strokeWidth="1.3"
+          strokeLinecap="round"
+        />
+      </svg>
+      <i className="ifs-gear-dot" />
+    </span>
+  );
+}
+
+function Spokes() {
+  return (
+    <span className="ifs-spokes" aria-hidden>
+      {Array.from({ length: 12 }).map((_, index) => (
+        <i key={index} style={{ transform: `rotate(${index * 30}deg)`, animationDelay: `${index * 0.08}s` }} />
+      ))}
+    </span>
+  );
+}
+
+function MiniCloseTab({ onClose }: { onClose: () => void }) {
+  return (
+    <span className="ifs-mini-tab" aria-hidden={false}>
+      <button type="button" className="ifs-mini-close" aria-label="Close betslip" onClick={onClose}>
+        ✕
+      </button>
+    </span>
   );
 }
 

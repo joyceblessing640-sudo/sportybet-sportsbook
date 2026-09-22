@@ -39,7 +39,7 @@ export function InstantFootballTicket({ ticketId }: { ticketId: string }) {
 
   if (!ready || !ticket) {
     return (
-      <div className="ift" data-testid="if-open-bets" data-if-build="if-flow-v13">
+      <div className="ift" data-testid="if-open-bets" data-if-build="if-states-v14">
         <header className="ift-top">
           <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
             <ChevronLeft size={24} strokeWidth={2.2} />
@@ -73,7 +73,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   const [started, setStarted] = useState(Boolean(ticket.playing || ticket.status === "SETTLED"));
   const [speed, setSpeed] = useState<"1x" | "2x">("1x");
   const [cursor, setCursor] = useState(ticket.status === "SETTLED" ? 999 : 0);
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(true);
   const [openCount, setOpenCount] = useState(1);
   const [showToast, setShowToast] = useState(false);
   const toasted = useRef(false);
@@ -150,7 +150,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   }
 
   return (
-    <div className="ift" data-testid="if-open-bets" data-if-build="if-flow-v13">
+    <div className="ift" data-testid="if-open-bets" data-if-build="if-states-v14">
       <header className="ift-top">
         <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
           <ChevronLeft size={24} strokeWidth={2.2} />
@@ -182,16 +182,21 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
           </button>
         </div>
         {showDetails ? (
-          ticket.picks.map((row) => (
-            <div key={row.matchId + row.selection} className="ift-pick">
-              <p className="ift-pick-line">
-                {selectionLabel(row.selection)} @<strong>{formatOdds(row.odds)}</strong>
-              </p>
-              <p className="ift-pick-market">{row.marketName}</p>
-              <p className="ift-pick-match">{row.matchLabel.replace(" VS ", " vs ")}</p>
-              <p className="ift-pick-league">League: {row.league}</p>
-            </div>
-          ))
+          ticket.picks.map((row) => {
+            const [home, away] = row.matchLabel.replace(/ VS /i, " vs ").split(" vs ");
+            return (
+              <div key={row.matchId + row.selection} className="ift-pick">
+                <p className="ift-pick-line">
+                  {selectionLabel(row.selection)} @<strong>{formatOdds(row.odds)}</strong>
+                </p>
+                <p className="ift-pick-market">{row.marketName}</p>
+                <p className="ift-pick-match">
+                  {home} <em>vs</em> {away ?? ""}
+                </p>
+                <p className="ift-pick-league">League: {row.league}</p>
+              </div>
+            );
+          })
         ) : (
           <p className="ift-pick-match" style={{ margin: "12px 0 4px" }}>
             {ticket.picks.map((row) => row.matchLabel.replace(" VS ", " vs ")).join(", ")}
@@ -280,7 +285,9 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
       ) : null}
 
       <div className="ift-speed-bar">
-        <span>⏱ Simulation Speed</span>
+        <span>
+          <ClockIcon /> Simulation Speed
+        </span>
         <div className="ift-speeds">
           {(["1x", "2x"] as const).map((item) => (
             <button key={item} type="button" aria-current={speed === item ? "true" : undefined} onClick={() => setSpeed(item)}>
@@ -315,6 +322,15 @@ function TeamSide({ pick, side }: { pick: DemoTicketPick; side: "home" | "away" 
       <p className="truncate text-[13px] font-bold text-white">{name}</p>
       <p className="text-[11px] font-semibold text-white/55">{team?.abbreviation ?? name.slice(0, 3).toUpperCase()}</p>
     </div>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <circle cx="8" cy="9" r="5.6" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M8 6.2V9l2 1.4M6.2 1.8h3.6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
   );
 }
 

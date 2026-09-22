@@ -25,6 +25,10 @@
   background: rgb(0 0 0 / 0.45);
 }
 
+.ifs-mini {
+  overflow: visible;
+}
+
 .ifs-dock,
 .ifs-mini,
 .ifs-sheet {
@@ -84,21 +88,60 @@
 .ifs-mini {
   background: #fff;
   box-shadow: 0 -4px 18px rgb(16 24 20 / 0.12);
-  padding-top: 6px;
+  padding-top: 10px;
   animation: ifs-up 180ms ease both;
+}
+
+/* Close sits in a rounded tab that pokes above the white sheet, like Sporty. */
+.ifs-mini-tab {
+  position: absolute;
+  top: -21px;
+  right: 14px;
+  display: block;
+  width: 56px;
+  height: 22px;
+  border-radius: 12px 12px 0 0;
+  background: #fff;
+  box-shadow: 0 -3px 10px rgb(16 24 20 / 0.08);
+}
+
+.ifs-mini-tab::before,
+.ifs-mini-tab::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 0 0, transparent 12px, #fff 12px);
+}
+
+.ifs-mini-tab::before {
+  left: -12px;
+  background: radial-gradient(circle at 0 0, transparent 12px, #fff 12px);
+}
+
+.ifs-mini-tab::after {
+  right: -12px;
+  background: radial-gradient(circle at 100% 0, transparent 12px, #fff 12px);
 }
 
 .ifs-mini-close {
   display: grid;
-  width: 36px;
-  height: 28px;
-  margin-left: auto;
+  width: 100%;
+  height: 100%;
   place-items: center;
   border: 0;
   background: transparent;
-  color: #9aa1ad;
-  font-size: 22px;
+  color: #6b7280;
+  font-size: 15px;
   line-height: 1;
+}
+
+.ifs-div {
+  width: 1px;
+  height: 14px;
+  margin: 0 2px;
+  background: #d8dde6;
 }
 
 .ifs-mini-pick,
@@ -154,8 +197,9 @@
   place-items: center;
   border: 0;
   background: transparent;
-  color: #9aa1ad;
-  font-size: 18px;
+  color: #1a1d24;
+  font-size: 15px;
+  font-weight: 600;
   line-height: 1;
 }
 
@@ -165,10 +209,17 @@
   border: 0;
   background: transparent;
   color: var(--ifs-ink);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   text-align: left;
+}
+
+.ifs-mini-match em {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 400;
+  color: #9aa1ad;
 }
 
 .ifs-mini-meta input {
@@ -487,10 +538,11 @@
 }
 
 .ifs-sheet-head {
+  position: relative;
   flex-shrink: 0;
   background: #2a2d36;
   color: #fff;
-  padding: 10px 12px 8px;
+  padding: 14px 12px 10px;
 }
 
 .ifs-sheet-top {
@@ -521,13 +573,19 @@
   text-align: left;
 }
 
+/* Collapse chevron is centred at the top of the dark header. */
 .ifs-chevron {
-  width: 36px;
-  height: 28px;
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  width: 52px;
+  height: 22px;
+  place-items: center;
   border: 0;
   background: transparent;
   color: #fff;
-  font-size: 16px;
 }
 
 .ifs-balance {
@@ -542,15 +600,34 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 10px;
-  font-size: 12px;
+  font-size: 12.5px;
   color: #c5cad3;
 }
 
 .ifs-sheet-tools button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: 0;
   background: transparent;
   color: inherit;
-  font-size: 12px;
+  font-size: 12.5px;
+}
+
+.ifs-gear {
+  position: relative;
+  display: inline-flex;
+  line-height: 0;
+}
+
+.ifs-gear-dot {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 99px;
+  background: #e31837;
 }
 
 .ifs-tabs {
@@ -561,17 +638,20 @@
 }
 
 .ifs-tabs button {
-  height: 40px;
+  height: 42px;
   border: 0;
-  background: transparent;
-  color: #6b7280;
-  font-size: 14px;
+  background: #3a3e48;
+  color: #fff;
+  font-size: 15px;
   font-weight: 500;
+  margin: 0 1px;
 }
 
 .ifs-tabs button[aria-current="true"] {
   background: #fff;
   color: var(--ifs-ink);
+  font-weight: 600;
+  border-radius: 4px 4px 0 0;
 }
 
 .ifs-sheet-body {
@@ -620,9 +700,16 @@
 .ifs-live-match button {
   border: 0;
   background: transparent;
-  color: #9aa1ad;
-  font-size: 18px;
+  color: #1a1d24;
+  font-size: 15px;
+  font-weight: 600;
   line-height: 1;
+}
+
+.ifs-live-match em {
+  font-style: normal;
+  color: #9aa1ad;
+  font-size: 12px;
 }
 
 .ifs-live-market {
@@ -696,9 +783,22 @@
   align-items: center;
   gap: 10px;
   min-height: 40px;
-  padding: 0 14px;
+  padding: 0 14px 0 0;
   font-size: 13px;
-  color: #6b7280;
+  color: #b6bcc6;
+}
+
+/* SportyInsure sits in a green ribbon with a notched right edge. */
+.ifs-insure-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 16px 0 14px;
+  background: var(--ifs-green);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);
 }
 
 .ifs-insure-i {
@@ -715,15 +815,16 @@
   line-height: 1;
 }
 
-.ifs-insure strong {
-  color: var(--ifs-green);
-  font-weight: 700;
-}
-
 .ifs-insure label {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+}
+
+.ifs-insure input {
+  width: 15px;
+  height: 15px;
+  accent-color: #c5cad3;
 }
 
 .ifs-line,
@@ -803,10 +904,59 @@
   vertical-align: -2px;
 }
 
+.ifs-submitting {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* iOS-style spoke spinner, as in the reference submitting state. */
+.ifs-spokes {
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.ifs-spokes i {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 5px;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: #fff;
+  transform-origin: 1px 9px;
+  animation: ifs-spoke 0.96s linear infinite;
+}
+
+@keyframes ifs-spoke {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+.ifs-sheet[data-if-state="submitting"] .ifs-sheet-body {
+  position: relative;
+  pointer-events: none;
+}
+
+.ifs-sheet[data-if-state="submitting"] .ifs-sheet-body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(120 126 136 / 0.35);
+}
+
 .ifs-confirm-sheet {
   flex-shrink: 0;
-  background: #fff;
-  padding-top: 28px;
+  background: #fafafa;
+  padding-top: 26px;
 }
 
 .ifs-confirm-sheet .label,
@@ -818,6 +968,7 @@
 
 .ifs-confirm-sheet .label {
   font-size: 15px;
+  color: #6b7280;
 }
 
 .ifs-confirm-sheet .amount {
@@ -827,14 +978,14 @@
 }
 
 .ifs-confirm-actions-safe {
-  margin-top: 28px;
-  background: linear-gradient(to right, var(--ifs-dark) 46.51%, var(--ifs-green-btn) 46.51%);
+  margin-top: 26px;
+  background: linear-gradient(to right, var(--ifs-dark) 28.5%, var(--ifs-green) 28.5%);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .ifs-confirm-actions {
   display: grid;
-  grid-template-columns: 1fr 1.15fr;
+  grid-template-columns: 0.4fr 1fr;
   height: 52px;
   min-height: 52px;
   max-height: 52px;
@@ -857,7 +1008,7 @@
 }
 
 .ifs-ok {
-  background: var(--ifs-green-btn);
+  background: var(--ifs-green);
 }
 
 .ifs-sheet[data-if-state="confirm"] .ifs-sheet-body {
