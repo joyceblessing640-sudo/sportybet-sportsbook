@@ -37,18 +37,27 @@ export function InstantFootballTicket({ ticketId }: { ticketId: string }) {
     return subscribeDemoTickets(load);
   }, [ticketId]);
 
-  if (!ready) {
-    return <div className="ift"><div className="ift-play">Loading demo ticket…</div></div>;
-  }
-  if (!ticket) {
+  if (!ready || !ticket) {
     return (
-      <div className="ift">
-        <div className="ift-play">
-          <p>Demo ticket not found</p>
-          <Link href="/virtuals/instant-football" className="ift-reload">
-            Back to Instant Football
+      <div className="ift" data-testid="if-open-bets" data-if-build="if-match-v9">
+        <header className="ift-top">
+          <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
+            <ChevronLeft size={24} strokeWidth={2.2} />
           </Link>
+          <h1>Instant Football</h1>
+        </header>
+        <div className="ift-open">
+          <BallIcon />
+          Open Bets
         </div>
+        {ready && !ticket ? (
+          <article className="ift-card">
+            <p>Demo ticket not found</p>
+            <Link href="/virtuals/instant-football" className="ift-reload">
+              Back to Instant Football
+            </Link>
+          </article>
+        ) : null}
       </div>
     );
   }
@@ -66,6 +75,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   const [cursor, setCursor] = useState(ticket.status === "SETTLED" ? 999 : 0);
   const [showDetails, setShowDetails] = useState(false);
   const [openCount, setOpenCount] = useState(1);
+  const [showToast, setShowToast] = useState(false);
   const toasted = useRef(false);
 
   const pick = ticket.picks[index];
@@ -85,7 +95,10 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   useEffect(() => {
     if (toasted.current || ticket.status !== "OPEN") return;
     toasted.current = true;
-    toast.success(`Ticket #${ticket.ticketNo || ticket.publicId} has been created successfully.`);
+    toast.dismiss();
+    setShowToast(true);
+    const timer = window.setTimeout(() => setShowToast(false), 4200);
+    return () => window.clearTimeout(timer);
   }, [ticket]);
 
   useEffect(() => {
@@ -137,7 +150,7 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
   }
 
   return (
-    <div className="ift" data-testid="if-open-bets">
+    <div className="ift" data-testid="if-open-bets" data-if-build="if-match-v9">
       <header className="ift-top">
         <Link href="/virtuals/instant-football" aria-label="Back to Instant Football" className="ift-back">
           <ChevronLeft size={24} strokeWidth={2.2} />
@@ -175,13 +188,13 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
                 {selectionLabel(row.selection)} @<strong>{formatOdds(row.odds)}</strong>
               </p>
               <p className="ift-pick-market">{row.marketName}</p>
-              <p className="ift-pick-match">{row.matchLabel.replace(" vs ", " VS ")}</p>
+              <p className="ift-pick-match">{row.matchLabel.replace(" VS ", " vs ")}</p>
               <p className="ift-pick-league">League: {row.league}</p>
             </div>
           ))
         ) : (
           <p className="ift-pick-match" style={{ margin: "12px 0 4px" }}>
-            {ticket.picks.map((row) => row.matchLabel.replace(" vs ", " vs ")).join(", ")}
+            {ticket.picks.map((row) => row.matchLabel.replace(" VS ", " vs ")).join(", ")}
           </p>
         )}
         <button type="button" className="ift-details" onClick={() => setShowDetails((value) => !value)}>
@@ -255,6 +268,15 @@ function TicketPlay({ ticket, onTicket }: { ticket: DemoTicket; onTicket: (ticke
             ),
           )}
         </ol>
+      ) : null}
+
+      {showToast ? (
+        <div className="ift-toast" role="status">
+          <span>Ticket #{ticket.ticketNo || ticket.publicId} has been created successfully.</span>
+          <span className="ift-toast-ok" aria-hidden>
+            ✓
+          </span>
+        </div>
       ) : null}
 
       <div className="ift-speed-bar">

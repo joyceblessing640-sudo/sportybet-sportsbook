@@ -352,8 +352,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  min-height: 58px;
-  padding: 6px 8px;
+  min-height: 64px;
+  padding: 7px 8px 6px;
   border-bottom: 1px solid #f1f3f7;
   background: #fff;
 }
@@ -364,36 +364,39 @@
 }
 
 .if-pair {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: start;
-  column-gap: 2px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4px;
+  width: max-content;
+  max-width: 100%;
 }
 
 .if-side {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
   min-width: 0;
+  flex: 0 1 auto;
 }
 
 .if-side > .if-crest {
-  align-self: center;
+  margin-top: 1px;
 }
 
 .if-side-away {
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .if-meta {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .if-side-away .if-meta {
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 .if-abbr {
@@ -430,11 +433,12 @@
 }
 
 .if-vs {
-  padding: 3px 2px 0;
+  flex: 0 0 auto;
+  padding: 2px 2px 0;
   font-size: 10px;
   font-weight: 500;
   color: #b0b7c1;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
 }
 
 .if-stars {
@@ -450,13 +454,28 @@
   color: #f5c518;
 }
 
-.if-more {
+.if-more-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 3px;
+  min-height: 12px;
+}
+
+.if-more {
+  margin: 0;
   font-size: 11px;
   font-weight: 400;
   color: var(--if-muted);
   line-height: 1;
   letter-spacing: 0.01em;
+}
+
+.if-graph {
+  display: grid;
+  place-items: center;
+  color: #c5cad3;
+  line-height: 0;
 }
 
 .if-odds {

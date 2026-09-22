@@ -91,7 +91,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
     setMode("submitting");
     setError(null);
     try {
-      await new Promise((resolve) => window.setTimeout(resolve, 5000));
+      await new Promise((resolve) => window.setTimeout(resolve, 1800));
       const ticket = placeDemoBet({ type: tab, stakePesewas, items });
       clear();
       setPhase("dock");
@@ -115,7 +115,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const payLabel = toGhs(stakePesewas || 0);
 
   return (
-    <div className="ifs-root" data-testid="if-slip" data-if-build="if-logos-v7" data-if-phase={phase} data-if-mode={mode}>
+    <div className="ifs-root" data-testid="if-slip" data-if-build="if-match-v9" data-if-phase={phase} data-if-mode={mode}>
       {phase === "sheet" ? (
         <button type="button" className="ifs-backdrop" aria-label="Close betslip" onClick={closeSheet} />
       ) : null}
@@ -229,6 +229,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
               </div>
               <div className="ifs-insure">
                 <strong>SportyInsure</strong>
+                <span className="ifs-insure-i">i</span>
                 <label>
                   <input type="checkbox" checked={flexi} disabled={busy} onChange={() => setFlexi((value) => !value)} />
                   Flexi
@@ -321,6 +322,7 @@ function SingleMini({
       </button>
       <button type="button" className="ifs-mini-pick" onClick={onExpand}>
         <span>
+          <SoccerBall />
           {selectionLabel(item.selection)}
           <em> | {item.marketName}</em>
         </span>
@@ -331,7 +333,7 @@ function SingleMini({
           ×
         </button>
         <button type="button" className="ifs-mini-match" onClick={onExpand}>
-          {item.matchLabel.replace(" vs ", " VS ")}
+          {item.matchLabel.replace(" VS ", " vs ")}
         </button>
         <input value={stake} inputMode="decimal" aria-label="Stake" onChange={(event) => onStake(event.target.value)} />
       </div>
@@ -391,16 +393,28 @@ function LivePick({
 }) {
   return (
     <article className="ifs-live-pick">
-      <span className="ifs-live-name">{selectionLabel(item.selection)}</span>
+      <span className="ifs-live-name">
+        <SoccerBall />
+        {selectionLabel(item.selection)}
+      </span>
       <span className="ifs-live-odds">{formatOdds(item.odds)}</span>
       <div className="ifs-live-match">
         <button type="button" aria-label="Remove selection" disabled={disabled} onClick={onRemove}>
           ×
         </button>
-        <span>{item.matchLabel.replace(" vs ", " VS ")}</span>
+        <span>{item.matchLabel.replace(" VS ", " vs ")}</span>
       </div>
       <span className="ifs-live-market">{item.marketName}</span>
     </article>
+  );
+}
+
+function SoccerBall() {
+  return (
+    <svg className="ifs-ball" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <circle cx="8" cy="8" r="6.2" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M8 1.8 9.6 5.2 13.4 5.6 10.6 8.2l.9 3.8L8 10.4 4.5 12l.9-3.8L2.6 5.6l3.8-.4Z" stroke="currentColor" strokeWidth="1.1" />
+    </svg>
   );
 }
 

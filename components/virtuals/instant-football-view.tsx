@@ -101,7 +101,7 @@ export function InstantFootballView() {
   }
 
   return (
-    <div className="if" data-testid="if-board" data-if-build="if-crests-v8">
+    <div className="if" data-testid="if-board" data-if-build="if-match-v9">
       <div className="if-chrome">
         <header className="if-top">
           <Link href="/virtuals" aria-label="Back to Virtuals" className="if-back">
@@ -249,7 +249,7 @@ function MatchRow({
               <Stars value={match.home.stars} />
             </span>
           </div>
-          <span className="if-vs">VS</span>
+          <span className="if-vs">vs</span>
           <div className="if-side if-side-away">
             <span className="if-meta">
               <span className="if-abbr">{match.away.abbreviation}</span>
@@ -258,7 +258,12 @@ function MatchRow({
             <DemoCrest team={match.away} size={18} />
           </div>
         </div>
-        <p className="if-more">+71 &gt;</p>
+        <div className="if-more-row">
+          <p className="if-more">+{extraMarkets(match)} &gt;</p>
+          <span className="if-graph" aria-hidden>
+            <GraphIcon />
+          </span>
+        </div>
       </div>
       <div className="if-odds">
         {outcomes.map((outcome) => {
@@ -281,11 +286,16 @@ function MatchRow({
   );
 }
 
+function extraMarkets(match: DemoMatch) {
+  const seed = [...match.id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  return 15 + (seed % 19);
+}
+
 function Stars({ value }: { value: number }) {
   return (
     <span className="if-stars" aria-hidden>
-      {[1, 2, 3].map((star) => (
-        <span key={star} className={star <= value ? "on" : undefined}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span key={star} className={star <= Math.min(5, value + 2) ? "on" : undefined}>
           ★
         </span>
       ))}
@@ -309,6 +319,15 @@ function SparkIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
       <path d="M1.5 11.5 5 7.5 8 9.5 14.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
       <path d="M1.5 13.5h13" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+function GraphIcon() {
+  return (
+    <svg width="14" height="12" viewBox="0 0 14 12" fill="none" aria-hidden>
+      <path d="M1 9.2 4.2 5.8 7 7.4 13 2.2" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+      <path d="M1 11h12" stroke="currentColor" strokeWidth="1.2" />
     </svg>
   );
 }

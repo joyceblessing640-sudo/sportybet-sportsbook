@@ -109,9 +109,17 @@
 }
 
 .ifs-mini-pick span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   flex: 1;
   font-size: 15px;
   font-weight: 500;
+}
+
+.ifs-ball {
+  flex-shrink: 0;
+  color: #1a1d24;
 }
 
 .ifs-mini-pick em {
@@ -569,6 +577,12 @@
   color: var(--ifs-ink);
 }
 
+.ifs-live-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .ifs-live-odds {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -664,6 +678,20 @@
   padding: 0 14px;
   font-size: 13px;
   color: #6b7280;
+}
+
+.ifs-insure-i {
+  display: grid;
+  width: 14px;
+  height: 14px;
+  place-items: center;
+  border-radius: 99px;
+  background: #cfd4dc;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
 }
 
 .ifs-insure strong {
