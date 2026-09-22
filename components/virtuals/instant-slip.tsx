@@ -115,7 +115,7 @@ export function InstantFootballSlip({ onNextRound }: { onNextRound: () => void }
   const payLabel = toGhs(stakePesewas || 0);
 
   return (
-    <div className="ifs-root" data-testid="if-slip" data-if-build="if-safe-v16" data-if-phase={phase} data-if-mode={mode}>
+    <div className="ifs-root" data-testid="if-slip" data-if-build="if-safe-v17" data-if-phase={phase} data-if-mode={mode}>
       {phase === "sheet" ? (
         <button type="button" className="ifs-backdrop" aria-label="Close betslip" onClick={closeSheet} />
       ) : null}

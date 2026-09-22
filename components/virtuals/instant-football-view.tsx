@@ -102,7 +102,7 @@ export function InstantFootballView() {
   }
 
   return (
-    <div className="if" data-testid="if-board" data-if-build="if-safe-v16">
+    <div className="if" data-testid="if-board" data-if-build="if-safe-v17">
       <div className="if-chrome">
         <header className="if-top">
           <Link href="/virtuals" aria-label="Back to Virtuals" className="if-back">
