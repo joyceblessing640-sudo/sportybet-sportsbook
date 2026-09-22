@@ -34,7 +34,49 @@
   z-index: 30;
 }
 
+.if-shot {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  scroll-margin-top: 44px;
+}
+
+.if-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.if-shot-tab {
+  position: absolute;
+  top: 0;
+  height: 8.2%;
+  border: 0;
+  background: transparent;
+}
+
+.if-shot-odd {
+  position: absolute;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  border-radius: 2px;
+}
+
+.if-shot-odd[data-active="true"] {
+  background: #12a150;
+  color: #fff;
+}
+
 .if-top {
+  position: sticky;
+  top: 0;
+  z-index: 30;
   display: flex;
   align-items: center;
   height: 44px;

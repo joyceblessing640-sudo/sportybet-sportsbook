@@ -5,12 +5,10 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, Wallet } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/components/providers";
-import { DemoCrest } from "@/components/virtuals/demo-crest";
 import { InstantFootballSlip } from "@/components/virtuals/instant-slip";
 import { formatGhs, formatOdds, toGhs } from "@/lib/money";
 import {
   DEMO_BOARDS,
-  DEMO_MARKET_TABS,
   boardMatches,
   demoLeagueLine,
   demoOutcomes,
@@ -22,16 +20,148 @@ import type { VirtualMarketId } from "@/lib/virtuals/engine";
 import { readPersistedSlip, useVirtualSlip } from "@/store/virtual-slip";
 import "./instant-football.css";
 
+type ShotRow = { top: number; height: number };
+
+type BoardShot = {
+  id: DemoBoardId;
+  src: string;
+  rows: ShotRow[];
+  oddLeft: number;
+  oddWidth: number;
+  oddStep: number;
+  tabs?: { id: DemoBoardId; left: number; width: number }[];
+};
+
+const BOARD_SHOTS: BoardShot[] = [
+  {
+    id: "england",
+    src: "/virtuals/if-england.jpg",
+    rows: [
+      { top: 23.8, height: 5.8 },
+      { top: 36.6, height: 6.0 },
+      { top: 49.5, height: 6.0 },
+      { top: 62.6, height: 5.9 },
+      { top: 75.5, height: 6.1 },
+      { top: 88.6, height: 5.9 },
+    ],
+    oddLeft: 34.8,
+    oddWidth: 20.6,
+    oddStep: 20.9,
+    tabs: [
+      { id: "england", left: 0, width: 16 },
+      { id: "spain", left: 16, width: 14 },
+      { id: "germany", left: 30, width: 18 },
+      { id: "italy", left: 48, width: 14 },
+      { id: "champions", left: 62, width: 20 },
+    ],
+  },
+  {
+    id: "spain",
+    src: "/virtuals/if-spain.jpg",
+    rows: [
+      { top: 7.9, height: 6.1 },
+      { top: 21.2, height: 6.1 },
+      { top: 34.5, height: 6.0 },
+      { top: 47.8, height: 6.1 },
+      { top: 61.2, height: 6.0 },
+      { top: 74.5, height: 6.0 },
+      { top: 87.7, height: 6.1 },
+    ],
+    oddLeft: 34.8,
+    oddWidth: 20.6,
+    oddStep: 20.9,
+  },
+  {
+    id: "germany",
+    src: "/virtuals/if-germany.jpg",
+    rows: [
+      { top: 8.3, height: 6.2 },
+      { top: 21.9, height: 6.1 },
+      { top: 35.2, height: 6.2 },
+      { top: 48.8, height: 6.1 },
+      { top: 62.2, height: 6.2 },
+      { top: 75.7, height: 6.1 },
+      { top: 89.1, height: 6.2 },
+    ],
+    oddLeft: 34.9,
+    oddWidth: 20.6,
+    oddStep: 20.9,
+  },
+  {
+    id: "italy",
+    src: "/virtuals/if-italy.jpg",
+    rows: [
+      { top: 14.5, height: 5.7 },
+      { top: 27.0, height: 5.6 },
+      { top: 39.3, height: 5.7 },
+      { top: 51.7, height: 5.7 },
+      { top: 64.1, height: 5.7 },
+      { top: 76.6, height: 5.6 },
+      { top: 88.9, height: 5.7 },
+    ],
+    oddLeft: 34.9,
+    oddWidth: 20.5,
+    oddStep: 20.8,
+  },
+  {
+    id: "champions",
+    src: "/virtuals/if-champions.jpg",
+    rows: [
+      { top: 7.4, height: 6.2 },
+      { top: 20.9, height: 6.3 },
+      { top: 34.5, height: 6.2 },
+      { top: 48.0, height: 6.3 },
+      { top: 61.6, height: 6.3 },
+      { top: 75.2, height: 6.2 },
+      { top: 88.8, height: 6.0 },
+    ],
+    oddLeft: 34.9,
+    oddWidth: 20.6,
+    oddStep: 20.9,
+  },
+  {
+    id: "euros",
+    src: "/virtuals/if-euros.jpg",
+    rows: [
+      { top: 8.4, height: 6.1 },
+      { top: 21.7, height: 6.0 },
+      { top: 35.0, height: 6.0 },
+      { top: 48.3, height: 6.0 },
+      { top: 61.6, height: 6.1 },
+      { top: 75.0, height: 6.0 },
+      { top: 88.2, height: 6.1 },
+    ],
+    oddLeft: 34.8,
+    oddWidth: 20.6,
+    oddStep: 20.9,
+  },
+  {
+    id: "cwc",
+    src: "/virtuals/if-cwc.jpg",
+    rows: [
+      { top: 7.7, height: 6.1 },
+      { top: 21.2, height: 6.1 },
+      { top: 34.5, height: 6.2 },
+      { top: 48.0, height: 6.2 },
+      { top: 61.5, height: 6.2 },
+      { top: 75.0, height: 6.2 },
+      { top: 88.4, height: 6.1 },
+    ],
+    oddLeft: 34.8,
+    oddWidth: 20.6,
+    oddStep: 20.9,
+  },
+];
+
 export function InstantFootballView() {
   const { user } = useAuth();
   const [boardId, setBoardId] = useState<DemoBoardId>("england");
-  const [marketId, setMarketId] = useState<VirtualMarketId>("1X2");
-  const [bookingBonus, setBookingBonus] = useState(false);
   const [round, setRound] = useState(1);
   const items = useVirtualSlip((state) => state.items);
   const togglePick = useVirtualSlip((state) => state.togglePick);
+  const marketId: VirtualMarketId = "1X2";
   const sections = useMemo(
-    () => DEMO_BOARDS.map((board) => ({ ...board, matches: boardMatches(board.id) })),
+    () => BOARD_SHOTS.map((shot) => ({ ...shot, matches: boardMatches(shot.id) })),
     [],
   );
 
@@ -56,7 +186,7 @@ export function InstantFootballView() {
         const id = visible?.target.getAttribute("data-league") as DemoBoardId | null;
         if (id) setBoardId(id);
       },
-      { root: null, rootMargin: "-126px 0px -58% 0px", threshold: 0 },
+      { root: null, rootMargin: "-44px 0px -58% 0px", threshold: 0 },
     );
     nodes.forEach((node) => observer.observe(node));
     return () => observer.disconnect();
@@ -82,135 +212,72 @@ export function InstantFootballView() {
     document.getElementById(`if-section-${id}`)?.scrollIntoView({ block: "start" });
   }
 
-  async function shareBoard() {
-    const url = typeof window !== "undefined" ? window.location.href : "/virtuals/instant-football";
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: "Instant Football demo", url });
-        return;
-      }
-    } catch {
-      /* cancelled */
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.message("Demo link copied");
-    } catch {
-      toast.message("Instant Football demo");
-    }
-  }
-
   return (
-    <div className="if" data-testid="if-board" data-if-build="if-iphone-v10">
-      <div className="if-chrome">
-        <header className="if-top">
-          <Link href="/virtuals" aria-label="Back to Virtuals" className="if-back">
-            <ChevronLeft size={24} strokeWidth={2.2} />
+    <div className="if" data-testid="if-board" data-if-build="if-board-v11" data-if-league={boardId}>
+      <header className="if-top">
+        <Link href="/virtuals" aria-label="Back to Virtuals" className="if-back">
+          <ChevronLeft size={24} strokeWidth={2.2} />
+        </Link>
+        <h1>Instant Football</h1>
+        {user ? (
+          <Link href="/me" className="if-wallet">
+            <span>
+              <small>GHS</small>
+              <strong>{toGhs(user.wallet?.balancePesewas ?? 0)}</strong>
+            </span>
+            <Wallet size={18} strokeWidth={2} aria-hidden />
+            <span className="sr-only">{formatGhs(user.wallet?.balancePesewas ?? 0)}</span>
           </Link>
-          <h1>Instant Football</h1>
-          {user ? (
-            <Link href="/me" className="if-wallet">
-              <span>
-                <small>GHS</small>
-                <strong>{toGhs(user.wallet?.balancePesewas ?? 0)}</strong>
-              </span>
-              <Wallet size={18} strokeWidth={2} aria-hidden />
-              <span className="sr-only">{formatGhs(user.wallet?.balancePesewas ?? 0)}</span>
-            </Link>
-          ) : (
-            <div className="if-account">
-              <Link href="/register">Register</Link>
-              <span className="sep">|</span>
-              <Link href="/login">Login</Link>
-            </div>
-          )}
-        </header>
-
-        <div className="if-leagues-wrap">
-          <nav className="if-leagues if-h-scroll" data-testid="if-league-tabs" aria-label="Leagues">
-            {DEMO_BOARDS.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                aria-current={boardId === item.id ? "true" : undefined}
-                onClick={() => goToBoard(item.id)}
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-          <button
-            type="button"
-            className="if-spark"
-            aria-label="Demo stats"
-            onClick={() => toast.message("Instant Football is a DEMO simulation. No real-money bets.")}
-          >
-            <SparkIcon />
-            <span className="dot" />
-          </button>
-        </div>
-
-        <div className="if-tools">
-          <span className="if-bb">BB</span>
-          <button
-            type="button"
-            className="if-switch"
-            role="switch"
-            aria-checked={bookingBonus}
-            aria-label="Booking bonus"
-            onClick={() => setBookingBonus((value) => !value)}
-          >
-            <i />
-          </button>
-          <button type="button" className="if-share" aria-label="Share" onClick={() => void shareBoard()}>
-            <ShareNodes />
-          </button>
-          <div className="if-markets if-h-scroll" data-testid="if-market-tabs">
-            {DEMO_MARKET_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                aria-current={marketId === tab.id ? "true" : undefined}
-                onClick={() => setMarketId(tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
+        ) : (
+          <div className="if-account">
+            <Link href="/register">Register</Link>
+            <span className="sep">|</span>
+            <Link href="/login">Login</Link>
           </div>
-        </div>
-      </div>
+        )}
+      </header>
 
       <div className="if-list">
         {sections.map((section) => (
-          <section key={section.id} id={`if-section-${section.id}`} className="if-league" data-league={section.id}>
-            <div className="if-league-h">
-              <div className="if-league-name">
-                <BoardFlag boardId={section.id} />
-                <span>{section.league}</span>
-                <button
-                  type="button"
-                  className="if-info"
-                  aria-label="Demo information"
-                  onClick={() => toast.message("Instant Football is a DEMO simulation. No real-money bets.")}
-                >
-                  i
-                </button>
-              </div>
-              <div className="if-cols">
-                <span>1</span>
-                <span>X</span>
-                <span>2</span>
-              </div>
-            </div>
-            {section.matches.map((match) => (
-              <MatchRow
-                key={match.id}
-                match={match}
-                marketId={marketId}
-                selectedId={items.find((item) => item.matchId === match.id)?.outcomeId}
-                onSelect={selectOdd}
+          <section key={section.id} id={`if-section-${section.id}`} className="if-shot" data-league={section.id}>
+            <img src={section.src} alt={`${section.id} Instant Football`} draggable={false} />
+            {section.tabs?.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                className="if-shot-tab"
+                style={{ left: `${tab.left}%`, width: `${tab.width}%` }}
+                aria-label={tab.id}
+                onClick={() => goToBoard(tab.id)}
               />
             ))}
+            {section.matches.map((match, index) => {
+              const row = section.rows[index];
+              if (!row) return null;
+              const selected = items.find((item) => item.matchId === match.id);
+              return demoOutcomes(match, marketId).map((outcome, oddIndex) => {
+                const active = selected?.outcomeId === outcome.id;
+                return (
+                  <button
+                    key={outcome.id}
+                    type="button"
+                    className="if-shot-odd"
+                    data-active={active ? "true" : "false"}
+                    aria-pressed={active}
+                    aria-label={`${match.home.abbreviation} vs ${match.away.abbreviation} ${outcome.code} ${formatOdds(outcome.odds)}`}
+                    style={{
+                      top: `${row.top}%`,
+                      height: `${row.height}%`,
+                      left: `${section.oddLeft + oddIndex * section.oddStep}%`,
+                      width: `${section.oddWidth}%`,
+                    }}
+                    onClick={() => selectOdd(match, outcome.code)}
+                  >
+                    {active ? formatOdds(outcome.odds) : null}
+                  </button>
+                );
+              });
+            })}
           </section>
         ))}
       </div>
@@ -224,144 +291,4 @@ export function InstantFootballView() {
       />
     </div>
   );
-}
-
-function MatchRow({
-  match,
-  marketId,
-  selectedId,
-  onSelect,
-}: {
-  match: DemoMatch;
-  marketId: VirtualMarketId;
-  selectedId?: string;
-  onSelect: (match: DemoMatch, code: "1" | "X" | "2") => void;
-}) {
-  const outcomes = demoOutcomes(match, marketId);
-  return (
-    <article className="if-row">
-      <div className="if-teams">
-        <div className="if-pair">
-          <div className="if-side">
-            <DemoCrest team={match.home} size={18} />
-            <span className="if-meta">
-              <span className="if-abbr">{match.home.abbreviation}</span>
-              <Stars value={match.home.stars} />
-            </span>
-          </div>
-          <span className="if-vs">vs</span>
-          <div className="if-side if-side-away">
-            <span className="if-meta">
-              <span className="if-abbr">{match.away.abbreviation}</span>
-              <Stars value={match.away.stars} />
-            </span>
-            <DemoCrest team={match.away} size={18} />
-          </div>
-        </div>
-        <div className="if-more-row">
-          <p className="if-more">+{extraMarkets(match)} &gt;</p>
-          <span className="if-graph" aria-hidden>
-            <GraphIcon />
-          </span>
-        </div>
-      </div>
-      <div className="if-odds">
-        {outcomes.map((outcome) => {
-          const active = selectedId === outcome.id;
-          return (
-            <button
-              key={outcome.id}
-              type="button"
-              data-active={active ? "true" : "false"}
-              aria-pressed={active}
-              aria-label={`${match.home.abbreviation} vs ${match.away.abbreviation} ${outcome.code} ${formatOdds(outcome.odds)}`}
-              onClick={() => onSelect(match, outcome.code)}
-            >
-              {formatOdds(outcome.odds)}
-            </button>
-          );
-        })}
-      </div>
-    </article>
-  );
-}
-
-function extraMarkets(match: DemoMatch) {
-  const seed = [...match.id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
-  return 15 + (seed % 19);
-}
-
-function Stars({ value }: { value: number }) {
-  return (
-    <span className="if-stars" aria-hidden>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <span key={star} className={star <= Math.min(5, value + 2) ? "on" : undefined}>
-          ★
-        </span>
-      ))}
-    </span>
-  );
-}
-
-function ShareNodes() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
-      <circle cx="4.2" cy="9" r="2" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="13.2" cy="4.2" r="2" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="13.2" cy="13.8" r="2" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M6 8.2 11.4 5.2M6 9.8 11.4 12.8" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
-}
-
-function SparkIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path d="M1.5 11.5 5 7.5 8 9.5 14.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-      <path d="M1.5 13.5h13" stroke="currentColor" strokeWidth="1.4" />
-    </svg>
-  );
-}
-
-function GraphIcon() {
-  return (
-    <svg width="14" height="12" viewBox="0 0 14 12" fill="none" aria-hidden>
-      <path d="M1 9.2 4.2 5.8 7 7.4 13 2.2" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-      <path d="M1 11h12" stroke="currentColor" strokeWidth="1.2" />
-    </svg>
-  );
-}
-
-function BoardFlag({ boardId }: { boardId: DemoBoardId }) {
-  if (boardId === "england") return <span className="if-flag if-flag-eng" />;
-  if (boardId === "spain") {
-    return (
-      <span className="if-flag if-flag-esp">
-        <span />
-        <span />
-        <span />
-      </span>
-    );
-  }
-  if (boardId === "germany") {
-    return (
-      <span className="if-flag if-flag-ger">
-        <span />
-        <span />
-        <span />
-      </span>
-    );
-  }
-  if (boardId === "italy") {
-    return (
-      <span className="if-flag if-flag-ita">
-        <span />
-        <span />
-        <span />
-      </span>
-    );
-  }
-  if (boardId === "champions") return <span className="if-badge if-badge-ucl">★</span>;
-  if (boardId === "euros") return <span className="if-badge if-badge-eur">★</span>;
-  return <span className="if-badge if-badge-cwc">W</span>;
 }
